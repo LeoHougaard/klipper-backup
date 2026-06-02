@@ -9,6 +9,10 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 . (Join-Path $PSScriptRoot "read-env.ps1")
 
+if (-not $PrinterHost) { $PrinterHost = $env:PRINTER_HOST }
+if (-not $PrinterUser) { $PrinterUser = $env:PRINTER_USER }
+if (-not $PrinterConfigDir) { $PrinterConfigDir = $env:PRINTER_CONFIG_DIR }
+
 if (-not $PrinterHost) { throw "Set PRINTER_HOST in .env or pass -PrinterHost." }
 if (-not $PrinterUser) { $PrinterUser = "biqu" }
 if (-not $PrinterConfigDir) { $PrinterConfigDir = "~/printer_data/config" }
