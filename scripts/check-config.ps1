@@ -1,0 +1,37 @@
+Set-StrictMode -Version Latest
+$ErrorActionPreference = "Stop"
+
+$configDir = Join-Path $PSScriptRoot "..\printer_data\config"
+$required = @(
+    "printer.cfg",
+    "toolhead_btt_ebbcan_G0B1_v1.2.cfg",
+    "moonraker.conf"
+)
+
+foreach ($file in $required) {
+    $path = Join-Path $configDir $file
+    if (-not (Test-Path -LiteralPath $path)) {
+        throw "Missing required config file: $file"
+    }
+}
+
+$allConfigs = Get-ChildItem -LiteralPath $configDir -File -Include *.cfg,*.conf
+$duplicateSections = @()
+foreach ($file in $allConfigs) {
+    $sections = @{}
+    Select-String -LiteralPath $file.FullName -Pattern '^\s*\[([^\]]+)\]\s*$' | ForEach-Object {
+        $section = $_.Matches[0].Groups[1].Value.Trim()
+        if ($sections.ContainsKey($section)) {
+            $duplicateSections += "{0}: duplicate [{1}]" -f $file.Name, $section
+        } else {
+            $sections[$section] = $true
+        }
+    }
+}
+
+if ($duplicateSections.Count -gt 0) {
+    $duplicateSections | ForEach-Object { Write-Warning $_ }
+    throw "Duplicate Klipper sections found inside one or more files."
+}
+
+Write-Host "Config sanity check passed."

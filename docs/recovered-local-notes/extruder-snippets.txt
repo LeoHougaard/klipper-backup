@@ -1,0 +1,65 @@
+[extruder]
+# Pins for EBB36 v1.2
+step_pin: EBBCan:PD0
+dir_pin: !EBBCan:PD1    # Add ! if the motor spins the wrong way
+enable_pin: !EBBCan:PD2
+heater_pin: EBBCan:PB13 # Pin for the Heater on EBB36 v1.2
+
+# Thermistor
+sensor_type: Generic 3950
+sensor_pin: EBBCan:PA3  # TH0 pin on EBB36 v1.2
+
+# Performance Settings
+rotation_distance: 22.23
+gear_ratio: 50:10
+microsteps: 32
+full_steps_per_rotation: 200
+nozzle_diameter: 0.400
+filament_diameter: 1.750
+
+# PID and Temp
+control: pid
+pid_Kp: 28.182
+pid_Ki: 1.978
+pid_Kd: 100.397
+min_temp: 0
+max_temp: 300           # 550 is dangerously high for a standard setup
+min_extrude_temp: 170
+
+[tmc2209 extruder]
+uart_pin: EBBCan:PA15
+run_current: 0.650      # Adjust based on your motor specs
+stealthchop_threshold: 999999
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[mcu EBBCan]
+canbus_uuid: 123456abcdef # Put your actual UUID here only once
+
+[extruder]
+step_pin: EBBCan:PD0
+# ... rest of your extruder settings ...
+sensor_pin: EBBCan:PA3
