@@ -36,6 +36,12 @@ configuration that should be backed up to GitHub.
   material, not necessarily active printer config.
 - Do not store passwords, API keys, Moonraker auth tokens, Wi-Fi credentials, or
   SSH private keys in this repo.
+- Continuous improvement rule: if a thread hits an issue, missing fact, awkward
+  workflow, broken script, or repeated workaround that slows down printer work,
+  either fix the underlying problem before finishing or add a clear note to this
+  file so future threads inherit the lesson. If that issue has been resolved,
+  remove or update the stale note instead of letting old workaround guidance
+  linger.
 
 ## Normal Workflow
 
