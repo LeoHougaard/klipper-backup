@@ -33,13 +33,13 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\sync-to-github.ps1
 Preview what differs between this checkout and the printer:
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\diff-printer.ps1 -PrinterHost voron.local
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\diff-printer.ps1
 ```
 
 Deploy tracked config files:
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\deploy-to-printer.ps1 -PrinterHost voron.local
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\deploy-to-printer.ps1
 ```
 
 The deploy script creates a timestamped backup on the printer before copying.
@@ -48,7 +48,6 @@ The deploy script creates a timestamped backup on the printer before copying.
 
 Fill these in when convenient:
 
-- SSH key login from this Windows machine
 - Whether Klipper-Backup exists as a cron job or standalone script outside
   Moonraker/systemd
 
@@ -56,7 +55,11 @@ Known details:
 
 - Printer IP: `10.1.39.216`
 - Hostname reported by Klipper: `voron`
-- SSH user inferred from Klipper paths: `biqu`
+- SSH user: `biqu`
+- SSH key: `C:\Users\Leo\.ssh\voron_biqu_ed25519`
+- SSH host fingerprint: `SHA256:YCuxxgKFH6kMWKsyg33cyjeuXornwIheRLbnHsZDKVY`
+- Verified SSH command:
+  `ssh -i C:\Users\Leo\.ssh\voron_biqu_ed25519 biqu@10.1.39.216 hostname`
 - Moonraker auth: `login_required=false`
 - Moonraker trusted client: `true`
 - Klipper config path: `/home/biqu/printer_data/config/printer.cfg`

@@ -10,15 +10,16 @@ configuration that should be backed up to GitHub.
 - Controller: BTT SKR Pico V1.0 / RP2040
 - Host: BTT Pi / CB1 class host
 - Hostname/IP: `voron` / `10.1.39.216`
-- Likely SSH user: `biqu`
+- SSH user: `biqu`
+- SSH key: `C:\Users\Leo\.ssh\voron_biqu_ed25519`
+- SSH host fingerprint: `SHA256:YCuxxgKFH6kMWKsyg33cyjeuXornwIheRLbnHsZDKVY`
 - Toolhead: BTT EBB36 CAN v1.2, STM32G0B1
 - Main config: `printer_data/config/printer.cfg`
 - Toolhead config: `printer_data/config/toolhead_btt_ebbcan_G0B1_v1.2.cfg`
 - Remote config path: `/home/biqu/printer_data/config/printer.cfg`
 - Moonraker: reachable at `http://10.1.39.216:7125`
 - Moonraker auth: `login_required=false`, local client is trusted
-- SSH status from this Windows machine: host is reachable, but key login is not
-  configured for `biqu` or `pi` yet.
+- SSH status from this Windows machine: key login works for `biqu`.
 - Klipper-Backup automatic service: not listed in Moonraker `available_services`
   or update-manager status as of 2026-06-02.
 
@@ -55,6 +56,7 @@ Create a local `.env` file if you want agents to use a default host:
 PRINTER_HOST=10.1.39.216
 PRINTER_USER=biqu
 PRINTER_CONFIG_DIR=~/printer_data/config
+PRINTER_SSH_KEY=C:\Users\Leo\.ssh\voron_biqu_ed25519
 ```
 
 `.env` is ignored by git.
