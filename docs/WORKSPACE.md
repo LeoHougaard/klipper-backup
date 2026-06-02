@@ -48,8 +48,17 @@ The deploy script creates a timestamped backup on the printer before copying.
 
 Fill these in when convenient:
 
-- Printer hostname or IP
-- SSH username
-- Whether SSH key login is already configured
-- Whether Moonraker authorization is enabled
-- Whether Klipper-Backup is still running automatically on the printer
+- SSH key login from this Windows machine
+- Whether Klipper-Backup exists as a cron job or standalone script outside
+  Moonraker/systemd
+
+Known details:
+
+- Printer IP: `10.1.39.216`
+- Hostname reported by Klipper: `voron`
+- SSH user inferred from Klipper paths: `biqu`
+- Moonraker auth: `login_required=false`
+- Moonraker trusted client: `true`
+- Klipper config path: `/home/biqu/printer_data/config/printer.cfg`
+- Service list includes `klipper-mcu`, `crowsnest`, `KlipperScreen`,
+  `klipper`, `sonar`, and `moonraker`; `crowsnest` is currently failed.

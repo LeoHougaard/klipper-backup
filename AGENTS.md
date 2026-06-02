@@ -9,9 +9,18 @@ configuration that should be backed up to GitHub.
 - Model: Voron V0.2r1, heavily customized over time
 - Controller: BTT SKR Pico V1.0 / RP2040
 - Host: BTT Pi / CB1 class host
+- Hostname/IP: `voron` / `10.1.39.216`
+- Likely SSH user: `biqu`
 - Toolhead: BTT EBB36 CAN v1.2, STM32G0B1
 - Main config: `printer_data/config/printer.cfg`
 - Toolhead config: `printer_data/config/toolhead_btt_ebbcan_G0B1_v1.2.cfg`
+- Remote config path: `/home/biqu/printer_data/config/printer.cfg`
+- Moonraker: reachable at `http://10.1.39.216:7125`
+- Moonraker auth: `login_required=false`, local client is trusted
+- SSH status from this Windows machine: host is reachable, but key login is not
+  configured for `biqu` or `pi` yet.
+- Klipper-Backup automatic service: not listed in Moonraker `available_services`
+  or update-manager status as of 2026-06-02.
 
 ## Ground Rules
 
@@ -43,7 +52,7 @@ configuration that should be backed up to GitHub.
 Create a local `.env` file if you want agents to use a default host:
 
 ```powershell
-PRINTER_HOST=voron.local
+PRINTER_HOST=10.1.39.216
 PRINTER_USER=biqu
 PRINTER_CONFIG_DIR=~/printer_data/config
 ```
