@@ -42,6 +42,8 @@ configuration that should be backed up to GitHub.
   file so future threads inherit the lesson. If that issue has been resolved,
   remove or update the stale note instead of letting old workaround guidance
   linger.
+- No technical prompt debt: If there is any changes to my ways ask to confirm 
+  that the change is one that I want and then update AGENTS.md
 
 ## Normal Workflow
 
