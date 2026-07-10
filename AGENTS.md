@@ -26,6 +26,11 @@ configuration that should be backed up to GitHub.
 ## Ground Rules
 
 - Start every session with `git status --short --branch`.
+- On this Windows workspace, the first sandboxed shell command may fail with
+  `windows sandbox: spawn setup refresh`. This is a local tool-runner issue, not
+  a Git or repo problem. If it happens on a required read-only command such as
+  `git status --short --branch`, rerun the same command with escalation and a
+  short justification instead of treating it as printer/config state.
 - Pull from GitHub before making changes:
   `powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\sync-from-github.ps1`.
 - Do not edit generated/runtime files unless the user asks.
