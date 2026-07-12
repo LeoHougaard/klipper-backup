@@ -64,6 +64,9 @@ configuration that should be backed up to GitHub.
 - `deploy-to-printer.ps1 -RestartKlipper` restarts through Moonraker rather
   than `sudo`; SSH key login has no passwordless sudo. Native SSH/SCP failures
   must terminate the deployment rather than being reported as success.
+- Deploying `klipper_extras/*.py` requires Moonraker's full Klipper service
+  restart. A normal `/printer/restart` reloads config only and leaves updated
+  Python modules cached in the running process.
 - For motion, heater, homing, probe, CAN, or MCU changes, explain the risk and
   ask the user to confirm the printer is physically safe to test.
 - Preserve recovered notes in `docs/recovered-local-notes/`; they are reference

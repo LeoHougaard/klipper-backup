@@ -46,6 +46,8 @@ the include for `y_axis_z_offset.cfg` must remain after `[bed_mesh]` in
 configuration and repository-maintained Klipper extras before optionally
 restarting Klipper through Moonraker. The script treats failed SSH, SCP, and
 restart operations as deployment failures instead of continuing silently.
+Deployments containing Python extras use a full Klipper service restart because
+Klipper's normal configuration restart does not reload imported Python code.
 
 `klipper-agent.gitignore` is configured as the Klipper checkout's local
 `core.excludesFile`. This keeps the repository-managed extra from making

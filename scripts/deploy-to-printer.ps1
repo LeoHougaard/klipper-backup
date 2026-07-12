@@ -82,9 +82,15 @@ if (Test-Path -LiteralPath $localKlipperExtras) {
 }
 
 if ($RestartKlipper) {
-    $restartUri = "http://${PrinterHost}:$MoonrakerPort/printer/restart"
+    if (Test-Path -LiteralPath $localKlipperExtras) {
+        # A config restart does not reload imported Python modules. Restart the
+        # Klipper service whenever repository-managed extras are deployed.
+        $restartUri = "http://${PrinterHost}:$MoonrakerPort/machine/services/restart?service=klipper"
+    } else {
+        $restartUri = "http://${PrinterHost}:$MoonrakerPort/printer/restart"
+    }
     Invoke-RestMethod -Method Post -Uri $restartUri -TimeoutSec 15 | Out-Null
-    Write-Host "Deployed config and requested a Klipper restart through Moonraker."
+    Write-Host "Deployed config and requested the appropriate Klipper restart through Moonraker."
 } else {
     Write-Host "Deployed config. Restart Klipper from Mainsail/Moonraker when ready."
 }
