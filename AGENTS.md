@@ -58,6 +58,9 @@ configuration that should be backed up to GitHub.
   Klipper extras. It backs up and installs `klipper_extras/*.py` as well as the
   printer config; copying only `printer_data/config/` will leave the printer
   unable to load `[y_axis_z_offset]` after a fresh Klipper installation.
+- `deploy-to-printer.ps1 -RestartKlipper` restarts through Moonraker rather
+  than `sudo`; SSH key login has no passwordless sudo. Native SSH/SCP failures
+  must terminate the deployment rather than being reported as success.
 - For motion, heater, homing, probe, CAN, or MCU changes, explain the risk and
   ask the user to confirm the printer is physically safe to test.
 - Preserve recovered notes in `docs/recovered-local-notes/`; they are reference
@@ -95,6 +98,7 @@ PRINTER_CONFIG_DIR=~/printer_data/config
 PRINTER_SSH_KEY=C:\Users\Leo\.ssh\voron_biqu_ed25519
 PRINTER_KLIPPER_DIR=~/klipper
 PRINTER_KLIPPER_EXTRAS_DIR=~/klipper/klippy/extras
+MOONRAKER_PORT=7125
 ```
 
 `.env` is ignored by git.

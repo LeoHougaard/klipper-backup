@@ -37,7 +37,8 @@ The extra wraps Klipper's existing `bed_mesh` move transform. For that reason,
 the include for `y_axis_z_offset.cfg` must remain after `[bed_mesh]` in
 `printer.cfg`. The normal deployment script backs up and installs both printer
 configuration and repository-maintained Klipper extras before optionally
-restarting Klipper.
+restarting Klipper through Moonraker. The script treats failed SSH, SCP, and
+restart operations as deployment failures instead of continuing silently.
 
 `klipper-agent.gitignore` is configured as the Klipper checkout's local
 `core.excludesFile`. This keeps the repository-managed extra from making
