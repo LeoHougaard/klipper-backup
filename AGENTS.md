@@ -38,6 +38,9 @@ configuration that should be backed up to GitHub.
   `printer_data/config/y_axis_z_offset.cfg`. Mainsail exposes exactly
   `FRONT_Z_OFFSET` and `REAR_Z_OFFSET`; values are live, persistent, and
   linearly interpolated over Y10..110. See `docs/y-axis-z-offset.md`.
+- `CALIBRATE_BED_TILT` is the guided paper-test workflow. It homes, creates a
+  full mesh, then uses Mainsail's native manual-probe UI at front and rear;
+  accepted contacts update both offsets while preserving their average.
 - `printer_data/config/klipper-agent.gitignore` is installed as Klipper's local
   Git `core.excludesFile`, preventing the repository-managed extra from making
   the Klipper checkout appear dirty to Moonraker's update manager.

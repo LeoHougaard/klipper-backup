@@ -7,6 +7,8 @@
 import logging
 import math
 
+from . import manual_probe
+
 
 class YAxisZOffset:
     def __init__(self, config):
@@ -33,6 +35,16 @@ class YAxisZOffset:
         self.rear_variable = config.get(
             "rear_variable", "y_axis_z_offset_rear"
         )
+        self.calibrate_x = config.getfloat("calibrate_x", 60.0)
+        self.horizontal_move_z = config.getfloat(
+            "horizontal_move_z", 5.0, above=0.0
+        )
+        self.calibrate_speed = config.getfloat(
+            "calibrate_speed", 50.0, above=0.0
+        )
+        self.calibration_results = []
+        self.calibration_index = None
+        self.calibration_gcmd = None
 
         # This section is intentionally included after [bed_mesh]. Wrapping the
         # existing transform preserves normal mesh compensation underneath this
@@ -47,11 +59,17 @@ class YAxisZOffset:
             self.cmd_SET_Y_AXIS_Z_OFFSET,
             desc=self.cmd_SET_Y_AXIS_Z_OFFSET_help,
         )
+        self.gcode.register_command(
+            "Y_AXIS_Z_OFFSET_CALIBRATE",
+            self.cmd_Y_AXIS_Z_OFFSET_CALIBRATE,
+            desc=self.cmd_Y_AXIS_Z_OFFSET_CALIBRATE_help,
+        )
         self.printer.register_event_handler(
             "klippy:ready", self._handle_ready
         )
 
     def _handle_ready(self):
+        self.toolhead = self.printer.lookup_object("toolhead")
         save_variables = self.printer.lookup_object("save_variables", None)
         if save_variables is not None:
             variables = save_variables.get_status(None).get("variables", {})
@@ -62,6 +80,84 @@ class YAxisZOffset:
                 variables, self.rear_variable, self.rear_offset
             )
         self.gcode_move.reset_last_position()
+
+    def _manual_move(self, position):
+        self.toolhead.manual_move(position, self.calibrate_speed)
+
+    def _move_to_calibration_point(self, index):
+        y_pos = self.y_min if index == 0 else self.y_max
+        point_name = "front" if index == 0 else "rear"
+        self._manual_move([None, None, self.horizontal_move_z])
+        self._manual_move([self.calibrate_x, y_pos, None])
+        self.gcode.respond_info(
+            "%s paper test at X%.1f Y%.1f. Use Mainsail's Z controls, "
+            "then press ACCEPT."
+            % (point_name.capitalize(), self.calibrate_x, y_pos)
+        )
+        manual_probe.ManualProbeHelper(
+            self.printer,
+            self.calibration_gcmd,
+            self._manual_probe_callback,
+        )
+
+    def _manual_probe_callback(self, mpresult):
+        if mpresult is None:
+            self._manual_move([None, None, self.horizontal_move_z])
+            self.gcode.respond_info("Front/rear Z calibration aborted.")
+            self.calibration_index = None
+            self.calibration_results = []
+            return
+
+        # Convert the physical paper-contact position back through both this
+        # transform and bed_mesh. The resulting logical Z is the residual that
+        # the front/rear offsets need to equalize.
+        logical_contact_z = self.get_position()[2]
+        self.calibration_results.append(logical_contact_z)
+        self._manual_move([None, None, self.horizontal_move_z])
+
+        if self.calibration_index == 0:
+            self.calibration_index = 1
+            self._move_to_calibration_point(1)
+            return
+
+        front, rear = self._calculate_calibrated_offsets(
+            self.calibration_results[0], self.calibration_results[1]
+        )
+        if (abs(front) > self.max_abs_offset
+                or abs(rear) > self.max_abs_offset):
+            self.gcode.respond_info(
+                "Calibration result exceeds the %.3f mm safety limit; "
+                "offsets were not changed."
+                % (self.max_abs_offset,)
+            )
+            self.calibration_index = None
+            self.calibration_results = []
+            return
+
+        self.front_offset = front
+        self.rear_offset = rear
+        self.gcode_move.reset_last_position()
+        self.gcode.run_script_from_command(
+            "SAVE_VARIABLE VARIABLE=%s VALUE=%.6f\n"
+            "SAVE_VARIABLE VARIABLE=%s VALUE=%.6f"
+            % (self.front_variable, front, self.rear_variable, rear)
+        )
+        center_y = (self.y_min + self.y_max) / 2.0
+        self._manual_move([self.calibrate_x, center_y, None])
+        self.gcode.respond_info(
+            "Front/rear Z calibration complete: front %.4f mm, "
+            "rear %.4f mm. Values were saved."
+            % (front, rear)
+        )
+        self.calibration_index = None
+        self.calibration_results = []
+
+    def _calculate_calibrated_offsets(self, front_contact, rear_contact):
+        contact_average = (front_contact + rear_contact) / 2.0
+        return (
+            self.front_offset + front_contact - contact_average,
+            self.rear_offset + rear_contact - contact_average,
+        )
 
     def _load_saved_value(self, variables, name, fallback):
         if name not in variables:
@@ -103,7 +199,38 @@ class YAxisZOffset:
         "Set live front/rear Y-dependent Z offsets"
     )
 
+    cmd_Y_AXIS_Z_OFFSET_CALIBRATE_help = (
+        "Calibrate front/rear Z offsets with two manual paper tests"
+    )
+
+    def cmd_Y_AXIS_Z_OFFSET_CALIBRATE(self, gcmd):
+        if self.calibration_index is not None:
+            raise gcmd.error("Front/rear Z calibration is already active")
+        homed_axes = self.toolhead.get_status(None).get("homed_axes", "")
+        if not all(axis in homed_axes for axis in "xyz"):
+            raise gcmd.error("Home XYZ before front/rear Z calibration")
+        if getattr(self.next_transform, "z_mesh", None) is None:
+            raise gcmd.error(
+                "Generate or load a bed mesh before front/rear Z calibration"
+            )
+        print_stats = self.printer.lookup_object("print_stats", None)
+        if print_stats is not None:
+            state = print_stats.get_status(None).get("state", "")
+            if state in ("printing", "paused"):
+                raise gcmd.error(
+                    "Front/rear Z calibration cannot run during a print"
+                )
+        manual_probe.verify_no_manual_probe(self.printer)
+        self.calibration_results = []
+        self.calibration_index = 0
+        self.calibration_gcmd = gcmd
+        self._move_to_calibration_point(0)
+
     def cmd_SET_Y_AXIS_Z_OFFSET(self, gcmd):
+        if self.calibration_index is not None:
+            raise gcmd.error(
+                "Finish or abort front/rear Z calibration before changing offsets"
+            )
         front = gcmd.get_float("FRONT", None)
         rear = gcmd.get_float("REAR", None)
         if front is None and rear is None:
@@ -136,6 +263,7 @@ class YAxisZOffset:
             "rear_offset": self.rear_offset,
             "y_min": self.y_min,
             "y_max": self.y_max,
+            "calibration_point": self.calibration_index,
         }
 
 

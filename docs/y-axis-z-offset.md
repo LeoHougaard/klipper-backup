@@ -7,10 +7,17 @@ unreliable probe safe and cannot correct random or missed ALPS triggers.
 
 ## Mainsail controls
 
-Only two macros are exposed on the Mainsail dashboard:
+Two direct offset macros are exposed on the Mainsail dashboard:
 
 - `FRONT_Z_OFFSET OFFSET=<mm>` controls the correction at `Y=10`.
 - `REAR_Z_OFFSET OFFSET=<mm>` controls the correction at `Y=110`.
+
+`CALIBRATE_BED_TILT` provides the guided paper-test workflow for setting those
+two values. It homes the printer, generates a full bed mesh, then opens
+Mainsail's normal manual-probe popup at the front and rear. At each position,
+use the popup's Z controls until the paper drag is correct and press `ACCEPT`.
+The wizard preserves the average Z offset, changes only the front-to-rear
+tilt, and saves both resulting values automatically.
 
 Positive values raise the nozzle and increase the gap. Negative values lower
 the nozzle and reduce the gap. Klipper interpolates linearly between the two
@@ -50,3 +57,7 @@ Changing either offset changes commanded Z position as a function of Y. Treat
 deployment and first testing as a motion/probe change: clear the bed, keep a
 hand near power, begin with the documented small values, and verify motion and
 first-layer direction before making larger corrections.
+
+Run guided calibration with a clean nozzle and an empty bed. The macro performs
+homing and a full automatic mesh before moving to the manual paper-contact
+positions. `ABORT` cancels without changing either saved offset.
