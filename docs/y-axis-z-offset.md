@@ -12,12 +12,17 @@ Two direct offset macros are exposed on the Mainsail dashboard:
 - `FRONT_Z_OFFSET OFFSET=<mm>` controls the correction at `Y=10`.
 - `REAR_Z_OFFSET OFFSET=<mm>` controls the correction at `Y=110`.
 
-`CALIBRATE_BED_TILT` provides the guided paper-test workflow for setting those
-two values. It homes the printer, generates a full bed mesh, then opens
+`CALIBRATE_BED_TILT` is the primary workflow for setting those two values. It
+homes the printer, generates a full bed mesh, then opens
 Mainsail's normal manual-probe popup at the front and rear. At each position,
 use the popup's Z controls until the paper drag is correct and press `ACCEPT`.
 The wizard preserves the average Z offset, changes only the front-to-rear
 tilt, and saves both resulting values automatically.
+
+After that calibration, use Mainsail's ordinary global Z-offset control only
+for the small final whole-bed adjustment normally made while watching a first
+layer. The direct `FRONT_Z_OFFSET` and `REAR_Z_OFFSET` macros remain available
+for advanced correction, but they are not the normal calibration path.
 
 Positive values raise the nozzle and increase the gap. Negative values lower
 the nozzle and reduce the gap. Klipper interpolates linearly between the two
@@ -25,8 +30,9 @@ values and clamps the correction to the endpoint value outside `Y=10..110`.
 
 The initial values are front `+0.030 mm` and rear `-0.030 mm`, giving a
 `0.060 mm` front-to-rear difference while leaving the centre at zero. Tune in
-small increments, normally no more than `0.010 mm` at a time. Each endpoint is
-limited to `-0.20..+0.20 mm`.
+small increments, normally no more than `0.010 mm` at a time. Guided and direct
+endpoint values are accepted over `-1.0..+1.0 mm` so the paper calibration can
+represent substantial cantilever-bed flex.
 
 Selecting a macro without supplying `OFFSET` reports its current value. A
 supplied value takes effect on subsequent G-code moves immediately, including

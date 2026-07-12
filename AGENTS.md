@@ -41,6 +41,10 @@ configuration that should be backed up to GitHub.
 - `CALIBRATE_BED_TILT` is the guided paper-test workflow. It homes, creates a
   full mesh, then uses Mainsail's native manual-probe UI at front and rear;
   accepted contacts update both offsets while preserving their average.
+- Treat `CALIBRATE_BED_TILT` as the primary front/rear setup. Its endpoints
+  allow `-1.0..+1.0 mm`. Use Mainsail's ordinary global Z offset only for the
+  small final whole-bed adjustment during a first layer; the direct endpoint
+  macros are an advanced/manual fallback.
 - `printer_data/config/klipper-agent.gitignore` is installed as Klipper's local
   Git `core.excludesFile`, preventing the repository-managed extra from making
   the Klipper checkout appear dirty to Moonraker's update manager.

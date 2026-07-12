@@ -17,7 +17,7 @@ class YAxisZOffset:
         self.y_min = config.getfloat("y_min")
         self.y_max = config.getfloat("y_max", above=self.y_min)
         self.max_abs_offset = config.getfloat(
-            "max_abs_offset", 0.20, above=0.0
+            "max_abs_offset", 1.0, above=0.0
         )
         self.front_offset = config.getfloat(
             "front_offset", 0.0,
