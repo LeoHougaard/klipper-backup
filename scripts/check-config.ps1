@@ -35,3 +35,15 @@ if ($duplicateSections.Count -gt 0) {
 }
 
 Write-Host "Config sanity check passed."
+
+$klipperExtrasDir = Join-Path $PSScriptRoot "..\klipper_extras"
+if (Test-Path -LiteralPath $klipperExtrasDir) {
+    Get-ChildItem -LiteralPath $klipperExtrasDir -File -Filter *.py | ForEach-Object {
+        Get-Content -Raw -LiteralPath $_.FullName |
+            python -c "import sys; compile(sys.stdin.read(), sys.argv[1], 'exec')" $_.FullName
+        if ($LASTEXITCODE -ne 0) {
+            throw "Python syntax check failed: $($_.FullName)"
+        }
+    }
+    Write-Host "Klipper extra syntax check passed."
+}

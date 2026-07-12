@@ -8,3 +8,5 @@ printer-[0-9]*_[0-9]*.cfg
 *.csv
 *.zip
 ShakeTune_results
+variables.cfg
+__pycache__/

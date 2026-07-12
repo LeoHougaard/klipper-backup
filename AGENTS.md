@@ -33,6 +33,14 @@ configuration that should be backed up to GitHub.
   `timelapse.cfg` paths are symlinks into Moonraker-managed vendor checkouts,
   not user-owned config files. `diff-printer.ps1` reports them as live-only on
   Windows; this is expected and does not mean the active user config is newer.
+- Front/rear first-layer compensation is implemented by the repository-owned
+  `klipper_extras/y_axis_z_offset.py` and
+  `printer_data/config/y_axis_z_offset.cfg`. Mainsail exposes exactly
+  `FRONT_Z_OFFSET` and `REAR_Z_OFFSET`; values are live, persistent, and
+  linearly interpolated over Y10..110. See `docs/y-axis-z-offset.md`.
+- `printer_data/config/klipper-agent.gitignore` is installed as Klipper's local
+  Git `core.excludesFile`, preventing the repository-managed extra from making
+  the Klipper checkout appear dirty to Moonraker's update manager.
 
 ## Ground Rules
 
@@ -46,6 +54,10 @@ configuration that should be backed up to GitHub.
   `powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\sync-from-github.ps1`.
 - Do not edit generated/runtime files unless the user asks.
 - Before deploying to the printer, commit or stash local changes.
+- Use `scripts/deploy-to-printer.ps1` for deployments that include custom
+  Klipper extras. It backs up and installs `klipper_extras/*.py` as well as the
+  printer config; copying only `printer_data/config/` will leave the printer
+  unable to load `[y_axis_z_offset]` after a fresh Klipper installation.
 - For motion, heater, homing, probe, CAN, or MCU changes, explain the risk and
   ask the user to confirm the printer is physically safe to test.
 - Preserve recovered notes in `docs/recovered-local-notes/`; they are reference
@@ -81,6 +93,8 @@ PRINTER_HOST=10.1.39.216
 PRINTER_USER=biqu
 PRINTER_CONFIG_DIR=~/printer_data/config
 PRINTER_SSH_KEY=C:\Users\Leo\.ssh\voron_biqu_ed25519
+PRINTER_KLIPPER_DIR=~/klipper
+PRINTER_KLIPPER_EXTRAS_DIR=~/klipper/klippy/extras
 ```
 
 `.env` is ignored by git.
