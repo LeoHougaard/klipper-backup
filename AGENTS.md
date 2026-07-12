@@ -13,9 +13,14 @@ configuration that should be backed up to GitHub.
 - SSH user: `biqu`
 - SSH key: `C:\Users\Leo\.ssh\voron_biqu_ed25519`
 - SSH host fingerprint: `SHA256:YCuxxgKFH6kMWKsyg33cyjeuXornwIheRLbnHsZDKVY`
-- Toolhead: BTT EBB36 CAN v1.2, STM32G0B1
-- Pending toolhead upgrade: Mellow HeatCore 4 UHF Lite ALPS, 60 W heater,
-  direct PT1000 on EBB36 TH0, ALPS EN on PB9 and OUT on PB8
+- Toolhead: BTT EBB36 CAN v1.2, STM32G0B1, with installed Mellow HeatCore 4
+  UHF Lite ALPS, 60 W heater, direct PT1000 on EBB36 TH0, ALPS EN on PB9
+  and OUT on PB8
+- ALPS firmware/threshold: v2.0.0 / 20000
+- ALPS load-path warning: PTFE, extruder, shroud, fan screws, and wire bundles
+  can brace the moving HeatCore section and suppress pressure detection even
+  when the electronics are healthy. Recheck manual trigger and probe accuracy
+  after disturbing any of those parts.
 - Main config: `printer_data/config/printer.cfg`
 - Toolhead config: `printer_data/config/toolhead_btt_ebbcan_G0B1_v1.2.cfg`
 - Remote config path: `/home/biqu/printer_data/config/printer.cfg`

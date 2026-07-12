@@ -41,6 +41,13 @@ probing unsafe or inconsistent.
 6. Provide strain relief without preloading the ALPS element, and verify full
    X/Y travel cannot pull the heater, PT1000, or ALPS wiring.
 
+The PTFE guide, extruder, fan ducts, fan screws, and wire bundles must not form
+a rigid path between the moving HeatCore/ALPS section and the fixed toolhead.
+Verify pressure response after each of those parts is installed. On this
+printer, an over-constrained assembly reduced a strong pressure response to
+less than half the configured trigger threshold even though the electronics
+and trigger wiring were healthy.
+
 Mellow documents several ALPS wiring modes and specifically says that the
 yellow wire goes to the middle servo signal when using a BLTouch port. BTT's
 official EBB36 v1.2 sample assigns `PB9` as BLTouch control and `PB8` as its
@@ -112,8 +119,8 @@ These steps require the user to confirm the printer is physically safe first.
    ```
 
 8. Recheck the saved PID values, run a controlled heat test, then calibrate the
-   first layer/Z offset. The config intentionally retains a 300 C safety ceiling
-   during commissioning even though Mellow rates the hotend itself higher.
+   first layer/Z offset. The config uses Mellow's 400 C HeatCore/PT1000 rating
+   as its safety ceiling and must not be raised above that rating.
 9. Re-run input shaping after the mechanical toolhead change.
 
 ## Primary references
