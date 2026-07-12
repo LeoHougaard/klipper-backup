@@ -123,6 +123,19 @@ These steps require the user to confirm the printer is physically safe first.
    as its safety ceiling and must not be raised above that rating.
 9. Re-run input shaping after the mechanical toolhead change.
 
+## Completed commissioning values (2026-07-11)
+
+- Extruder PID at 250 C: `Kp 38.523`, `Ki 11.673`, `Kd 31.782`
+- Bed PID at 60 C: `Kp 56.449`, `Ki 2.595`, `Kd 306.941`
+- Accelerometer idle noise with the heatsink fan off: X `14.766`, Y `17.593`,
+  Z `27.531`
+- Input shaper: X `mzv` at `62.2 Hz`; Y `3hump_ei` at `86.6 Hz`
+
+The much higher Y-axis noise observed while the heatsink fan was running was
+fan vibration, not an accelerometer fault. Measure idle noise with fans off,
+but leave the printer in its completed mechanical configuration for resonance
+calibration.
+
 ## Primary references
 
 - [Mellow HeatCore 4 product page](https://www.3dmellow.com/products/heatcore-4-uhf-alps-hotend)
