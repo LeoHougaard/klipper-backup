@@ -67,6 +67,10 @@ configuration that should be backed up to GitHub.
 - Deploying `klipper_extras/*.py` requires Moonraker's full Klipper service
   restart. A normal `/printer/restart` reloads config only and leaves updated
   Python modules cached in the running process.
+- In custom Klipper extras, do not call time-sensitive `get_status()` methods
+  such as `toolhead.get_status()` with `None`. Command handlers must obtain
+  `eventtime = printer.get_reactor().monotonic()` and pass that value; `None`
+  caused a Klipper shutdown during the first bed-tilt calibration attempt.
 - For motion, heater, homing, probe, CAN, or MCU changes, explain the risk and
   ask the user to confirm the printer is physically safe to test.
 - Preserve recovered notes in `docs/recovered-local-notes/`; they are reference

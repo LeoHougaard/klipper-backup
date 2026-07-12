@@ -72,7 +72,10 @@ class YAxisZOffset:
         self.toolhead = self.printer.lookup_object("toolhead")
         save_variables = self.printer.lookup_object("save_variables", None)
         if save_variables is not None:
-            variables = save_variables.get_status(None).get("variables", {})
+            eventtime = self.printer.get_reactor().monotonic()
+            variables = save_variables.get_status(eventtime).get(
+                "variables", {}
+            )
             self.front_offset = self._load_saved_value(
                 variables, self.front_variable, self.front_offset
             )
@@ -206,7 +209,10 @@ class YAxisZOffset:
     def cmd_Y_AXIS_Z_OFFSET_CALIBRATE(self, gcmd):
         if self.calibration_index is not None:
             raise gcmd.error("Front/rear Z calibration is already active")
-        homed_axes = self.toolhead.get_status(None).get("homed_axes", "")
+        eventtime = self.printer.get_reactor().monotonic()
+        homed_axes = self.toolhead.get_status(eventtime).get(
+            "homed_axes", ""
+        )
         if not all(axis in homed_axes for axis in "xyz"):
             raise gcmd.error("Home XYZ before front/rear Z calibration")
         if getattr(self.next_transform, "z_mesh", None) is None:
@@ -215,7 +221,7 @@ class YAxisZOffset:
             )
         print_stats = self.printer.lookup_object("print_stats", None)
         if print_stats is not None:
-            state = print_stats.get_status(None).get("state", "")
+            state = print_stats.get_status(eventtime).get("state", "")
             if state in ("printing", "paused"):
                 raise gcmd.error(
                     "Front/rear Z calibration cannot run during a print"
