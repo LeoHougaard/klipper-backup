@@ -45,5 +45,19 @@ if (Test-Path -LiteralPath $klipperExtrasDir) {
             throw "Python syntax check failed: $($_.FullName)"
         }
     }
+    $unsafeStatusCalls = Get-ChildItem -LiteralPath $klipperExtrasDir -File -Filter *.py |
+        Select-String -Pattern '\.get_status\(None\)'
+    if ($unsafeStatusCalls) {
+        $unsafeStatusCalls | ForEach-Object { Write-Warning $_ }
+        throw "Klipper extras must pass a reactor timestamp to get_status()."
+    }
     Write-Host "Klipper extra syntax check passed."
+}
+
+$yOffsetTests = Join-Path $PSScriptRoot "..\tests\test_y_axis_z_offset.py"
+if (Test-Path -LiteralPath $yOffsetTests) {
+    python $yOffsetTests
+    if ($LASTEXITCODE -ne 0) {
+        throw "Y-axis Z-offset tests failed."
+    }
 }

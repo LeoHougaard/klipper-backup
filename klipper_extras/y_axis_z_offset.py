@@ -1,8 +1,8 @@
-# Smooth, runtime-adjustable Z compensation between the front and rear of a bed.
+# Smooth probe-result compensation between the front and rear of a bed.
 #
-# This module wraps the existing G-Code move transform (normally bed_mesh). It
-# intentionally affects commanded print moves, not probe results, so changes can
-# be tuned during a first layer without regenerating the mesh.
+# Correcting probe results makes bed meshes and screw-tilt measurements reflect
+# the manually calibrated nozzle-to-bed relationship. A fresh mesh is required
+# after changing either endpoint.
 
 import logging
 import math
@@ -45,13 +45,11 @@ class YAxisZOffset:
         self.calibration_results = []
         self.calibration_index = None
         self.calibration_gcmd = None
+        self.calibration_probe_count = 5
 
-        # This section is intentionally included after [bed_mesh]. Wrapping the
-        # existing transform preserves normal mesh compensation underneath this
-        # small, user-tunable front/rear correction.
-        self.gcode_move = self.printer.load_object(config, "gcode_move")
-        self.next_transform = self.gcode_move.set_move_transform(
-            self, force=True
+        self.bed_mesh = self.printer.load_object(config, "bed_mesh")
+        self.printer.register_event_handler(
+            "probe:update_results", self._update_probe_results
         )
 
         self.gcode.register_command(
@@ -82,7 +80,18 @@ class YAxisZOffset:
             self.rear_offset = self._load_saved_value(
                 variables, self.rear_variable, self.rear_offset
             )
-        self.gcode_move.reset_last_position()
+
+    def _update_probe_results(self, poslist):
+        for index, result in enumerate(poslist):
+            correction = self._offset_at_y(result.test_y)
+            poslist[index] = manual_probe.ProbeResult(
+                result.bed_x,
+                result.bed_y,
+                result.bed_z + correction,
+                result.test_x,
+                result.test_y,
+                result.test_z,
+            )
 
     def _manual_move(self, position):
         self.toolhead.manual_move(position, self.calibrate_speed)
@@ -111,10 +120,10 @@ class YAxisZOffset:
             self.calibration_results = []
             return
 
-        # Convert the physical paper-contact position back through both this
-        # transform and bed_mesh. The resulting logical Z is the residual that
-        # the front/rear offsets need to equalize.
-        logical_contact_z = self.get_position()[2]
+        # Convert the physical paper-contact position back through the active,
+        # compensated bed mesh. The resulting logical Z is the remaining
+        # front/rear error that the endpoint corrections need to equalize.
+        logical_contact_z = self.bed_mesh.get_position()[2]
         self.calibration_results.append(logical_contact_z)
         self._manual_move([None, None, self.horizontal_move_z])
 
@@ -139,21 +148,34 @@ class YAxisZOffset:
 
         self.front_offset = front
         self.rear_offset = rear
-        self.gcode_move.reset_last_position()
-        self.gcode.run_script_from_command(
-            "SAVE_VARIABLE VARIABLE=%s VALUE=%.6f\n"
-            "SAVE_VARIABLE VARIABLE=%s VALUE=%.6f"
-            % (self.front_variable, front, self.rear_variable, rear)
-        )
         center_y = (self.y_min + self.y_max) / 2.0
         self._manual_move([self.calibrate_x, center_y, None])
-        self.gcode.respond_info(
-            "Front/rear Z calibration complete: front %.4f mm, "
-            "rear %.4f mm. Values were saved."
-            % (front, rear)
-        )
+        probe_count = self.calibration_probe_count
         self.calibration_index = None
         self.calibration_results = []
+        self.gcode.respond_info(
+            "Paper calibration complete: front %.4f mm, rear %.4f mm. "
+            "Rebuilding a compensated %dx%d heightmap."
+            % (front, rear, probe_count, probe_count)
+        )
+        self.gcode.run_script_from_command(
+            "SAVE_VARIABLE VARIABLE=%s VALUE=%.6f\n"
+            "SAVE_VARIABLE VARIABLE=%s VALUE=%.6f\n"
+            "BED_MESH_CLEAR\n"
+            "BED_MESH_CALIBRATE PROBE_COUNT=%d,%d"
+            % (
+                self.front_variable,
+                front,
+                self.rear_variable,
+                rear,
+                probe_count,
+                probe_count,
+            )
+        )
+        self.gcode.respond_info(
+            "Front/rear Z calibration complete. The displayed heightmap "
+            "includes the saved correction."
+        )
 
     def _calculate_calibrated_offsets(self, front_contact, rear_contact):
         contact_average = (front_contact + rear_contact) / 2.0
@@ -188,18 +210,8 @@ class YAxisZOffset:
             self.rear_offset - self.front_offset
         )
 
-    def get_position(self):
-        position = list(self.next_transform.get_position())
-        position[2] -= self._offset_at_y(position[1])
-        return position
-
-    def move(self, newpos, speed):
-        position = list(newpos)
-        position[2] += self._offset_at_y(position[1])
-        self.next_transform.move(position, speed)
-
     cmd_SET_Y_AXIS_Z_OFFSET_help = (
-        "Set live front/rear Y-dependent Z offsets"
+        "Set front/rear probe correction used by the next bed mesh"
     )
 
     cmd_Y_AXIS_Z_OFFSET_CALIBRATE_help = (
@@ -215,7 +227,7 @@ class YAxisZOffset:
         )
         if not all(axis in homed_axes for axis in "xyz"):
             raise gcmd.error("Home XYZ before front/rear Z calibration")
-        if getattr(self.next_transform, "z_mesh", None) is None:
+        if self.bed_mesh.z_mesh is None:
             raise gcmd.error(
                 "Generate or load a bed mesh before front/rear Z calibration"
             )
@@ -227,9 +239,15 @@ class YAxisZOffset:
                     "Front/rear Z calibration cannot run during a print"
                 )
         manual_probe.verify_no_manual_probe(self.printer)
+        probe_count = gcmd.get_int("PROBE_COUNT", 5)
+        if probe_count < 3 or probe_count > 15 or probe_count % 2 == 0:
+            raise gcmd.error(
+                "PROBE_COUNT must be an odd number from 3 through 15"
+            )
         self.calibration_results = []
         self.calibration_index = 0
         self.calibration_gcmd = gcmd
+        self.calibration_probe_count = probe_count
         self._move_to_calibration_point(0)
 
     def cmd_SET_Y_AXIS_Z_OFFSET(self, gcmd):
@@ -257,9 +275,9 @@ class YAxisZOffset:
             self.front_offset = front
         if rear is not None:
             self.rear_offset = rear
-        self.gcode_move.reset_last_position()
         gcmd.respond_info(
-            "Y-axis Z offsets updated: front %.4f mm, rear %.4f mm"
+            "Y-axis probe correction updated: front %.4f mm, rear %.4f mm. "
+            "Generate a new bed mesh to apply it."
             % (self.front_offset, self.rear_offset)
         )
 
@@ -270,6 +288,8 @@ class YAxisZOffset:
             "y_min": self.y_min,
             "y_max": self.y_max,
             "calibration_point": self.calibration_index,
+            "calibration_probe_count": self.calibration_probe_count,
+            "mode": "probe_result_compensation",
         }
 
 

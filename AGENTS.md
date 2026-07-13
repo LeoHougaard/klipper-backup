@@ -35,16 +35,22 @@ configuration that should be backed up to GitHub.
   Windows; this is expected and does not mean the active user config is newer.
 - Front/rear first-layer compensation is implemented by the repository-owned
   `klipper_extras/y_axis_z_offset.py` and
-  `printer_data/config/y_axis_z_offset.cfg`. Mainsail exposes exactly
-  `FRONT_Z_OFFSET` and `REAR_Z_OFFSET`; values are live, persistent, and
-  linearly interpolated over Y10..110. See `docs/y-axis-z-offset.md`.
+  `printer_data/config/y_axis_z_offset.cfg`. Saved endpoint values are linearly
+  interpolated over Y10..110 and applied to probe results, so bed meshes,
+  heightmaps, and screw-tilt calculations are compensated. See
+  `docs/y-axis-z-offset.md`.
 - `CALIBRATE_BED_TILT` is the guided paper-test workflow. It homes, creates a
   full mesh, then uses Mainsail's native manual-probe UI at front and rear;
-  accepted contacts update both offsets while preserving their average.
+  accepted contacts update both offsets while preserving their average, then
+  automatically rebuild a compensated heightmap.
 - Treat `CALIBRATE_BED_TILT` as the primary front/rear setup. Its endpoints
   allow `-1.0..+1.0 mm`. Use Mainsail's ordinary global Z offset only for the
   small final whole-bed adjustment during a first layer; the direct endpoint
   macros are an advanced/manual fallback.
+- `CALIBRATE_BED_TILT PROBE_COUNT=<odd 3..15>` controls both its initial and
+  final mesh density. `CALIBRATE_COMPENSATED_BED_MESH PROBE_COUNT=<odd 3..15>`
+  refreshes the corrected heightmap after physical screw adjustments without
+  repeating the paper calibration. Common choices are 5, 9, and 13.
 - `printer_data/config/klipper-agent.gitignore` is installed as Klipper's local
   Git `core.excludesFile`, preventing the repository-managed extra from making
   the Klipper checkout appear dirty to Moonraker's update manager.
