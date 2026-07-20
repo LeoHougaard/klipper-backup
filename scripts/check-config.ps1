@@ -15,6 +15,15 @@ foreach ($file in $required) {
     }
 }
 
+$mainConfig = Join-Path $configDir "printer.cfg"
+$toolheadConfig = Join-Path $configDir "toolhead_btt_ebbcan_G0B1_v1.2.cfg"
+if (-not (Select-String -LiteralPath $mainConfig -Pattern '^\s*\[probe\]\s*$' -Quiet)) {
+    throw "[probe] must remain in printer.cfg so SAVE_CONFIG can persist z_offset."
+}
+if (Select-String -LiteralPath $toolheadConfig -Pattern '^\s*\[probe\]\s*$' -Quiet) {
+    throw "Do not place [probe] in the included toolhead config; SAVE_CONFIG cannot replace an included z_offset."
+}
+
 $allConfigs = Get-ChildItem -LiteralPath $configDir -File -Include *.cfg,*.conf
 $duplicateSections = @()
 foreach ($file in $allConfigs) {

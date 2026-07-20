@@ -98,6 +98,10 @@ configuration that should be backed up to GitHub.
   Python but may leave the MCUs latched in shutdown. Once the underlying code
   is fixed, use Moonraker's `/printer/firmware_restart` endpoint to clear that
   latch; verify the printer returns to `ready` before testing commands.
+- Keep the complete `[probe]` section, especially `z_offset`, in the main
+  `printer_data/config/printer.cfg`. Klipper's `SAVE_CONFIG` writes only to the
+  main file and reports an included-value conflict if `[probe] z_offset` comes
+  from the included toolhead config. `check-config.ps1` enforces this layout.
 - For motion, heater, homing, probe, CAN, or MCU changes, explain the risk and
   ask the user to confirm the printer is physically safe to test.
 - Preserve recovered notes in `docs/recovered-local-notes/`; they are reference
