@@ -13,8 +13,10 @@ The sequence is:
    line immediately in front of the model when space exists, otherwise use a
    Y-axis line beside it.
 4. Move to that line origin at Z10, lower vertically to the configured 0.20 mm
-   first-extrusion height, and wait there for final nozzle temperature. Ooze is
-   therefore deposited at the purge origin on the build plate.
+   first-extrusion height, run the part-cooling output at full speed, and wait
+   there for final nozzle temperature. Ooze is therefore deposited and cooled
+   at the purge origin on the build plate. The part fan switches off before
+   extrusion begins.
 5. Restore the previous 4 mm retract, draw exactly 10 mm at a fixed 1.60 mm
    width, then switch directly to exactly 20 mm at a fixed 0.45 mm width. There
    is no tapered transition between the two sections.
