@@ -78,6 +78,10 @@ configuration that should be backed up to GitHub.
   Klipper extras. It backs up and installs `klipper_extras/*.py` as well as the
   printer config; copying only `printer_data/config/` will leave the printer
   unable to load `[y_axis_z_offset]` after a fresh Klipper installation.
+- `deploy-to-printer.ps1` copies current files but does not delete remote files
+  removed or renamed in the repository. After such a rename, archive the exact
+  obsolete remote file under `~/agent-config-backups/` and rerun
+  `diff-printer.ps1`; never broadly delete Moonraker-managed or runtime paths.
 - `deploy-to-printer.ps1 -RestartKlipper` restarts through Moonraker rather
   than `sudo`; SSH key login has no passwordless sudo. Native SSH/SCP failures
   must terminate the deployment rather than being reported as success.
