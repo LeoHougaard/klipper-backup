@@ -16,6 +16,11 @@ The sequence is:
 5. Draw a 55 mm line toward the front in six segments. Its calculated width
    tapers from 1.60 mm to 0.45 mm at a 0.20 mm layer height.
 
+All positioning from the rear edge to the purge start is completed at the
+10 mm park height. The nozzle lowers vertically at the purge start to the
+configured 0.20 mm first-extrusion height, which is guarded against zero or
+negative values, before extrusion begins.
+
 The macro refuses to draw through a model. If neither side has enough room for
 the configured 5 mm centre-line margin, it stops with a message asking for a
 reserved side lane. It uses Moonraker's processed object polygons, with a
