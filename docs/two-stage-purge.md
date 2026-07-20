@@ -1,4 +1,4 @@
-# KAMP-style heat park and two-stage purge
+# KAMP-volume heat park and two-stage purge
 
 `PRINT_START` uses the repository-owned `PURGE_LINE_HEAT_PARK` and `LINE_PURGE`
 macros from `printer_data/config/two_stage_line_purge.cfg`. The Moonraker-managed
@@ -17,13 +17,18 @@ The sequence is:
    there for final nozzle temperature. Ooze is therefore deposited and cooled
    at the purge origin on the build plate. The part fan switches off before
    extrusion begins.
-5. Restore the previous 4 mm retract, draw exactly 10 mm at a fixed 1.60 mm
-   width, then switch directly to exactly 20 mm at a fixed 0.45 mm width. There
-   is no tapered transition between the two sections.
+5. Restore the previous 4 mm retract and reproduce the original configured KAMP
+   purge: move 18 mm while extruding 18 mm of filament, using KAMP's original
+   flow-rate speed calculation. Then move another 20 mm at 25 mm/s with
+   extrusion calculated for a fixed 0.45 mm line width. There is no transition
+   section between them.
 
-The line is clamped inside the printable limits. If there is no safe front or
-side lane, the macro stops instead of drawing through the model. G-code without
-Moonraker object polygons uses a deterministic X-axis line at the front edge.
+The complete 38 mm path is clamped inside the printable limits. The macro also
+estimates the physical width of the original-volume KAMP section from filament
+diameter and purge height, then keeps that entire footprint plus 2 mm clearance
+inside the plate and away from the model. If there is no safe front or side
+lane, it stops instead of drawing through the model. G-code without Moonraker
+object polygons uses a deterministic X-axis line at the front edge.
 
 All XY positioning occurs at the configured 10 mm travel height. The nozzle
 only lowers vertically at the purge origin, and the macro rejects a zero or
