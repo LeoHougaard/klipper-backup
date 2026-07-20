@@ -35,12 +35,12 @@ configuration that should be backed up to GitHub.
   Windows; this is expected and does not mean the active user config is newer.
 - The repository-owned `two_stage_line_purge.cfg` replaces KAMP's vendor
   `Line_Purge.cfg` and `Smart_Park.cfg`. It uses KAMP-style adaptive placement,
-  waits for final nozzle temperature at the purge origin and Z0.20 so ooze
+  waits for final nozzle temperature at the purge origin and KAMP's Z0.80 so ooze
   lands on the plate, with the part-cooling output at full speed during that
   wait. It then turns part cooling off, reproduces KAMP's original 18 mm travel
-  with 18 mm of filament, and adds 20 mm at 0.45 mm width. The complete 38 mm
-  path and the calculated heavy-line footprint are clamped inside the build
-  limits. See
+  with 18 mm of filament at Z0.80, moves 2 mm clear, lowers to Z0.20, and adds
+  20 mm at 0.45 mm width. The complete 40 mm path and the calculated heavy-line
+  footprint are clamped inside the build limits. See
   `docs/two-stage-purge.md`.
 - Front/rear first-layer compensation is implemented by the repository-owned
   `klipper_extras/y_axis_z_offset.py` and
