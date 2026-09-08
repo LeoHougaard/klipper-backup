@@ -44,8 +44,14 @@ configfile.settings JSON. Run `scripts/check-config.ps1` for module unit tests.
 
 These checks do not exercise a complete Klipper instance, MCU step generation,
 real-time queue supply, physical filament feed, adhesion or corner deposition.
-The first physical print requires Leo present and the bed cleared, as required
-by AGENTS.md. Deployment and physical printing are pending that confirmation.
+Leo confirmed the bed was cleared, PLA loaded and that he was present. The
+module was deployed with a full service restart on 2026-09-08. Klipper returned
+ready, the API version 1 guard passed, and the remote module and retry-file
+hashes matched the prepared files. The retry completed probing and purging and
+started the object at 0.5 mm/s, with no reported stalls or errors in the first
+396 queued segments. No camera is configured; adhesion and completed-part
+quality have not been verified remotely. This is an initial live startup check,
+not completed-print or power-cycle validation.
 
 ## Installation and recovery
 
