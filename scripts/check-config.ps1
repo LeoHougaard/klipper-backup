@@ -70,3 +70,11 @@ if (Test-Path -LiteralPath $yOffsetTests) {
         throw "Y-axis Z-offset tests failed."
     }
 }
+
+$continuousTests = Join-Path $PSScriptRoot "..\tests\test_continuous_extrusion.py"
+if (Test-Path -LiteralPath $continuousTests) {
+    python $continuousTests
+    if ($LASTEXITCODE -ne 0) {
+        throw "Continuous extrusion tests failed."
+    }
+}
