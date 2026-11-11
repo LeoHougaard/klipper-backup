@@ -20,6 +20,7 @@ def main():
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--candidate", action="store_true")
     parser.add_argument("--reverse", action="store_true", help="Activity-only reverse landscape; no system setting changes")
+    parser.add_argument("--quality", action="store_true", help="Additional heating/file edge states and real camera-on job views")
     args = parser.parse_args()
     args.output.mkdir(parents=True, exist_ok=True)
     fixture = Fixture()
@@ -67,6 +68,14 @@ def main():
         else:
             snapshot()
         capture("01-idle")
+        if args.quality:
+            fixture.status["extruder"].update(temperature=72, target=240)
+            fixture.status["heater_bed"].update(temperature=52, target=100)
+            wait_for(lambda root: any(n.get("text") == "●  Heating" for n in root.iter("node")), "heating")
+            capture("22-heating")
+            fixture.status["extruder"].update(temperature=22, target=0)
+            fixture.status["heater_bed"].update(temperature=23, target=0)
+            wait_for(lambda root: any(n.get("text") == "●  Ready" for n in root.iter("node")), "ready again")
         if args.candidate:
             tap("Set nozzle temperature")
             capture("16-temperature")
@@ -78,6 +87,18 @@ def main():
                 tap("Print details: test-plate.gcode")
                 capture("17-file-details")
                 tap("Close")
+                if args.quality:
+                    tap("Print details: Voron_parts/HeatCore_4_toolhead_front_ABS_0.2mm.gcode")
+                    capture("24-long-file-details")
+                    tap("Close")
+                    saved_files = fixture.files
+                    fixture.files = [saved_files[-1]]
+                    tap("Refresh")
+                    wait_for(lambda root: any(n.get("content-desc") == "Print details: Bracket_without_metadata.gcode" for n in root.iter("node")), "missing metadata file")
+                    tap("Print details: Bracket_without_metadata.gcode")
+                    capture("23-no-preview-details")
+                    tap("Close")
+                    fixture.files = saved_files
         if args.candidate:
             navigate("Prepare")
             tap("Filament")
@@ -107,6 +128,9 @@ def main():
         capture("06-printing")
         if args.candidate:
             navigate("Camera")
+            if args.quality:
+                tap("Turn camera on")
+                wait_for(lambda root: any("●  Live" in n.get("text", "") for n in root.iter("node")), "live native camera")
             capture("19-camera-printing")
             navigate("Home")
             tap("Speed, flow & fan")
@@ -121,7 +145,13 @@ def main():
         if args.candidate:
             navigate("Camera")
             capture("20-camera-paused")
+            if args.quality:
+                tap("Turn camera off")
             navigate("Home")
+            if args.quality:
+                tap("Change filament")
+                capture("25-paused-filament")
+                navigate("Home")
             fixture.status["print_stats"]["state"] = "complete"
             wait_for(lambda root: any(n.get("text") == "●  Print complete" for n in root.iter("node")), "complete")
             capture("13-complete")

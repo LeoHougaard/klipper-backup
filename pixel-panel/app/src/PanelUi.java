@@ -10,17 +10,18 @@ import android.widget.*;
 
 /** Small native component system for the landscape printer console. */
 final class PanelUi {
-  static final int BG = 0xff101416,
-      SURFACE = 0xff191f22,
-      RAISED = 0xff242c30,
-      LINE = 0xff303a3f,
-      TEXT = 0xffe7edeb,
-      MUTED = 0xffa0afaf,
-      ACCENT = 0xff9dc9b5,
-      ACCENT_BG = 0xff263c34,
+  static final int BG = 0xff0d1215,
+      SURFACE = 0xff161e23,
+      RAISED = 0xff202b31,
+      LINE = 0xff2d3b42,
+      TEXT = 0xffe9efed,
+      MUTED = 0xffa2b1b5,
+      ACCENT = 0xff9bcabb,
+      ACCENT_BG = 0xff223b34,
       DANGER = 0xffe6a5a0,
-      DANGER_BG = 0xff3b2929,
+      DANGER_BG = 0xff302326,
       AMBER = 0xffdfc397;
+  static final int DISABLED = 0xff65777c;
   final Context context;
 
   PanelUi(Context c) {
@@ -51,6 +52,7 @@ final class PanelUi {
     v.setTextColor(color);
     v.setGravity(Gravity.CENTER_VERTICAL);
     v.setIncludeFontPadding(false);
+    v.setFontFeatureSettings("tnum");
     return v;
   }
 
@@ -61,7 +63,7 @@ final class PanelUi {
   }
 
   TextView heading(String value) {
-    TextView v = text(value, 22, TEXT);
+    TextView v = text(value, 20, TEXT);
     v.setTypeface(Typeface.create("sans-serif-medium", Typeface.NORMAL));
     return v;
   }
@@ -92,7 +94,7 @@ final class PanelUi {
     View v = new View(context);
     v.setBackgroundColor(LINE);
     LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(-1, dp(1));
-    lp.setMargins(0, dp(12), 0, dp(12));
+    lp.setMargins(0, dp(10), 0, dp(10));
     parent.addView(v, lp);
   }
 
@@ -101,6 +103,8 @@ final class PanelUi {
     v.setAllCaps(false);
     v.setText(title);
     v.setTextSize(14);
+    v.setIncludeFontPadding(false);
+    v.setFontFeatureSettings("tnum");
     v.setTypeface(Typeface.create("sans-serif-medium", Typeface.NORMAL));
     v.setGravity(Gravity.CENTER);
     v.setMinWidth(0);
@@ -110,18 +114,9 @@ final class PanelUi {
     v.setStateListAnimator(null);
     v.setElevation(0);
     pad(v, 12, 8);
-    int fill = style == 1 ? ACCENT : style == 2 ? DANGER_BG : style == 3 ? ACCENT_BG : RAISED;
     int ink = style == 1 ? BG : style == 2 ? DANGER : style == 3 ? ACCENT : TEXT;
-    v.setTextColor(
-        new ColorStateList(
-            new int[][] {new int[] {-android.R.attr.state_enabled}, new int[] {}},
-            new int[] {0xff6c797b, ink}));
-    StateListDrawable states = new StateListDrawable();
-    states.addState(new int[] {-android.R.attr.state_enabled}, shape(0xff1c2427, 10));
-    states.addState(
-        new int[] {},
-        new RippleDrawable(ColorStateList.valueOf(0x22ffffff), shape(fill, 10), null));
-    v.setBackground(states);
+    v.setTextColor(ink(ink));
+    v.setBackground(buttonBackground(style));
     if (icon != null) {
       Icon d = new Icon(icon, ink);
       d.setBounds(0, 0, dp(19), dp(19));
@@ -132,6 +127,33 @@ final class PanelUi {
     return v;
   }
 
+  ColorStateList ink(int color) {
+    return new ColorStateList(
+        new int[][] {new int[] {-android.R.attr.state_enabled}, new int[] {}},
+        new int[] {DISABLED, color});
+  }
+
+  GradientDrawable controlShape(int fill, int border) {
+    GradientDrawable d = shape(fill, 8);
+    if (border != 0) d.setStroke(dp(1), border);
+    return d;
+  }
+
+  Drawable buttonBackground(int style) {
+    int fill =
+        style == 4
+            ? Color.TRANSPARENT
+            : style == 1 ? ACCENT : style == 2 ? DANGER_BG : style == 3 ? ACCENT_BG : SURFACE;
+    int border =
+        style == 4 || style == 1 ? 0 : style == 2 ? 0xff68464b : style == 3 ? 0xff45685c : LINE;
+    StateListDrawable content = new StateListDrawable();
+    content.addState(
+        new int[] {-android.R.attr.state_enabled}, controlShape(0xff141c20, 0xff243238));
+    content.addState(new int[] {android.R.attr.state_focused}, controlShape(fill, ACCENT));
+    content.addState(new int[] {}, controlShape(fill, border));
+    return new RippleDrawable(ColorStateList.valueOf(0x239bcabb), content, shape(0xffffffff, 8));
+  }
+
   void weighted(LinearLayout parent, View v, int height) {
     LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, dp(height), 1);
     lp.setMargins(dp(3), 0, dp(3), 0);
@@ -140,24 +162,37 @@ final class PanelUi {
 
   LinearLayout panel() {
     LinearLayout v = col();
-    v.setBackground(shape(SURFACE, 12));
-    pad(v, 16, 14);
+    v.setBackground(shape(SURFACE, 10));
+    pad(v, 14, 12);
     return v;
   }
 
   View navigation(String title, String icon, boolean selected, Runnable action) {
     LinearLayout item = col();
     item.setGravity(Gravity.CENTER);
+    item.setMinimumHeight(dp(56));
+    item.setMinimumWidth(dp(48));
+    GradientDrawable cue = shape(ACCENT, 2);
+    LayerDrawable selectedBackground =
+        new LayerDrawable(new Drawable[] {shape(0xff1b2c29, 8), cue});
+    selectedBackground.setLayerSize(1, dp(3), dp(24));
+    selectedBackground.setLayerGravity(1, Gravity.LEFT | Gravity.CENTER_VERTICAL);
     item.setBackground(
         new RippleDrawable(
-            ColorStateList.valueOf(0x22ffffff), shape(selected ? ACCENT_BG : BG, 10), null));
+            ColorStateList.valueOf(0x239bcabb),
+            selected ? selectedBackground : shape(BG, 8),
+            shape(0xffffffff, 8)));
     ImageView image = new ImageView(context);
+    image.setDuplicateParentStateEnabled(true);
     image.setImageDrawable(new Icon(icon, selected ? ACCENT : MUTED));
-    item.addView(image, new LinearLayout.LayoutParams(dp(22), dp(22)));
+    item.addView(image, new LinearLayout.LayoutParams(dp(20), dp(20)));
     TextView label = text(title, 11, selected ? ACCENT : MUTED);
+    label.setTextColor(ink(selected ? ACCENT : MUTED));
+    label.setDuplicateParentStateEnabled(true);
+    label.setTypeface(Typeface.create("sans-serif-medium", Typeface.NORMAL));
     label.setGravity(Gravity.CENTER);
     LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(-1, dp(20));
-    lp.topMargin = dp(4);
+    lp.topMargin = dp(3);
     item.addView(label, lp);
     item.setContentDescription("Open " + title);
     item.setSelected(selected);
@@ -192,13 +227,17 @@ final class PanelUi {
     if (Boolean.valueOf(selected).equals(button.getTag())) return;
     button.setTag(selected);
     button.setSelected(selected);
-    button.setTextColor(selected ? ACCENT : MUTED);
-    button.setBackground(ui.shape(selected ? ACCENT_BG : RAISED, 8));
+    int ink = selected ? ACCENT : MUTED;
+    button.setTextColor(ui.ink(ink));
+    button.setBackground(ui.buttonBackground(selected ? 3 : 4));
+    for (Drawable drawable : button.getCompoundDrawables()) {
+      if (drawable instanceof Icon) ((Icon) drawable).setInk(ink);
+    }
   }
 
   static final class Icon extends Drawable {
     final String name;
-    final int baseColor;
+    int baseColor;
     final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
     Icon(String name, int color) {
@@ -220,9 +259,16 @@ final class PanelUi {
     protected boolean onStateChange(int[] states) {
       boolean enabled = false;
       for (int state : states) if (state == android.R.attr.state_enabled) enabled = true;
-      paint.setColor(enabled ? baseColor : 0xff6c797b);
+      int color = enabled ? baseColor : DISABLED;
+      if (paint.getColor() == color) return false;
+      paint.setColor(color);
       invalidateSelf();
       return true;
+    }
+
+    void setInk(int color) {
+      baseColor = color;
+      onStateChange(getState());
     }
 
     void path(Canvas c, float... points) {
@@ -342,11 +388,13 @@ final class PanelUi {
     @Override
     public void setAlpha(int a) {
       paint.setAlpha(a);
+      invalidateSelf();
     }
 
     @Override
     public void setColorFilter(ColorFilter f) {
       paint.setColorFilter(f);
+      invalidateSelf();
     }
 
     @Override

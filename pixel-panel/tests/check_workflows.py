@@ -109,7 +109,7 @@ def main():
 
         fixture.status["print_stats"].update(state="printing", filename="fixture-active.gcode")
         click("Home")
-        wait_text("LIVE Z ADJUSTMENT")
+        wait_text("Z OFFSET")
         for _ in range(3):
             send_and_observe(fixture, "Further +0.025", "SET_GCODE_OFFSET Z_ADJUST=0.025 MOVE=1")
         assert math.isclose(fixture.status["gcode_move"]["homing_origin"][2], .05)

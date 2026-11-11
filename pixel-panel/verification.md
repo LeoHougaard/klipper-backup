@@ -1,4 +1,55 @@
-# Pixel panel 0.2.0 verification
+# Pixel panel 0.3.0 verification
+
+## Stricter quality scale requested after 0.2.0
+
+For the next iteration, Leo explicitly anchors commit `38db008` as **5/10**.
+Earlier absolute review ratings do not count toward this new target. Preserve
+that baseline APK/screens in ignored `.build/design/quality-baseline/`.
+
+The fixed weighted rubric is task efficiency 25%, hierarchy/density 25%,
+machine-state clarity 20%, visual coherence 15%, and touch/context/recovery 15%.
+Seven requires conspicuous improvement in at least three categories while core
+workflows remain complete. Nine requires major improvement in all five, no
+category below eight, at least two materially shortened common workflows, live
+context during adjustments, distinct outcome/recovery states, and actual Pixel
+workflow evidence. Fit and clipping checks alone remain approximately 5–6.
+
+The first strict critique identified oversized shell/thermal/sidebar regions,
+navigation-only Home cards, weak current-job identity, generic component forms,
+oversized editors and generic paused/end states. These are the improvement
+categories; adding unrelated features does not satisfy the target.
+
+| Strict review | Efficiency | Hierarchy/density | State clarity | Coherence | Touch/context/recovery | Weighted |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Anchored baseline `38db008` | 5.0 | 5.0 | 5.0 | 5.0 | 5.0 | 5.00 |
+| Quality round 2 | 8.5 | 8.0 | 8.0 | 8.5 | 8.0 | 8.20 |
+| Fresh final review | 9.2 | 9.1 | 9.2 | 8.5 | 9.0 | **9.04** |
+
+The round-2 review required local Resume after paused filament work, initial
+filament temperature matching the current job, truthful heater-on completion
+language, useful recovery information instead of repeated status/actions, and
+secondary screens brought up to the new Home hierarchy. These were implemented
+and the fresh reviewer found no material UI/UX blocker under the fixed rubric.
+The final rating is a reviewer judgment on this user-defined relative scale,
+not a universal product benchmark.
+
+Quality round 3 contains 24 actual-device states, including real camera-on
+printing/paused views, heating, long names, missing previews and paused filament.
+Its accessibility data contains 313 enabled clickable targets, all at least
+48 dp. Workflow screenshots and passing results are in
+`.build/design/quality-workflows/`:
+
+- Direct Home homing, preheat and cooldown, with updated thermal values shown.
+- Recent plate → Start → Pause → load filament at the matched 240°C setting →
+  local Resume → active Home.
+- One-tap inline tuning returning 110%, then a contextual target editor returning
+  200°C while retaining the job identity/progress.
+
+All command workflows used the isolated fixture, not physical printer hardware.
+Baseline preheat required two taps versus one now; homing removes a navigation
+step; tuning removes its mandatory sheet; recent plate selection removes the
+Files-list step. Existing guarded dispatch, uncertainty handling, emergency
+priority and explicit Fast controls remain regression gates.
 
 Date: 2026-11-11. Base Pixel 10, Android 17 / API 37. The reference phone is
 rooted for its existing Linux project, but this APK uses no root, shell helper,
@@ -6,10 +57,13 @@ Linux service, privileged permission grant or hidden Android API. Runtime grants
 were made through Android's normal permission dialogs. A stock second phone
 remains a separate acceptance check.
 
-Final 0.2.0 APK SHA-256:
+Preserved 0.2.0 baseline APK SHA-256:
 `09fba699d8de402cdd352acf71fb7fddfb6efb3f4708a9dccc888eb3f66eb0e9`.
 
-## Redesign and review evidence
+Final 0.3.0 APK SHA-256:
+`14b0b924f0625af825845e7cdae9ca014ed3133bd05623d2e6984cc3568749d1`.
+
+## Earlier 0.2.0 redesign evidence
 
 The preserved baseline is commit `dc44d05`, with its APK and eight matched
 real-device states in the ignored `.build/design/baseline/` directory. Current
@@ -17,10 +71,11 @@ captures use `tests/capture_review.py` against an isolated Moonraker fixture;
 the manifest asserts that capture collection issued zero printer commands.
 PNG files are paired with actual Android accessibility bounds at density 2.625.
 
-The review method follows Theo's independent screenshot critiques and fresh
-reviewers after fixes. All agents in this redesign used GPT-6.1 Sol. Scores were
-requested without giving reviewers a desired score. Ratings guide inspection;
-actual task completion, target geometry and recovery checks decide acceptance.
+The initial review method followed Theo's independent screenshot critiques and
+fresh reviewers after fixes. All agents used GPT-6.1 Sol. Those earlier reviews
+were requested without a desired score. The stricter 0.3.0 iteration instead
+uses Leo's explicit baseline anchor and fixed rubric above. Actual task
+completion, target geometry and recovery checks remain acceptance gates.
 
 | Review | Evidence and findings | Decision |
 | --- | --- | --- |

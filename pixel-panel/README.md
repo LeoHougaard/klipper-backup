@@ -8,9 +8,13 @@ is the base Pixel 10 on Android 17. Klipper stays on the existing BTT Pi.
 
 - Landscape in either direction, muted dark colors, 48 dp minimum controls, and
   hardware-reported safe margins for both the camera cutout and rounded corners.
-- Home: preparation shortcuts while idle; filename, progress, estimated remaining
-  time, layers, pause/resume, cancel and direct live Z adjustment during printing.
-  Nozzle/bed readings and editable targets stay visible in both states.
+- Home: direct homing, PLA/ABS preheat, cooldown and the recent plate while idle.
+  Printing keeps model identity, progress, remaining time, pause/resume, live Z
+  and inline speed/flow/fan together. Nozzle/bed current and target values remain
+  editable in the header across the app; compact editors preserve job context.
+- Paused filament changes start from the current heater target and offer local
+  Resume back to the active job. Finished, failed and unavailable states show
+  relevant next actions and separate Pixel/Moonraker/Klipper connection status.
 - Prepare: spatial XY/Z movement, homing/travel checks, motor release, complete
   hot-nozzle load/unload and bounded feed/retract, plus native front/rear paper
   calibration and corrected-heightmap refresh. Calibration results distinguish
@@ -147,6 +151,9 @@ python -X utf8 -u pixel-panel/tests/check_fast_controls.py
 
 # Partial calibration certainty and E-stop cancellation during delayed preflight.
 python -X utf8 -u pixel-panel/tests/check_recovery_edges.py
+
+# Shortened Home, recent plate, paused filament/Resume and inline read-back paths.
+python -X utf8 -u pixel-panel/tests/check_quality_workflows.py --output pixel-panel/.build/design/quality-workflows
 
 # Start with camera off. The test starts/stops it; the gateway stays active.
 python -X utf8 pixel-panel/tests/check_gateway.py

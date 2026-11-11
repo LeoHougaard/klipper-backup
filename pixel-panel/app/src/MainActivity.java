@@ -26,10 +26,13 @@ public final class MainActivity extends Activity {
       images = Executors.newSingleThreadExecutor();
   final ExecutorService fileReads = Executors.newSingleThreadExecutor();
   final ArrayList<Runnable> bindings = new ArrayList<>(), dialogBindings = new ArrayList<>();
+  final ArrayList<View> headerControls = new ArrayList<>();
   PanelUi p;
   PrinterClient client;
   JSONObject status = new JSONObject();
-  long seen, lastPoll, pageGeneration;
+  long seen, lastPoll, pageGeneration, lastFileRequest, noticeUntil;
+  boolean filesFetching;
+  String fileError = "";
   volatile long connectionGeneration;
   boolean resumed, polling, commandBusy, emergencyBusy, cameraDecoding, destroyed;
   String page = "Home",
@@ -50,6 +53,7 @@ public final class MainActivity extends Activity {
   double xyStep = 10, zStep = .1, paperStep = .025;
   boolean calibrationRequested;
   String calibrationResult = "";
+  String filamentForJob;
   byte[] displayedFrame;
   ImageView cameraImage;
   TextView cameraOverlay;
@@ -65,6 +69,10 @@ public final class MainActivity extends Activity {
         public void run() {
           if (!resumed || destroyed) return;
           if (!polling && SystemClock.elapsedRealtime() - lastPoll >= 1800) poll();
+          if (page.equals("Home")
+              && ready()
+              && !filesFetching
+              && SystemClock.elapsedRealtime() - lastFileRequest > 15000) fetchFiles();
           updateViews();
           ui.postDelayed(this, 500);
         }
@@ -169,7 +177,12 @@ public final class MainActivity extends Activity {
     if (activeDialog != null && activeDialog.isShowing() && emergencyButton != null) {
       Rect target = new Rect();
       emergencyButton.getGlobalVisibleRect(target);
-      if (!target.contains((int) event.getRawX(), (int) event.getRawY())) return true;
+      boolean allowed = target.contains((int) event.getRawX(), (int) event.getRawY());
+      for (View control : headerControls) {
+        control.getGlobalVisibleRect(target);
+        allowed |= target.contains((int) event.getRawX(), (int) event.getRawY());
+      }
+      if (!allowed) return true;
     }
     return super.dispatchTouchEvent(event);
   }
@@ -291,7 +304,7 @@ public final class MainActivity extends Activity {
       return "unavailable:"
           + (fresh() ? engine() : lastError.isEmpty() ? "connecting" : "disconnected");
     if (manual()) return "paper:" + obj("y_axis_z_offset").optInt("calibration_point", 0);
-    return (activePrint() ? "active:" : "idle:" + jobState() + ":")
+    return (activePrint() ? "active:" + jobState() + ":" : "idle:" + jobState() + ":")
         + obj("print_stats").optString("filename");
   }
 
@@ -318,8 +331,10 @@ public final class MainActivity extends Activity {
             : ready()
                 ? jobState().equals("paused") ? PanelUi.AMBER : PanelUi.ACCENT
                 : PanelUi.AMBER);
+    if (!commandBusy && noticeUntil > 0 && SystemClock.elapsedRealtime() > noticeUntil) notice = "";
     feedback.setText(
         !urgentMessage.isEmpty() ? urgentMessage : commandBusy ? actionLabel + "…" : notice);
+    feedback.setVisibility(feedback.getText().length() == 0 ? View.GONE : View.VISIBLE);
     feedback.setTextColor(
         !urgentMessage.isEmpty() ? PanelUi.DANGER : commandBusy ? PanelUi.ACCENT : noticeColor);
     if (dialogFeedback != null) {
@@ -333,6 +348,7 @@ public final class MainActivity extends Activity {
 
   void tell(String text, int color) {
     notice = text;
+    noticeUntil = SystemClock.elapsedRealtime() + (color == PanelUi.DANGER ? 15000 : 6000);
     noticeColor = color;
     if (activeDialog != null) dialogNotice = text;
     if (feedback != null) {
@@ -390,6 +406,7 @@ public final class MainActivity extends Activity {
     page = next;
     pageGeneration++;
     bindings.clear();
+    headerControls.clear();
     cameraImage = null;
     cameraOverlay = null;
     displayedFrame = null;
@@ -400,17 +417,17 @@ public final class MainActivity extends Activity {
     LinearLayout rail = p.col();
     navigationRail = rail;
     rail.setGravity(Gravity.CENTER_HORIZONTAL);
-    rail.setPadding(0, 0, p.dp(12), 0);
+    rail.setPadding(0, 0, p.dp(8), 0);
     TextView mark = p.text("", 11, PanelUi.MUTED);
     bindText(mark, () -> fastControls() ? "V / 0.2 · FAST" : "V / 0.2");
     mark.setGravity(Gravity.CENTER);
-    add(rail, mark, 34);
+    add(rail, mark, 28);
     String[] tabs = {"Home", "Prepare", "Files", "Camera"},
         icons = {"home", "move", "files", "camera"};
     for (int i = 0; i < tabs.length; i++) {
       String name = tabs[i];
       View item = p.navigation(name, icons[i], name.equals(page), () -> show(name));
-      LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(-1, p.dp(62));
+      LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(-1, p.dp(56));
       lp.bottomMargin = p.dp(4);
       rail.addView(item, lp);
     }
@@ -420,21 +437,24 @@ public final class MainActivity extends Activity {
         p.navigation(
             "More", "more", page.equals("More") || page.equals("Connection"), () -> show("More")),
         56);
-    root.addView(rail, new LinearLayout.LayoutParams(p.dp(84), -1));
+    root.addView(rail, new LinearLayout.LayoutParams(p.dp(68), -1));
     LinearLayout main = p.col(), header = p.row();
-    TextView screenTitle = p.heading(page.equals("Home") ? "Voron" : page);
+    TextView screenTitle = p.text(page.equals("Home") ? "Voron 0.2" : page, 18, PanelUi.TEXT);
+    screenTitle.setTypeface(Typeface.create("sans-serif-medium", Typeface.NORMAL));
     screenTitle.setContentDescription("Screen: " + page);
     header.addView(screenTitle, new LinearLayout.LayoutParams(0, -1, 1));
-    connection = p.text("Connecting", 13, PanelUi.MUTED);
+    addHeaderHeater(header, "Nozzle", "extruder");
+    addHeaderHeater(header, "Bed", "heater_bed");
+    connection = p.text("Connecting", 12, PanelUi.MUTED);
     connection.setContentDescription("Connection details");
-    connection.setMinWidth(p.dp(104));
-    connection.setPadding(p.dp(12), 0, p.dp(12), 0);
+    connection.setMinWidth(p.dp(108));
+    connection.setPadding(p.dp(10), 0, p.dp(10), 0);
     connection.setOnClickListener(v -> show("Connection"));
     header.addView(connection, new LinearLayout.LayoutParams(-2, -1));
     Button stop = button("E-stop", "stop", 2, this::emergencyStop);
     emergencyButton = stop;
     stop.setContentDescription("Emergency stop");
-    header.addView(stop, new LinearLayout.LayoutParams(p.dp(108), p.dp(48)));
+    header.addView(stop, new LinearLayout.LayoutParams(p.dp(96), p.dp(48)));
     add(main, header, 48);
     p.gap(main, 8);
     workspace = p.col();
@@ -442,7 +462,8 @@ public final class MainActivity extends Activity {
     feedback = p.text("", 12, PanelUi.MUTED);
     feedback.setMaxLines(1);
     feedback.setEllipsize(TextUtils.TruncateAt.END);
-    add(main, feedback, 26);
+    feedback.setVisibility(View.GONE);
+    add(main, feedback, 22);
     root.addView(main, new LinearLayout.LayoutParams(0, -1, 1));
     setContentView(root);
     switch (page) {
@@ -470,63 +491,174 @@ public final class MainActivity extends Activity {
   }
 
   void sheetFocus(boolean open) {
-    if (workspace != null) workspace.setAlpha(open ? .20f : 1f);
+    if (workspace != null) workspace.setAlpha(open ? .58f : 1f);
     if (navigationRail != null) navigationRail.setAlpha(open ? .35f : 1f);
+  }
+
+  void addHeaderHeater(LinearLayout header, String title, String heater) {
+    LinearLayout cell = p.col();
+    cell.setGravity(Gravity.CENTER_VERTICAL);
+    cell.setPadding(p.dp(10), p.dp(3), p.dp(10), p.dp(3));
+    TextView label = p.text(title.toUpperCase(Locale.US), 10, PanelUi.MUTED);
+    cell.addView(label);
+    LinearLayout reading = p.row();
+    TextView actual = p.text("", 20, PanelUi.TEXT), target = p.text("", 12, PanelUi.MUTED);
+    bindText(actual, () -> temperature(heater));
+    bindText(
+        target,
+        () -> {
+          double n = finite(obj(heater), "target");
+          return fresh() && Double.isFinite(n)
+              ? n > 0 ? " / " + value(n, 0) + "°" : " / off"
+              : " / —";
+        });
+    reading.addView(actual);
+    reading.addView(target);
+    cell.addView(reading);
+    cell.setContentDescription("Set " + title.toLowerCase(Locale.US) + " temperature");
+    cell.setOnClickListener(v -> temperatureSheet(heater));
+    cell.setFocusable(true);
+    headerControls.add(cell);
+    bindings.add(() -> {
+      boolean enabled = ready() && !manual() && !commandBusy;
+      cell.setEnabled(enabled);
+      cell.setAlpha(enabled ? 1f : .45f);
+      boolean warm = finite(obj(heater), "target") > finite(obj(heater), "temperature") + 3;
+      actual.setTextColor(warm ? PanelUi.AMBER : PanelUi.TEXT);
+    });
+    LinearLayout.LayoutParams size = new LinearLayout.LayoutParams(p.dp(116), p.dp(48));
+    size.rightMargin = p.dp(4);
+    header.addView(cell, size);
   }
 
   void home() {
     LinearLayout columns = p.row();
     columns.setGravity(Gravity.TOP);
-    LinearLayout left = p.col();
-    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, -1, 1);
-    lp.rightMargin = p.dp(16);
-    columns.addView(left, lp);
-    LinearLayout heaters = p.col();
-    columns.addView(heaters, new LinearLayout.LayoutParams(p.dp(216), -1));
+    LinearLayout left = p.panel(), right = p.panel();
+    LinearLayout.LayoutParams main = new LinearLayout.LayoutParams(0, -1, 1);
+    main.rightMargin = p.dp(12);
+    columns.addView(left, main);
+    columns.addView(right, new LinearLayout.LayoutParams(p.dp(280), -1));
     add(workspace, columns, -1);
-    if (!ready()) unavailable(left);
-    else if (manual()) {
+    if (!ready()) {
+      unavailable(left);
+      right.addView(p.text("Connection path", 18, PanelUi.TEXT));
+      p.gap(right, 14);
+      TextView address = p.text(client.base, 13, PanelUi.MUTED);
+      address.setMaxLines(2);
+      add(right, address, 40);
+      statusLine(right, "Pixel sharing", () -> ConnectionService.running ? "On" : "Off");
+      statusLine(right, "Moonraker", () -> fresh() ? "Responding" : "No response");
+      statusLine(right, "Klipper", () -> fresh() ? engine() : "Unknown");
+      p.gap(right, 14);
+      add(right, button("Connection settings", "wifi", 0, () -> show("Connection")), 48);
+      return;
+    }
+    if (manual()) {
+      left.addView(p.label("BED CALIBRATION"));
+      p.gap(left, 12);
       left.addView(p.heading("Continue the paper test"));
       p.gap(left, 10);
-      subtext(
-          left,
-          "The printer is waiting for nozzle contact at the "
-              + (obj("y_axis_z_offset").optInt("calibration_point", 0) == 0 ? "front" : "rear")
-              + " of the bed.");
-      p.gap(left, 16);
-      add(left, button("Continue calibration", "calibrate", 1, () -> openPrepare("Bed setup")), 56);
-    } else if (activePrint()) activeJob(left);
-    else idleHome(left);
-    heaterCard(heaters, "Nozzle", "extruder", "heat");
-    p.gap(heaters, 10);
-    heaterCard(heaters, "Bed", "heater_bed", "bed");
-    p.gap(heaters, 10);
-    Button heat =
-        button(
-            "Preheat / Cool down",
-            "heat",
-            0,
-            () -> {
-              if (activePrint()) {
-                if (jobState().equals("paused")) openPrepare("Filament");
-                else show("Camera");
-              } else preheatSheet();
-            });
+      subtext(left, "The printer is waiting for the next nozzle contact measurement.");
+      p.gap(left, 18);
+      add(left, button("Continue calibration", "calibrate", 1, () -> openPrepare("Bed setup")), 48);
+      right.addView(p.label("IN PROGRESS"));
+      p.gap(right, 12);
+      subtext(right, "Accept or abort the active paper contact before other printer tasks.");
+      return;
+    }
+    if (activePrint()) {
+      activeJob(left);
+      liveTuning(right);
+    } else if (Arrays.asList("complete", "error", "cancelled").contains(jobState())) {
+      finishedJob(left, right);
+    } else {
+      idleHome(left);
+      recentPrint(right);
+    }
+  }
+
+  void statusLine(LinearLayout parent, String label, Supplier<String> reading) {
+    LinearLayout row = p.row();
+    row.addView(p.text(label, 13, PanelUi.MUTED), new LinearLayout.LayoutParams(0, -1, 1));
+    TextView value = p.text("", 13, PanelUi.TEXT);
+    bindText(value, reading);
+    row.addView(value);
+    add(parent, row, 30);
+  }
+
+  ImageView preview(LinearLayout parent, int width, int height, Supplier<String> filename) {
+    ImageView image = new ImageView(this);
+    image.setScaleType(ImageView.ScaleType.FIT_CENTER);
+    image.setBackground(p.shape(PanelUi.BG, 8));
+    p.pad(image, 6, 6);
+    image.setContentDescription("Model preview");
+    final Bitmap[] previous = {null};
+    final String[] previousName = {null};
     bindings.add(() -> {
-      String icon = activePrint() ? jobState().equals("paused") ? "filament" : "camera" : "heat";
-      heat.setText(
-          activePrint()
-              ? jobState().equals("paused") ? "Change filament" : "View camera"
-              : "Preheat / Cool down");
-      if (!icon.equals(heat.getTag())) {
-        heat.setTag(icon);
-        PanelUi.Icon d = new PanelUi.Icon(icon, PanelUi.TEXT);
-        d.setBounds(0, 0, p.dp(19), p.dp(19));
-        heat.setCompoundDrawables(d, null, null, null);
+      String name = filename.get();
+      Bitmap bitmap = thumbnails.get(name);
+      if (!Objects.equals(previousName[0], name) || previous[0] != bitmap) {
+        previousName[0] = name;
+        previous[0] = bitmap;
+        if (bitmap != null) image.setImageBitmap(bitmap);
+        else image.setImageDrawable(new PanelUi.Icon("files", PanelUi.MUTED));
       }
     });
-    gate(heat, () -> ready() && !manual());
-    add(heaters, heat, 48);
+    parent.addView(
+        image, new LinearLayout.LayoutParams(width < 0 ? width : p.dp(width), p.dp(height)));
+    return image;
+  }
+
+  JSONObject recentFile() {
+    return files.isEmpty() ? null : files.get(0);
+  }
+
+  String recentName() {
+    JSONObject file = recentFile();
+    return file == null ? "" : file.optString("path");
+  }
+
+  void recentPrint(LinearLayout card) {
+    card.addView(p.label("RECENT PLATE"));
+    p.gap(card, 8);
+    preview(card, -1, 100, this::recentName);
+    p.gap(card, 8);
+    TextView name = p.text("", 17, PanelUi.TEXT);
+    name.setMaxLines(2);
+    name.setEllipsize(TextUtils.TruncateAt.END);
+    bindText(
+        name,
+        () ->
+            !recentName().isEmpty()
+                ? friendly(recentName())
+                : filesFetching
+                    ? "Loading stored prints…"
+                    : !fileError.isEmpty() ? "Library unavailable" : "No stored prints");
+    add(card, name, 42);
+    TextView detail = p.text("", 12, PanelUi.MUTED);
+    detail.setMaxLines(2);
+    bindText(
+        detail,
+        () ->
+            recentFile() == null
+                ? !fileError.isEmpty()
+                    ? "Open Files to retry the connection"
+                    : filesFetching ? "Reading the Pi's file library" : "Send a plate from Orca"
+                : fileSummary(recentFile(), metadata.get(recentName())));
+    add(card, detail, 30);
+    p.gap(card, 8);
+    Button open =
+        button(
+            "Print details",
+            "play",
+            1,
+            () -> {
+              if (recentFile() != null) fileDetails(recentFile());
+              else show("Files");
+            });
+    bindings.add(() -> open.setText(recentFile() == null ? "Browse prints" : "Print details"));
+    add(card, open, 48);
   }
 
   void heaterCard(LinearLayout parent, String title, String heater, String icon) {
@@ -581,93 +713,233 @@ public final class MainActivity extends Activity {
   }
 
   void idleHome(LinearLayout left) {
-    left.addView(
-        p.heading(
-            jobState().equals("error")
-                ? "Print failed"
-                : jobState().equals("complete") ? "Print finished" : "Ready for your next print"));
-    p.gap(left, 7);
-    subtext(
+    TextView title = p.text("", 26, PanelUi.TEXT);
+    bindText(title, () -> heating() ? "Heating" : "Ready");
+    left.addView(title);
+    TextView state = p.text("", 13, PanelUi.MUTED);
+    bindText(state, () -> homed("xyz") ? "All axes homed" : "Home before moving");
+    add(left, state, 24);
+    p.gap(left, 10);
+    Button home = button("Home axes", "home", 1, this::homeAxes);
+    gate(home, () -> idle() && !manual());
+    rowButtons(
         left,
-        jobState().equals("error")
-            ? obj("print_stats").optString("message", "The last print did not finish.")
-            : jobState().equals("complete")
-                ? friendly(obj("print_stats").optString("filename"))
-                    + " · "
-                    + duration(finite(obj("print_stats"), "print_duration"))
-                : "Prepare the printer, then send a plate from Orca or choose a stored file.");
-    p.gap(left, 16);
-    LinearLayout row = p.row();
-    p.weighted(row, task("Move", "Home & position", "move", () -> openPrepare("Move")), 76);
-    p.weighted(
-        row,
-        task("Filament", "Heat, load & unload", "filament", () -> openPrepare("Filament")),
-        76);
-    add(left, row, 76);
+        home,
+        button("Move", "move", 4, () -> openPrepare("Move")),
+        button("Filament", "filament", 4, () -> openPrepare("Filament")));
     p.gap(left, 8);
-    LinearLayout next = p.row();
-    p.weighted(
-        next,
-        task("Bed setup", "Paper test & heightmap", "calibrate", () -> openPrepare("Bed setup")),
-        76);
-    p.weighted(next, task("Stored prints", "Choose a plate", "files", () -> show("Files")), 76);
-    add(left, next, 76);
+    rowButtons(
+        left,
+        button("Bed setup", "calibrate", 0, () -> openPrepare("Bed setup")),
+        button("Stored prints", "files", 0, () -> show("Files")));
+    p.gap(left, 14);
+    left.addView(p.label("PREHEAT"));
+    p.gap(left, 6);
+    Button pla = button("PLA 200° / 60°", null, 0, () -> preheat(200, 60));
+    Button abs = button("ABS 240° / 100°", null, 0, () -> preheat(240, 100));
+    Button cool =
+        button(
+            "Cool down",
+            null,
+            0,
+            () -> gcode("Turning heaters off", "TURN_OFF_HEATERS", Policy.IDLE, null));
+    pla.setTextSize(12);
+    abs.setTextSize(12);
+    cool.setTextSize(12);
+    gate(pla, this::idle);
+    gate(abs, this::idle);
+    gate(cool, this::idle);
+    rowButtons(left, pla, abs, cool);
+    p.gap(left, 10);
+    TextView coordinates = p.text("", 12, PanelUi.MUTED);
+    bindText(coordinates, () -> position() + " mm");
+    add(left, coordinates, 22);
+  }
+
+  void plateIdentity(LinearLayout parent, String filename) {
+    LinearLayout identity = p.row();
+    preview(identity, 88, 88, () -> filename);
+    LinearLayout info = p.col();
+    info.setPadding(p.dp(12), 0, 0, 0);
+    TextView name = p.text(friendly(filename), 17, PanelUi.TEXT);
+    name.setMaxLines(2);
+    name.setEllipsize(TextUtils.TruncateAt.END);
+    add(info, name, 44);
+    TextView material = p.text("", 12, PanelUi.MUTED);
+    bindText(
+        material,
+        () -> {
+          JSONObject meta = metadata.get(filename);
+          return meta == null ? "Stored G-code" : meta.optString("filament_type", "Stored G-code");
+        });
+    add(info, material, 20);
+    TextView elapsed = p.text("", 12, PanelUi.MUTED);
+    bindText(
+        elapsed,
+        () -> duration(finite(obj("print_stats"), "print_duration")) + " elapsed" + layerText());
+    add(info, elapsed, 22);
+    identity.addView(info, new LinearLayout.LayoutParams(0, -2, 1));
+    add(parent, identity, 88);
+  }
+
+  String layerText() {
+    JSONObject info = obj("print_stats").optJSONObject("info");
+    return info != null && info.optInt("total_layer") > 0
+        ? " · Layer " + info.optInt("current_layer") + "/" + info.optInt("total_layer")
+        : "";
+  }
+
+  String timeLeft() {
+    double seconds = finite(obj("print_stats"), "print_duration"), f = progress();
+    return Double.isFinite(seconds) && f > .02
+        ? "~" + duration(seconds * (1 - f) / f)
+        : "Calculating";
   }
 
   void activeJob(LinearLayout left) {
-    TextView name = p.text(friendly(obj("print_stats").optString("filename")), 19, PanelUi.TEXT);
-    name.setMaxLines(2);
-    name.setEllipsize(TextUtils.TruncateAt.END);
-    add(left, name, 48);
-    LinearLayout metrics = p.row();
-    TextView percent = p.text("", 25, PanelUi.TEXT);
+    plateIdentity(left, obj("print_stats").optString("filename"));
+    p.gap(left, 8);
+    LinearLayout stats = p.row();
+    TextView percent = p.text("", 34, PanelUi.TEXT);
     bindText(percent, () -> value(progress() * 100, 0) + "%");
-    metrics.addView(percent, new LinearLayout.LayoutParams(0, p.dp(32), 1));
-    TextView time = p.text("", 13, PanelUi.MUTED);
-    bindText(time, this::remaining);
-    metrics.addView(time);
-    left.addView(metrics);
+    stats.addView(percent, new LinearLayout.LayoutParams(0, p.dp(52), 1));
+    LinearLayout time = p.col();
+    TextView label = p.label(jobState().equals("paused") ? "PRINT PAUSED" : "EST. REMAINING");
+    time.addView(label);
+    TextView eta = p.text("", 21, jobState().equals("paused") ? PanelUi.AMBER : PanelUi.TEXT);
+    bindText(eta, () -> jobState().equals("paused") ? "Ready to resume" : timeLeft());
+    time.addView(eta);
+    stats.addView(time);
+    add(left, stats, 52);
     ProgressBar bar = new ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal);
     bar.setProgressTintList(android.content.res.ColorStateList.valueOf(PanelUi.ACCENT));
     bar.setProgressBackgroundTintList(android.content.res.ColorStateList.valueOf(PanelUi.LINE));
     bindings.add(() -> bar.setProgress((int) (progress() * 100)));
-    add(left, bar, 10);
-    p.gap(left, 10);
-    Button pause = button("Pause", "pause", 1, this::pauseResume);
-    bindings.add(() -> {
-      boolean resume = jobState().equals("paused");
-      pause.setText(resume ? "Resume" : "Pause");
-      if (!Boolean.valueOf(resume).equals(pause.getTag())) {
-        pause.setTag(resume);
-        PanelUi.Icon icon = new PanelUi.Icon(resume ? "play" : "pause", PanelUi.BG);
-        icon.setBounds(0, 0, p.dp(19), p.dp(19));
-        pause.setCompoundDrawables(icon, null, null, null);
-      }
-    });
+    add(left, bar, 6);
+    p.gap(left, 12);
+    Button pause =
+        button(
+            jobState().equals("paused") ? "Resume" : "Pause",
+            jobState().equals("paused") ? "play" : "pause",
+            1,
+            this::pauseResume);
     gate(pause, this::activePrint);
-    Button cancel = button("Cancel print", null, 2, this::cancelPrint);
+    Button cancel = button("Cancel print", null, 0, this::cancelPrint);
     gate(cancel, this::activePrint);
+    cancel.setTextColor(PanelUi.DANGER);
     rowButtons(left, pause, cancel);
-    p.gap(left, 10);
-    LinearLayout tune = p.panel();
-    p.pad(tune, 12, 8);
-    LinearLayout top = p.row();
-    top.addView(p.label("LIVE Z ADJUSTMENT"), new LinearLayout.LayoutParams(0, -2, 1));
-    TextView offset = p.text("", 15, PanelUi.ACCENT);
+    p.gap(left, 8);
+    if (jobState().equals("paused")) {
+      rowButtons(
+          left,
+          button("Change filament", "filament", 0, () -> openPrepare("Filament")),
+          button("View camera", "camera", 0, () -> show("Camera")));
+    } else {
+      rowButtons(
+          left,
+          button("View camera", "camera", 0, () -> show("Camera")),
+          button(
+              "Print details",
+              "files",
+              0,
+              () -> {
+                JSONObject file = listedFile(obj("print_stats").optString("filename"));
+                if (file != null) fileDetails(file);
+                else show("Files");
+              }));
+    }
+  }
+
+  void liveTuning(LinearLayout right) {
+    LinearLayout title = p.row();
+    title.addView(
+        p.text("Live tuning", 17, PanelUi.TEXT), new LinearLayout.LayoutParams(0, p.dp(48), 1));
+    Button more = button("•••", null, 0, this::tuningSheet);
+    more.setContentDescription("Speed, flow & fan");
+    title.addView(more, new LinearLayout.LayoutParams(p.dp(48), p.dp(48)));
+    right.addView(title);
+    LinearLayout z = p.row();
+    z.addView(p.label("Z OFFSET"), new LinearLayout.LayoutParams(0, -1, 1));
+    TextView offset = p.text("", 16, PanelUi.ACCENT);
     bindText(offset, () -> value(zOffset(), 3) + " mm");
-    top.addView(offset);
-    tune.addView(top);
-    p.gap(tune, 6);
+    z.addView(offset);
+    add(right, z, 24);
     Button closer = button("Closer −0.025", null, 0, () -> adjustZ(-.025));
     Button further = button("Further +0.025", null, 0, () -> adjustZ(.025));
+    closer.setTextSize(12);
+    further.setTextSize(12);
+    p.pad(closer, 5, 8);
+    p.pad(further, 5, 8);
     gate(closer, () -> activePrint() && homed("xyz"));
     gate(further, () -> activePrint() && homed("xyz"));
-    rowButtons(tune, closer, further);
-    add(left, tune, 90);
-    p.gap(left, 8);
-    Button more = button("Speed, flow & fan", "more", 0, this::tuningSheet);
-    gate(more, this::activePrint);
-    add(left, more, 48);
+    rowButtons(right, closer, further);
+    p.gap(right, 8);
+    inlineTuneRow(right, "Speed", "speed_factor", 10, 50, 150, "M220 S");
+    inlineTuneRow(right, "Flow", "extrude_factor", 5, 50, 150, "M221 S");
+    inlineTuneRow(right, "Fan", "fan", 10, 0, 100, "M106 S");
+  }
+
+  void finishedJob(LinearLayout left, LinearLayout right) {
+    boolean failed = jobState().equals("error");
+    TextView state =
+        p.text(
+            failed
+                ? "Print failed"
+                : jobState().equals("cancelled") ? "Print cancelled" : "Print finished",
+            24,
+            failed ? PanelUi.DANGER : PanelUi.ACCENT);
+    left.addView(state);
+    p.gap(left, 10);
+    plateIdentity(left, obj("print_stats").optString("filename"));
+    p.gap(left, 10);
+    TextView outcome =
+        p.text(
+            failed
+                ? obj("print_stats").optString("message", "The print was interrupted.")
+                : "Remove the finished plate before starting another print.",
+            13,
+            PanelUi.MUTED);
+    outcome.setMaxLines(2);
+    add(left, outcome, 36);
+    p.gap(left, 10);
+    rowButtons(
+        left,
+        button(
+            failed ? "Print again" : "Reprint",
+            "play",
+            1,
+            () -> {
+              JSONObject file = listedFile(obj("print_stats").optString("filename"));
+              if (file != null) fileDetails(file);
+              else show("Files");
+            }),
+        button("Choose print", "files", 0, () -> show("Files")));
+    right.addView(p.text(failed ? "Inspect and prepare" : "Next plate", 18, PanelUi.TEXT));
+    p.gap(right, 10);
+    TextView next = p.text("", 13, PanelUi.MUTED);
+    next.setMaxLines(3);
+    bindText(
+        next,
+        () ->
+            failed
+                ? "Check the plate, nozzle and filament before trying again."
+                : finite(obj("extruder"), "target") > 0 || finite(obj("heater_bed"), "target") > 0
+                    ? "Heaters are still on. Cool down when finished."
+                    : "Heaters are off.");
+    add(right, next, 42);
+    p.gap(right, 14);
+    add(
+        right,
+        button(
+            "Cool down",
+            "heat",
+            0,
+            () -> gcode("Turning heaters off", "TURN_OFF_HEATERS", Policy.IDLE, null)),
+        48);
+    p.gap(right, 6);
+    add(right, button("Change filament", "filament", 0, () -> openPrepare("Filament")), 48);
+    p.gap(right, 6);
+    add(right, button("Bed setup", "calibrate", 0, () -> openPrepare("Bed setup")), 48);
   }
 
   double progress() {
@@ -710,7 +982,7 @@ public final class MainActivity extends Activity {
   }
 
   void unavailable(LinearLayout body) {
-    body.addView(p.heading(fresh() ? stateTitle() : "Printer unavailable"));
+    body.addView(p.heading(fresh() ? "Printer stopped" : "Printer unavailable"));
     p.gap(body, 10);
     TextView detail =
         p.text(
@@ -723,11 +995,17 @@ public final class MainActivity extends Activity {
             PanelUi.MUTED);
     detail.setMaxLines(3);
     body.addView(detail);
+    p.gap(body, 12);
+    subtext(
+        body,
+        fresh() && !engine().equals("ready")
+            ? "Resolve the reported printer fault before restarting Klipper."
+            : "Local printing only needs the local printer connection.");
     p.gap(body, 16);
     if (fresh() && !engine().equals("ready"))
       rowButtons(
           body,
-          button("Restart Klipper", "refresh", 1, () -> recover(false)),
+          button("Restart Klipper", "refresh", 0, () -> recover(false)),
           button("Firmware restart", null, 0, () -> recover(true)));
     else
       rowButtons(
@@ -740,13 +1018,14 @@ public final class MainActivity extends Activity {
                 lastPoll = 0;
                 if (!polling) poll();
               }),
-          button("Connection", "wifi", 0, () -> show("Connection")));
-    p.gap(body, 12);
-    subtext(
-        body,
-        fresh() && !engine().equals("ready")
-            ? "Resolve the reported printer fault before restarting Klipper."
-            : "Local printing does not need internet. Check the local printer connection.");
+          button(
+              "Error details",
+              null,
+              0,
+              () ->
+                  information(
+                      "Connection error",
+                      lastError.isEmpty() ? "Waiting for a printer response." : lastError)));
   }
 
   enum Policy {
@@ -912,6 +1191,10 @@ public final class MainActivity extends Activity {
   }
 
   void pauseResume() {
+    pauseResume(null);
+  }
+
+  void pauseResume(Runnable success) {
     boolean resume = jobState().equals("paused");
     String filename = obj("print_stats").optString("filename");
     Runnable send =
@@ -927,7 +1210,7 @@ public final class MainActivity extends Activity {
                   d.request(
                       "POST", resume ? "/printer/print/resume" : "/printer/print/pause", null);
                 },
-                null);
+                success);
     if (resume)
       confirm("Resume this print?", "Check that the toolhead and print are clear.", "Resume", send);
     else send.run();
@@ -955,17 +1238,29 @@ public final class MainActivity extends Activity {
   }
 
   void openPrepare(String tab) {
+    if (tab.equals("Filament")
+        && jobState().equals("paused")
+        && !Objects.equals(filamentForJob, obj("print_stats").optString("filename"))) {
+      filamentForJob = obj("print_stats").optString("filename");
+      double target = finite(obj("extruder"), "target");
+      if (Double.isFinite(target) && target > 0) filamentTemperature = (int) Math.round(target);
+    }
     prepareTab = tab;
     show("Prepare");
   }
 
   void prepare() {
     LinearLayout tabs = p.row();
-    for (String name : new String[] {"Move", "Filament", "Bed setup"})
-      p.weighted(
-          tabs, button(name, null, name.equals(prepareTab) ? 3 : 0, () -> openPrepare(name)), 48);
-    add(workspace, tabs, 48);
-    p.gap(workspace, 12);
+    tabs.setBackground(p.shape(PanelUi.SURFACE, 8));
+    for (String name : new String[] {"Move", "Filament", "Bed setup"}) {
+      Button tab = button(name, null, name.equals(prepareTab) ? 3 : 4, () -> openPrepare(name));
+      tab.setSelected(name.equals(prepareTab));
+      p.weighted(tabs, tab, 48);
+    }
+    LinearLayout bar = p.row();
+    bar.addView(tabs, new LinearLayout.LayoutParams(p.dp(480), p.dp(48)));
+    add(workspace, bar, 48);
+    p.gap(workspace, 8);
     LinearLayout body = p.col();
     workspace.addView(body, new LinearLayout.LayoutParams(-1, 0, 1));
     if (prepareTab.equals("Move")) movePage(body);
@@ -1162,23 +1457,27 @@ public final class MainActivity extends Activity {
                 : jobState().equals("printing")
                     ? "Pause the print before changing filament."
                     : filamentReady()
-                        ? "Nozzle ready. Insert filament for loading, or hold the strand for"
-                            + " unloading."
-                        : "Choose a material, then heat the nozzle. Loading stays locked until it"
-                            + " is hot enough.");
+                        ? "Nozzle ready. Load or unload the filament."
+                        : "Heat the nozzle to " + filamentTemperature + "° to begin.");
     instructions.addView(stage);
-    p.gap(instructions, 16);
+    p.gap(instructions, 8);
     Button load = button("Load filament", "filament", 1, () -> filamentMacro(true)),
         unload = button("Unload filament", null, 0, () -> filamentMacro(false));
     gate(load, () -> filamentReady() && capable("LOAD_FILAMENT"));
     gate(unload, () -> filamentReady() && capable("UNLOAD_FILAMENT"));
     rowButtons(instructions, load, unload);
-    p.gap(instructions, 12);
+    p.gap(instructions, 8);
     Button feed = button("Feed 5 mm", null, 0, () -> feed(5)),
         retract = button("Retract 5 mm", null, 0, () -> feed(-5));
     gate(feed, () -> filamentReady());
     gate(retract, () -> filamentReady());
     rowButtons(instructions, feed, retract);
+    p.gap(instructions, 8);
+    Button resume = button("Resume print", "play", 1, () -> pauseResume(() -> show("Home")));
+    bindings.add(
+        () -> resume.setVisibility(jobState().equals("paused") ? View.VISIBLE : View.GONE));
+    gate(resume, () -> ready() && jobState().equals("paused"));
+    add(instructions, resume, 48);
     LinearLayout heat = p.col();
     cols.addView(heat, new LinearLayout.LayoutParams(p.dp(240), -1));
     heaterCard(heat, "Nozzle", "extruder", "heat");
@@ -1361,6 +1660,8 @@ public final class MainActivity extends Activity {
                       ? "Rebuilding the corrected heightmap…"
                       : "Creating the initial heightmap…"
                   : calibrationResult);
+      bindings.add(
+          () -> phase.setVisibility(phase.getText().length() == 0 ? View.GONE : View.VISIBLE));
       bindings.add(() -> phase.setTextColor(calibrationResultColor));
       add(main, phase, 40);
       p.gap(main, 8);
@@ -1542,6 +1843,10 @@ public final class MainActivity extends Activity {
   }
 
   LinearLayout sheet(String title) {
+    return sheet(title, 560);
+  }
+
+  LinearLayout sheet(String title, int widthDp) {
     if (activeDialog != null) activeDialog.dismiss();
     dialogBindings.clear();
     Dialog d = new Dialog(this);
@@ -1596,11 +1901,11 @@ public final class MainActivity extends Activity {
     d.getWindow()
         .setLayout(
             Math.min(
-                p.dp(800),
+                p.dp(widthDp),
                 getResources().getDisplayMetrics().widthPixels
                     - screenLeftInset
                     - screenRightInset
-                    - p.dp(100)),
+                    - p.dp(84)),
             -2);
     d.getWindow().setGravity(Gravity.TOP | Gravity.RIGHT);
     WindowManager.LayoutParams placement = d.getWindow().getAttributes();
@@ -1706,7 +2011,8 @@ public final class MainActivity extends Activity {
   }
 
   void temperatureSheet(String heater) {
-    LinearLayout body = sheet(heater.equals("extruder") ? "Nozzle temperature" : "Bed temperature");
+    LinearLayout body =
+        sheet(heater.equals("extruder") ? "Nozzle temperature" : "Bed temperature", 420);
     double max = heaterMax(status, heater);
     if (!ready() || !Double.isFinite(max)) {
       subtext(body, "Connect to the printer to read its temperature limits.");
@@ -1718,6 +2024,8 @@ public final class MainActivity extends Activity {
     body.addView(current);
     p.gap(body, 10);
     LinearLayout adjust = p.row();
+    adjust.addView(
+        p.text("Target", 15, PanelUi.TEXT), new LinearLayout.LayoutParams(0, p.dp(48), 1));
     Button
         minus =
             button(
@@ -1737,11 +2045,13 @@ public final class MainActivity extends Activity {
                   target[0] = Math.min(max, target[0] + 5);
                   updateViews();
                 });
-    adjust.addView(minus, new LinearLayout.LayoutParams(p.dp(100), p.dp(56)));
-    TextView number = p.text("", 32, PanelUi.TEXT);
+    p.pad(minus, 4, 8);
+    p.pad(plus, 4, 8);
+    adjust.addView(minus, new LinearLayout.LayoutParams(p.dp(56), p.dp(48)));
+    TextView number = p.text("", 26, PanelUi.TEXT);
     number.setGravity(Gravity.CENTER);
-    adjust.addView(number, new LinearLayout.LayoutParams(0, p.dp(56), 1));
-    adjust.addView(plus, new LinearLayout.LayoutParams(p.dp(100), p.dp(56)));
+    adjust.addView(number, new LinearLayout.LayoutParams(p.dp(72), p.dp(48)));
+    adjust.addView(plus, new LinearLayout.LayoutParams(p.dp(56), p.dp(48)));
     body.addView(adjust);
     p.gap(body, 12);
     LinearLayout presets = p.row();
@@ -1792,7 +2102,7 @@ public final class MainActivity extends Activity {
   }
 
   void numberSheet(String title, double initial, double min, double max, DoubleConsumer accept) {
-    LinearLayout body = sheet(title);
+    LinearLayout body = sheet(title, 420);
     EditText input = new EditText(this);
     input.setTextColor(PanelUi.TEXT);
     input.setTextSize(24);
@@ -1801,7 +2111,10 @@ public final class MainActivity extends Activity {
         android.text.InputType.TYPE_CLASS_NUMBER | android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL);
     input.setText(trimNumber(Double.isFinite(initial) ? initial : 0));
     input.selectAll();
-    body.addView(input);
+    input.setContentDescription(title);
+    input.setBackground(p.outline(PanelUi.RAISED));
+    p.pad(input, 12, 8);
+    add(body, input, 56);
     p.gap(body, 8);
     subtext(body, trimNumber(min) + " – " + trimNumber(max));
     p.gap(body, 12);
@@ -1880,8 +2193,8 @@ public final class MainActivity extends Activity {
   }
 
   void tuningSheet() {
-    LinearLayout body = sheet("Tune this print");
-    subtext(body, "Changes apply to the current printer session. Live Z is directly on Home.");
+    LinearLayout body = sheet("Tune this print", 420);
+    subtext(body, "Adjust the current printer session.");
     p.gap(body, 12);
     tuneRow(body, "Speed", "speed_factor", 10, 50, 150, "M220 S");
     p.gap(body, 10);
@@ -1898,29 +2211,65 @@ public final class MainActivity extends Activity {
 
   void tuneRow(
       LinearLayout body, String title, String field, int step, int min, int max, String prefix) {
+    buildTuneRow(body, title, field, step, min, max, prefix, true);
+  }
+
+  void inlineTuneRow(
+      LinearLayout body, String title, String field, int step, int min, int max, String prefix) {
+    buildTuneRow(body, title, field, step, min, max, prefix, false);
+  }
+
+  void buildTuneRow(
+      LinearLayout body,
+      String title,
+      String field,
+      int step,
+      int min,
+      int max,
+      String prefix,
+      boolean dialog) {
     LinearLayout row = p.row();
     row.addView(p.text(title, 15, PanelUi.TEXT), new LinearLayout.LayoutParams(0, p.dp(48), 1));
     Button minus = button("−" + step, null, 0, () -> adjustTune(field, -step, min, max, prefix)),
         plus = button("+" + step, null, 0, () -> adjustTune(field, step, min, max, prefix));
-    row.addView(minus, new LinearLayout.LayoutParams(p.dp(72), p.dp(48)));
-    TextView number = p.text("", 20, PanelUi.ACCENT);
+    p.pad(minus, 4, 8);
+    p.pad(plus, 4, 8);
+    int buttonWidth = dialog ? 56 : 48;
+    LinearLayout controls = p.row();
+    controls.setBackground(p.shape(PanelUi.RAISED, 8));
+    minus.setBackground(p.buttonBackground(4));
+    plus.setBackground(p.buttonBackground(4));
+    controls.addView(minus, new LinearLayout.LayoutParams(p.dp(buttonWidth), p.dp(48)));
+    TextView number = p.text("", dialog ? 20 : 18, PanelUi.ACCENT);
     number.setGravity(Gravity.CENTER);
-    row.addView(number, new LinearLayout.LayoutParams(p.dp(100), p.dp(48)));
-    row.addView(plus, new LinearLayout.LayoutParams(p.dp(72), p.dp(48)));
-    dialogBindings.add(
-        () -> number.setText(fresh() ? value(tuneValue(status, field), 0) + "%" : "—"));
+    controls.addView(number, new LinearLayout.LayoutParams(p.dp(dialog ? 72 : 62), p.dp(48)));
+    controls.addView(plus, new LinearLayout.LayoutParams(p.dp(buttonWidth), p.dp(48)));
+    row.addView(controls);
+    Runnable refresh =
+        () -> {
+          String current = fresh() ? value(tuneValue(status, field), 0) + "%" : "—";
+          number.setText(current);
+          number.setContentDescription(title + " " + current);
+        };
+    (dialog ? dialogBindings : bindings).add(refresh);
+    refresh.run();
     minus.setContentDescription(
         "Decrease " + title.toLowerCase(Locale.US) + " by " + step + " percent");
     plus.setContentDescription(
         "Increase " + title.toLowerCase(Locale.US) + " by " + step + " percent");
-    dialogGate(
-        minus,
+    BooleanSupplier canDecrease =
         () ->
-            ready() && Double.isFinite(tuneValue(status, field)) && tuneValue(status, field) > min);
-    dialogGate(
-        plus,
+            ready() && Double.isFinite(tuneValue(status, field)) && tuneValue(status, field) > min;
+    BooleanSupplier canIncrease =
         () ->
-            ready() && Double.isFinite(tuneValue(status, field)) && tuneValue(status, field) < max);
+            ready() && Double.isFinite(tuneValue(status, field)) && tuneValue(status, field) < max;
+    if (dialog) {
+      dialogGate(minus, canDecrease);
+      dialogGate(plus, canIncrease);
+    } else {
+      gate(minus, canDecrease);
+      gate(plus, canIncrease);
+    }
     body.addView(row);
   }
 
@@ -1978,6 +2327,9 @@ public final class MainActivity extends Activity {
   }
 
   void fetchFiles() {
+    if (filesFetching) return;
+    filesFetching = true;
+    lastFileRequest = SystemClock.elapsedRealtime();
     final PrinterClient target = client;
     final long generation = connectionGeneration;
     final long refreshGeneration = ++fileRefreshGeneration;
@@ -2008,7 +2360,11 @@ public final class MainActivity extends Activity {
           }
           metadata.keySet().retainAll(names);
           thumbnails.keySet().retainAll(names);
+          filesFetching = false;
+          fileError = "";
           files = next;
+          JSONObject currentPlate = listedFile(obj("print_stats").optString("filename"));
+          if (currentPlate != null) requestFileMetadata(currentPlate, null);
           renderFiles();
           preloadFileMetadata(next, 0, target, generation, refreshGeneration);
         });
@@ -2018,11 +2374,17 @@ public final class MainActivity extends Activity {
               || target != client
               || generation != connectionGeneration
               || refreshGeneration != fileRefreshGeneration) return;
+          filesFetching = false;
+          fileError = "Could not read stored prints";
           if (page.equals("Files") && fileList != null) {
             fileList.removeAllViews();
             subtext(fileList, "Could not load stored prints. Check the connection, then refresh.");
           }
           tell("Files · " + message(e), PanelUi.AMBER);
+        });
+      } finally {
+        ui.post(() -> {
+          if (refreshGeneration == fileRefreshGeneration) filesFetching = false;
         });
       }
     });
@@ -2159,7 +2521,7 @@ public final class MainActivity extends Activity {
       if (!name.toLowerCase(Locale.ROOT).contains(fileFilter.toLowerCase(Locale.ROOT))) continue;
       matches++;
       LinearLayout row = p.row();
-      p.pad(row, 12, 10);
+      p.pad(row, 10, 6);
       row.setBackground(
           new android.graphics.drawable.RippleDrawable(
               android.content.res.ColorStateList.valueOf(0x22ffffff),
@@ -2171,7 +2533,7 @@ public final class MainActivity extends Activity {
         image.setImageBitmap(thumb);
         image.setScaleType(ImageView.ScaleType.FIT_CENTER);
       } else image.setImageDrawable(new PanelUi.Icon("files", PanelUi.MUTED));
-      row.addView(image, new LinearLayout.LayoutParams(p.dp(56), p.dp(56)));
+      row.addView(image, new LinearLayout.LayoutParams(p.dp(48), p.dp(48)));
       LinearLayout labels = p.col();
       labels.setPadding(p.dp(14), 0, p.dp(10), 0);
       TextView title = p.text(friendly(name), 16, PanelUi.TEXT);
@@ -2186,14 +2548,18 @@ public final class MainActivity extends Activity {
       row.addView(arrow, new LinearLayout.LayoutParams(p.dp(20), p.dp(20)));
       row.setContentDescription("Print details: " + name);
       row.setOnClickListener(v -> fileDetails(file));
-      add(fileList, row, 82);
+      add(fileList, row, 68);
       p.gap(fileList, 8);
     }
     if (matches == 0)
       subtext(
           fileList,
           files.isEmpty()
-              ? "No stored prints yet. Send a plate from Orca, then refresh."
+              ? filesFetching
+                  ? "Loading stored prints…"
+                  : !fileError.isEmpty()
+                      ? fileError + ". Refresh to retry."
+                      : "No stored prints yet. Send a plate from Orca, then refresh."
               : "No prints match this search.");
   }
 
@@ -2221,7 +2587,7 @@ public final class MainActivity extends Activity {
 
   void fileDetails(JSONObject file) {
     String name = file.optString("path");
-    LinearLayout body = sheet("Print details");
+    LinearLayout body = sheet("Print details", 560);
     LinearLayout overview = p.row();
     ImageView image = new ImageView(this);
     Bitmap bitmap = thumbnails.get(name);
@@ -2475,22 +2841,46 @@ public final class MainActivity extends Activity {
     }
   }
 
-  void morePage() {
-    LinearLayout body = scroll(workspace);
+  void menuRow(LinearLayout parent, String title, String subtitle, String icon, Runnable action) {
     LinearLayout row = p.row();
-    p.weighted(
-        row, task("Connection", "Wi-Fi, offline & Orca", "wifi", () -> show("Connection")), 88);
-    p.weighted(
-        row, task("Maintenance", "Software & recovery", "refresh", this::maintenanceSheet), 88);
-    add(body, row, 88);
-    p.gap(body, 10);
-    LinearLayout second = p.row();
-    p.weighted(
-        second, task("Startup", "Dedicated printer display", "home", this::startupSheet), 88);
-    p.weighted(
-        second, task("Mainsail", "Full printer interface", "files", () -> openMainsail(false)), 88);
-    add(body, second, 88);
-    p.gap(body, 14);
+    p.pad(row, 6, 6);
+    row.setBackground(p.buttonBackground(4));
+    ImageView picture = new ImageView(this);
+    picture.setImageDrawable(new PanelUi.Icon(icon, PanelUi.MUTED));
+    row.addView(picture, new LinearLayout.LayoutParams(p.dp(22), p.dp(22)));
+    LinearLayout text = p.col();
+    text.setPadding(p.dp(12), 0, p.dp(8), 0);
+    text.addView(p.text(title, 15, PanelUi.TEXT));
+    TextView detail = p.text(subtitle, 12, PanelUi.MUTED);
+    detail.setMaxLines(1);
+    detail.setEllipsize(TextUtils.TruncateAt.END);
+    text.addView(detail);
+    row.addView(text, new LinearLayout.LayoutParams(0, -2, 1));
+    ImageView arrow = new ImageView(this);
+    arrow.setImageDrawable(new PanelUi.Icon("arrow", PanelUi.MUTED));
+    row.addView(arrow, new LinearLayout.LayoutParams(p.dp(18), p.dp(18)));
+    row.setContentDescription(title);
+    row.setOnClickListener(v -> action.run());
+    add(parent, row, 56);
+  }
+
+  void morePage() {
+    LinearLayout columns = p.row();
+    columns.setGravity(Gravity.TOP);
+    LinearLayout system = p.panel(), mode = p.panel();
+    LinearLayout.LayoutParams left = new LinearLayout.LayoutParams(0, -2, 1);
+    left.rightMargin = p.dp(12);
+    columns.addView(system, left);
+    columns.addView(mode, new LinearLayout.LayoutParams(p.dp(280), -2));
+    system.addView(p.text("System", 18, PanelUi.TEXT));
+    p.gap(system, 8);
+    menuRow(system, "Connection", "Wi-Fi, USB and Orca", "wifi", () -> show("Connection"));
+    menuRow(
+        system, "Maintenance", "Software and printer recovery", "refresh", this::maintenanceSheet);
+    menuRow(system, "Startup", "Dedicated display preferences", "home", this::startupSheet);
+    menuRow(system, "Mainsail", "Full printer interface", "files", () -> openMainsail(false));
+    mode.addView(p.text("Control mode", 18, PanelUi.TEXT));
+    p.gap(mode, 10);
     Button fast =
         button(
             "Fast controls: off",
@@ -2507,9 +2897,15 @@ public final class MainActivity extends Activity {
       fast.setText("Fast controls: " + (fastControls() ? "on" : "off"));
       PanelUi.selection(fast, fastControls(), p);
     });
-    add(body, fast, 48);
-    p.gap(body, 6);
-    subtext(body, "Skip routine confirmations. Brief warnings remain; printer limits still apply.");
+    add(mode, fast, 48);
+    p.gap(mode, 8);
+    subtext(mode, "Run routine actions with brief warnings instead of confirmation sheets.");
+    p.gap(mode, 16);
+    mode.addView(p.label("PIXEL SERVICES"));
+    p.gap(mode, 4);
+    statusLine(mode, "Local sharing", () -> ConnectionService.running ? "On" : "Off");
+    statusLine(mode, "Camera", () -> MonitorService.running ? "On" : "Off");
+    add(workspace, columns, -1);
   }
 
   void connectionPage() {
@@ -2626,6 +3022,9 @@ public final class MainActivity extends Activity {
     metadata.clear();
     thumbnails.clear();
     files.clear();
+    lastFileRequest = 0;
+    filesFetching = false;
+    fileError = "";
     startConnection();
     updateViews();
   }
