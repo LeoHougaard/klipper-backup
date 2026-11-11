@@ -4,11 +4,14 @@ import android.content.Context;
 import java.io.*;
 import java.net.*;
 import java.nio.charset.StandardCharsets;
+import java.util.*;
 import org.json.*;
 
 final class PrinterClient {
   final String base, key;
   private JSONObject settings;
+  private Set<String> availableObjects;
+  private JSONArray commands;
 
   PrinterClient(Context context) {
     base =
@@ -44,6 +47,12 @@ final class PrinterClient {
     HttpURLConnection connection = (HttpURLConnection) new URL(base + path).openConnection();
     connection.setConnectTimeout(3500);
     connection.setReadTimeout(7000);
+    if (path.startsWith("/printer/gcode/script") || path.startsWith("/printer/print/start"))
+      connection.setReadTimeout(20000);
+    if (path.startsWith("/printer/emergency_stop")) {
+      connection.setConnectTimeout(1500);
+      connection.setReadTimeout(2500);
+    }
     connection.setInstanceFollowRedirects(false);
     connection.setRequestMethod(method);
     if (!key.isEmpty()) connection.setRequestProperty("X-Api-Key", key);
@@ -53,6 +62,15 @@ final class PrinterClient {
   JSONObject request(String method, String path, JSONObject body) throws Exception {
     HttpURLConnection c = open(method, path);
     try {
+      if (path.startsWith("/printer/gcode/script") && body != null) {
+        String script = body.optString("script").trim();
+        // Full meshes can take minutes. Short moves, heater targets and TESTZ
+        // must release their uncertain-response gate promptly if a reply is lost.
+        if (script.startsWith("CALIBRATE_BED_TILT")
+            || script.startsWith("CALIBRATE_COMPENSATED_BED_MESH")
+            || script.equals("ACCEPT")) c.setReadTimeout(900000);
+        else if (script.matches("(?s).*\\bG28\\b.*")) c.setReadTimeout(120000);
+      }
       if (body != null) {
         c.setDoOutput(true);
         c.setRequestProperty("Content-Type", "application/json");
@@ -72,14 +90,31 @@ final class PrinterClient {
     }
   }
 
-  JSONObject status() throws Exception {
-    JSONObject status =
-        request(
-                "GET",
-                "/printer/objects/query?webhooks&print_stats&virtual_sdcard&extruder&heater_bed&toolhead&fan&gcode_move&display_status",
-                null)
-            .getJSONObject("result")
-            .getJSONObject("status");
+  synchronized JSONObject status() throws Exception {
+    JSONObject status;
+    try {
+      status =
+          request(
+                  "GET",
+                  "/printer/objects/query?webhooks&print_stats&virtual_sdcard&extruder&heater_bed&toolhead&fan&gcode_move&display_status",
+                  null)
+              .getJSONObject("result")
+              .getJSONObject("status");
+      if (status.optJSONObject("webhooks") == null
+          || status.getJSONObject("webhooks").optString("state").isEmpty())
+        throw new IOException("Printer telemetry is unavailable");
+    } catch (Exception original) {
+      JSONObject server = request("GET", "/server/info", null).getJSONObject("result");
+      String engine = server.optString("klippy_state", "");
+      if (engine.isEmpty() || engine.equals("ready")) throw original;
+      settings = null;
+      availableObjects = null;
+      commands = null;
+      return new JSONObject()
+          .put(
+              "webhooks",
+              new JSONObject().put("state", engine).put("state_message", "Klipper is " + engine));
+    }
     JSONObject webhooks = status.optJSONObject("webhooks");
     if (webhooks != null && "ready".equals(webhooks.optString("state"))) {
       if (settings == null)
@@ -89,7 +124,49 @@ final class PrinterClient {
                 .getJSONObject("status")
                 .getJSONObject("configfile");
       status.put("configfile", settings);
-    } else settings = null;
+      if (availableObjects == null) {
+        try {
+          Set<String> discovered = new HashSet<>();
+          JSONArray objects =
+              request("GET", "/printer/objects/list", null)
+                  .getJSONObject("result")
+                  .getJSONArray("objects");
+          for (int i = 0; i < objects.length(); i++) discovered.add(objects.getString(i));
+          availableObjects = discovered;
+        } catch (Exception ignored) {
+        }
+      }
+      StringBuilder optional = new StringBuilder();
+      for (String name : new String[] {"manual_probe", "y_axis_z_offset", "bed_mesh"})
+        if (availableObjects != null && availableObjects.contains(name)) {
+          if (optional.length() > 0) optional.append('&');
+          optional.append(name);
+        }
+      if (optional.length() > 0) {
+        JSONObject extra =
+            request("GET", "/printer/objects/query?" + optional, null)
+                .getJSONObject("result")
+                .getJSONObject("status");
+        for (Iterator<String> it = extra.keys(); it.hasNext(); ) {
+          String name = it.next();
+          status.put(name, extra.get(name));
+        }
+      }
+      if (commands == null) {
+        try {
+          JSONArray discovered = new JSONArray();
+          JSONObject help = request("GET", "/printer/gcode/help", null).getJSONObject("result");
+          for (Iterator<String> it = help.keys(); it.hasNext(); ) discovered.put(it.next());
+          commands = discovered;
+        } catch (Exception ignored) {
+        }
+      }
+      status.put("_commands", commands);
+    } else {
+      settings = null;
+      availableObjects = null;
+      commands = null;
+    }
     return status;
   }
 

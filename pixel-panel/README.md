@@ -6,19 +6,25 @@ is the base Pixel 10 on Android 17. Klipper stays on the existing BTT Pi.
 
 ## Current app
 
-- Landscape in either direction, dark touch interface, safe space for the camera cutout.
-- Print: live state, filename, progress, elapsed time, nozzle/bed temperatures,
-  temperature targets, preheat, cooldown, pause/resume and cancel. Tune offers
-  speed/flow adjustment and small whole-bed Z adjustments during a print.
-- Control: relative axis movement with homing/travel checks, home, motor release,
-  part fan, small extrusion/retraction with a hot-nozzle check. Printer calibration
-  opens the existing Mainsail interface, preserving its native manual-probe workflow.
-- Files: printer's stored G-code, newest first, and confirmed print start.
+- Landscape in either direction, muted dark colors, 48 dp minimum controls, and
+  hardware-reported safe margins for both the camera cutout and rounded corners.
+- Home: preparation shortcuts while idle; filename, progress, estimated remaining
+  time, layers, pause/resume, cancel and direct live Z adjustment during printing.
+  Nozzle/bed readings and editable targets stay visible in both states.
+- Prepare: spatial XY/Z movement, homing/travel checks, motor release, complete
+  hot-nozzle load/unload and bounded feed/retract, plus native front/rear paper
+  calibration and corrected-heightmap refresh. Calibration results distinguish
+  saved/rebuilt, rejected measurements, and unconfirmed completion.
+- Files: searchable stored G-code, newest first, metadata, model thumbnails and
+  explicit print start. Refreshed size/timestamp changes invalidate old previews.
 - Camera: rear camera, silent 1280×720 maximum JPEG frames at approximately 1 fps,
   authenticated MJPEG and snapshots, continuous torch with adjustable strength.
   The service stays independent of the Linux desktop. A notification stops it.
-- Settings: Moonraker URL and optional API key, Android Wi-Fi/tethering settings,
+- More: Moonraker URL and optional API key, Android Wi-Fi/tethering settings,
   offline hotspot, software versions, link to the existing updater, and startup options.
+- More → Fast controls skips routine confirmation dialogs, with brief action
+  warnings and a visible FAST indicator. It persists until switched off. This
+  does not change Klipper's homing, heater, extrusion or travel configuration.
 - Authenticated HTTP gateway: the same phone endpoint supports Orca's native
   Moonraker host, large uploads streamed without holding the G-code in memory,
   a small browser device panel, and camera access. No WebSocket proxy is implemented.
@@ -29,27 +35,27 @@ No AI detector or on-phone slicer is included.
 
 ## Use
 
-1. Open **Voron**. Allow local-network access on Android 17. In Settings, enter
+1. Open **Voron**. Allow local-network access on Android 17. In More → Connection, enter
    the Pi's Moonraker URL, including port 7125 if directly accessing Moonraker.
-   Connect should show `ready · standby` when the printer is ready and idle.
-2. Camera → Start monitoring. Grant camera and notification access. The light
-   defaults off; use its slider when desired. Preview shows the most recent frame.
-3. Camera → Share camera / Orca connection displays the phone's local addresses,
+   Home should show `Ready` when the printer is ready and idle.
+2. Camera → Turn camera on. Grant camera access; notification permission is
+   optional. The light defaults off. The preview advances and hides stale frames.
+3. More → Connection → Orca connection displays the phone's local addresses,
    port and private key. Those values remain in app-private storage; don't commit them.
 4. In Orca, select **Moonraker (Klipper)** as the host. Use the phone's address
    and port 8765 as the host URL and the displayed key as the API key.
    Device UI is `http://<phone>:8765/?token=<key>`; it includes the camera.
    A direct camera URL is `http://<phone>:8765/camera/stream?token=<key>`.
-5. Stop on the Camera page or notification releases the camera, torch, server
-   and monitoring wake lock. The printer keeps running independently.
+5. Turning the camera off releases the camera, torch and camera wake lock.
+   Sharing and uploads continue independently. More → Connection → Local sharing
+   stops the gateway and offline hotspot. The printer keeps running independently.
 
 The key grants printer control as well as video access. This prototype uses HTTP
 on a trusted local network. It must not be exposed with router port forwarding.
 Private remote access is planned, not installed. The phone URL above is local,
 and its IP can change; stable remote naming is still a deployment task.
 
-Changing the Moonraker address while monitoring is running currently requires
-stopping and starting monitoring so the gateway uses the new destination.
+Changing the Moonraker address updates the gateway destination immediately.
 The screen stays awake while the panel is visible. Monitoring uses a foreground
 camera service and a wake lock; Stop releases that lock. Long-print power and
 thermal behavior are not yet established.
@@ -77,9 +83,9 @@ requests **Voron** with a generated persistent password. The tested Pixel firmwa
 substituted a system-generated name and password despite that request; the app
 displays the actual reservation credentials, and a stable offline network identity
 remains unresolved. Older Android versions also use the system-generated hotspot.
-The hotspot currently belongs to the Activity;
-it ends if the app is destroyed. Moving ownership into a dedicated connection
-service is required before promising unattended offline recovery.
+The dedicated foreground connection service owns the hotspot and gateway,
+independently of the visible Activity and camera. Process death and cold-boot
+recovery still need verification on the dedicated phone.
 
 The optional Home intent lets a dedicated phone choose Voron as its launcher.
 Startup options can restore camera monitoring when the visible app opens after
@@ -94,7 +100,15 @@ the other pairs had no devices. This suggests one additional USB connection
 fits without moving printer devices. Device-tree identity does not establish
 the exact carrier revision or physical access. Verify the spare socket and
 phone charging under screen/camera/torch load before selecting a power solution.
-A hub is not currently justified just by device count.
+A hub is not currently justified just by device count. Leo has confirmed a spare
+socket is physically accessible; charging adequacy remains unverified.
+
+## Later ideas
+
+Camera-assisted automatic pressure advance calibration is recorded as future
+work at Leo's request. The planned overhead camera view may help inspect a
+calibration pattern. No PA automation is included or being implemented in this UI
+redesign. AI failure detection and on-phone slicing also remain later work.
 
 ## Updates
 
@@ -125,7 +139,16 @@ This APK is debuggable for testing; disable that flag for a release build.
 # Actual Android controls against an isolated Moonraker fixture. No real motion.
 python -X utf8 -u pixel-panel/tests/check_controls.py
 
-# Actual phone server and camera, through a temporary ADB forward.
+# Full paper-calibration outcomes, repeated tuning and emergency-stop concurrency.
+python -X utf8 -u pixel-panel/tests/check_workflows.py
+
+# Normal warning versus explicit one-tap Fast controls; restores the prior mode.
+python -X utf8 -u pixel-panel/tests/check_fast_controls.py
+
+# Partial calibration certainty and E-stop cancellation during delayed preflight.
+python -X utf8 -u pixel-panel/tests/check_recovery_edges.py
+
+# Start with camera off. The test starts/stops it; the gateway stays active.
 python -X utf8 pixel-panel/tests/check_gateway.py
 
 # Repeat over the phone's real Wi-Fi address, with no ADB network tunnel.
@@ -140,6 +163,16 @@ Test tools privately read the development app's key via `run-as`; they never
 print it. Fixture overrides are accepted only by a debuggable APK, never saved,
 and cleared by test cleanup. They are not production connection discovery.
 
+`tests/check_device_ui.cjs` uses Playwright with installed Chrome, silently and
+with all HTTP intercepted. Its default Playwright package path is
+`%LOCALAPPDATA%/VoronPanel/browser-tools/node_modules/playwright`; override with
+`VORON_PLAYWRIGHT` if needed. It verifies the browser Device panel, not Orca itself.
+
+```powershell
+npm install --prefix "$env:LOCALAPPDATA/VoronPanel/browser-tools" playwright --no-audit --no-fund
+node pixel-panel/tests/check_device_ui.cjs
+```
+
 See [verification](verification.md) for actual evidence and pending gates.
 
 ## Interface references
@@ -150,6 +183,13 @@ maintenance. It doesn't copy branding or add unrelated multi-material controls.
 
 - [Bambu X1 quick-start guide](https://cdn1.bambulab.com/documentation/quick-start-2024-01-17/Quick-Start-X1%26X1C_en.pdf)
 - [KlipperScreen panels](https://klipperscreen.readthedocs.io/en/latest/Panels/)
+- [Prusa idle and printing menus](https://help.prusa3d.com/article/lcd-menu-mk4-s-mk3-9-s_413171)
+- [Mainsail dashboard organisation](https://docs.mainsail.xyz/features/dashboard-organisation/)
+- [Fluidd file manager](https://docs.fluidd.xyz/features/file-manager/)
+- [Theo: Agents Sucked At UI (Until Today)](https://www.youtube.com/watch?v=xq0eB8vxeqk)
+- [Proper Printing: F*ck Around XL](https://properprinting.pro/pages/project/f-ck-around-xl)
+- [Proper Printing's touchscreen/computer build](https://www.youtube.com/watch?v=DQoEssmHciE)
+- [Proper Printing's latest CNC/printing workflow](https://www.youtube.com/watch?v=eDQwFdMI1rE)
 - [Moonraker printer API](https://moonraker.readthedocs.io/en/latest/external_api/printer/)
 - [Moonraker update manager](https://moonraker.readthedocs.io/en/latest/external_api/update_manager/)
 - [Android local-network permission](https://developer.android.com/privacy-and-security/local-network-permission)

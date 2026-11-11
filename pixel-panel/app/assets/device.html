@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <meta name="referrer" content="no-referrer">
+  <title>Voron · Device</title>
+  <style>
+    :root { color-scheme: dark; font: 15px/1.45 system-ui, sans-serif; background: #101416; color: #e7edeb; }
+    * { box-sizing: border-box; }
+    body { margin: 0; }
+    button { font: inherit; font-weight: 550; color: #e7edeb; background: #242c30; border: 1px solid #303a3f; border-radius: 7px; min-height: 48px; padding: 10px 18px; cursor: pointer; }
+    button:hover:not(:disabled) { background: #303a3f; }
+    button:focus-visible { outline: 2px solid #9dc9b5; outline-offset: 3px; }
+    button:disabled { opacity: .42; cursor: default; }
+    button.primary { background: #263c34; border-color: #486557; color: #c0e2d0; }
+    button.danger { background: #3b2929; border-color: #694340; color: #e6a5a0; }
+    button.quiet { background: transparent; }
+    [hidden] { display: none !important; }
+    main { width: min(1120px, 100%); margin: auto; padding: 20px; }
+    header { display: flex; align-items: center; gap: 16px; padding: 0 0 20px; }
+    .identity { flex: 1; min-width: 0; }
+    h1 { font-size: 23px; font-weight: 600; margin: 0; letter-spacing: -.4px; }
+    .muted, .label { color: #a0afaf; }
+    .label { font-size: 12px; font-weight: 550; }
+    .connection { display: flex; gap: 7px; align-items: center; font-size: 13px; margin-top: 3px; }
+    .dot { width: 7px; height: 7px; border-radius: 50%; background: #a0afaf; flex: 0 0 auto; }
+    .connection[data-tone="good"] .dot { background: #9dc9b5; }
+    .connection[data-tone="warn"] .dot { background: #dfc397; }
+    .layout { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(300px, 1fr); gap: 16px; align-items: start; }
+    .stack { display: grid; gap: 16px; }
+    section { background: #191f22; border: 1px solid #303a3f; border-radius: 10px; overflow: hidden; }
+    .section-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
+    h2 { font-size: 15px; font-weight: 550; margin: 0; }
+    .padded { padding: 18px; }
+    .camera-head { padding: 14px 18px; margin: 0; }
+    .camera-label { color: #a0afaf; font-size: 12px; }
+    .camera-label.live { color: #9dc9b5; }
+    .view { position: relative; background: #101416; aspect-ratio: 4 / 3; display: grid; place-items: center; overflow: hidden; }
+    #camera { width: 100%; height: 100%; object-fit: contain; position: absolute; inset: 0; }
+    .camera-empty { padding: 28px; text-align: center; max-width: 360px; }
+    .camera-empty strong { display: block; font-size: 16px; font-weight: 500; margin-bottom: 7px; }
+    .camera-empty p { margin: 0; font-size: 13px; color: #a0afaf; }
+    .job-state { color: #9dc9b5; font-size: 13px; }
+    .filename { font-size: 19px; line-height: 1.35; font-weight: 500; margin: 4px 0 16px; overflow-wrap: anywhere; }
+    .progress-line { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-bottom: 9px; font-size: 13px; }
+    #progress-value { font-size: 23px; font-variant-numeric: tabular-nums; }
+    progress { display: block; appearance: none; width: 100%; height: 5px; border: 0; border-radius: 3px; background: #303a3f; overflow: hidden; }
+    progress::-webkit-progress-bar { background: #303a3f; }
+    progress::-webkit-progress-value { background: #9dc9b5; }
+    progress::-moz-progress-bar { background: #9dc9b5; }
+    .actions { display: flex; gap: 10px; margin-top: 18px; }
+    .actions button { flex: 1; }
+    .hint { margin: 14px 0 0; font-size: 12px; color: #a0afaf; }
+    .temperatures { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    .temperature + .temperature { border-left: 1px solid #303a3f; padding-left: 18px; }
+    .reading { margin: 7px 0 2px; font-size: 25px; font-variant-numeric: tabular-nums; }
+    .unit { font-size: 14px; color: #a0afaf; }
+    .target { font-size: 12px; color: #a0afaf; }
+    .tuning { display: flex; gap: 12px; align-items: center; justify-content: space-between; }
+    #z-value { font-size: 21px; font-variant-numeric: tabular-nums; margin-top: 6px; }
+    .z-buttons { display: flex; gap: 8px; }
+    .z-buttons button { min-width: 78px; padding: 10px; }
+    .z-buttons small { display: block; font-size: 11px; color: #a0afaf; font-weight: 400; }
+    .notice { margin: 12px 0 0; color: #dfc397; font-size: 13px; overflow-wrap: anywhere; }
+    .notice:empty { display: none; }
+    footer { display: flex; justify-content: space-between; gap: 12px; padding-top: 16px; color: #a0afaf; font-size: 12px; }
+    dialog { position: fixed; top: 50%; transform: translateY(-50%); z-index: 5; width: min(420px, calc(100% - 32px)); background: #191f22; color: #e7edeb; border: 1px solid #486557; border-radius: 10px; padding: 22px; box-shadow: 0 12px 48px #000c; }
+    dialog::backdrop { background: #000a; }
+    dialog h2 { font-size: 20px; }
+    dialog p { color: #a0afaf; margin: 12px 0 22px; }
+    dialog .actions { justify-content: flex-end; }
+    @media (max-width: 760px) {
+      main { padding: 16px; }
+      .layout { grid-template-columns: 1fr; }
+      .camera-section { order: 1; }
+      .stack { order: 0; }
+      .view { aspect-ratio: 4 / 3; max-height: 60vh; }
+      header { gap: 10px; padding-bottom: 16px; }
+      header button { padding-inline: 12px; font-size: 13px; }
+      footer { flex-wrap: wrap; }
+    }
+    @media (max-width: 370px) { .tuning { align-items: start; flex-direction: column; } .z-buttons { width: 100%; } .z-buttons button { flex: 1; } }
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <div class="identity">
+      <h1>Voron</h1>
+      <div class="connection" id="connection"><span class="dot" aria-hidden="true"></span><span id="connection-text" role="status">Connecting to printer…</span></div>
+    </div>
+    <button class="danger" id="emergency">Emergency stop</button>
+  </header>
+  <div class="layout">
+    <section class="camera-section" aria-label="Printer camera">
+      <div class="section-head camera-head"><h2>Camera</h2><span class="camera-label" id="camera-state">Checking…</span></div>
+      <div class="view">
+        <img id="camera" alt="Live printer camera" hidden>
+        <div class="camera-empty" id="camera-empty"><strong id="camera-title">Checking camera</strong><p id="camera-detail">The camera runs on your Pixel.</p></div>
+      </div>
+    </section>
+    <div class="stack">
+      <section class="padded" aria-labelledby="job-heading">
+        <div class="section-head"><h2 id="job-heading">Print</h2><span class="job-state" id="job-state">Waiting for status</span></div>
+        <div class="filename" id="filename">Printer status unavailable</div>
+        <div id="progress-block" hidden>
+          <div class="progress-line"><span id="progress-value">—</span><span class="muted" id="elapsed"></span></div>
+          <progress id="progress" max="1" value="0" aria-label="Print progress"></progress>
+        </div>
+        <div class="actions" id="job-actions" hidden>
+          <button class="primary" id="pause" hidden>Pause</button>
+          <button class="primary" id="resume" hidden>Resume</button>
+          <button class="quiet" id="cancel">Cancel print</button>
+        </div>
+        <p class="hint" id="job-hint">Connect to see the current print.</p>
+        <p class="notice" id="telemetry-error" role="status"></p>
+      </section>
+      <section class="padded" aria-labelledby="temperature-heading">
+        <div class="section-head"><h2 id="temperature-heading">Temperatures</h2><span class="label">Actual / target</span></div>
+        <div class="temperatures">
+          <div class="temperature"><div class="label">Nozzle</div><div class="reading"><span id="nozzle">—</span><span class="unit"> °C</span></div><div class="target" id="nozzle-target">Target —</div></div>
+          <div class="temperature"><div class="label">Bed</div><div class="reading"><span id="bed">—</span><span class="unit"> °C</span></div><div class="target" id="bed-target">Target —</div></div>
+        </div>
+      </section>
+      <section class="padded" aria-labelledby="z-heading">
+        <div class="tuning">
+          <div><h2 id="z-heading">Z adjustment</h2><div id="z-value">— <span class="unit">mm</span></div></div>
+          <div class="z-buttons"><button id="z-down" aria-label="Lower nozzle by 0.01 millimeters">−0.01<small>Lower</small></button><button id="z-up" aria-label="Raise nozzle by 0.01 millimeters">+0.01<small>Raise</small></button></div>
+        </div>
+        <p class="hint" id="z-hint">Available during a print with XYZ homed.</p>
+      </section>
+    </div>
+  </div>
+  <p class="notice" id="action-message" role="status" aria-live="polite"></p>
+  <footer><span>Device · private local connection</span><span id="updated">Waiting for telemetry</span></footer>
+</main>
+<dialog id="confirmation" aria-labelledby="confirm-title" aria-describedby="confirm-detail">
+  <h2 id="confirm-title"></h2><p id="confirm-detail"></p>
+  <form method="dialog"><div class="actions"><button value="cancel" autofocus>Go back</button><button id="confirm-action" value="confirm">Confirm</button></div></form>
+</dialog>
+<script>
+'use strict';
+const $ = id => document.getElementById(id);
+const query = new URLSearchParams(location.search);
+const token = query.get('token') || query.get('apikey') || '';
+const STALE_MS = 8000;
+const finite = value => typeof value === 'number' && Number.isFinite(value);
+let status = null, health = null, lastPrinterAt = 0, lastHealthAt = 0;
+let printerError = '', healthError = '', busy = false, stopBusy = false, epoch = 0, emergencyVersion = 0;
+let pollPromise = null, pollTimer = null, cameraLoaded = false, cameraFailed = false;
+const image = $('camera');
+
+async function api(path, method = 'GET', body, timeout = 6500) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeout);
+  try {
+    const headers = {'X-Api-Key': token};
+    if (body !== undefined) headers['Content-Type'] = 'application/json';
+    const response = await fetch(path, {method, headers, body: body === undefined ? undefined : JSON.stringify(body), signal: controller.signal, cache: 'no-store'});
+    if (!response.ok) throw Error(response.status === 401 ? 'Device key rejected. Reopen the Device URL from your Pixel.' : 'Printer request failed (' + response.status + ').');
+    const result = await response.json();
+    if (result.error) throw Error('Printer rejected the request. Check its status before retrying.');
+    return result;
+  } catch (error) {
+    if (error.name === 'AbortError') throw Error('Request timed out. Check the printer before retrying.');
+    if (error instanceof TypeError) throw Error('Connection unavailable. Check your Pixel and printer.');
+    throw error;
+  } finally { clearTimeout(timer); }
+}
+
+function current() { return lastPrinterAt > 0 && performance.now() - lastPrinterAt <= STALE_MS && !printerError; }
+function ready() { return current() && status?.webhooks?.state === 'ready'; }
+function active() { return ['printing', 'paused'].includes(status?.print_stats?.state); }
+function zOffset() { const value = status?.gcode_move?.homing_origin?.[2]; return finite(value) ? value : null; }
+function zAllowed() { return ready() && active() && ['x', 'y', 'z'].every(axis => (status?.toolhead?.homed_axes || '').includes(axis)) && zOffset() !== null; }
+function setText(id, value) { $(id).textContent = value; }
+function duration(seconds) {
+  if (!finite(seconds) || seconds < 0) return '';
+  const minutes = Math.floor(seconds / 60);
+  return (minutes >= 60 ? Math.floor(minutes / 60) + 'h ' : '') + minutes % 60 + 'm elapsed';
+}
+function render() {
+  const fresh = current(), engine = status?.webhooks?.state, state = status?.print_stats?.state;
+  const isReady = ready(), isActive = active();
+  let connection = 'Connecting to printer…', tone = '';
+  if (printerError) { connection = 'Printer unavailable'; tone = 'warn'; }
+  else if (lastPrinterAt && !fresh) { connection = 'Printer status stale'; tone = 'warn'; }
+  else if (engine === 'ready') { connection = 'Printer connected'; tone = 'good'; }
+  else if (engine) { connection = 'Klipper ' + engine; tone = 'warn'; }
+  $('connection').dataset.tone = tone;
+  setText('connection-text', connection);
+  const labels = {printing: 'Printing', paused: 'Paused', standby: 'Ready', complete: 'Complete', cancelled: 'Cancelled', error: 'Print error'};
+  setText('job-state', fresh ? labels[state] || (engine === 'ready' ? 'Ready' : 'Unavailable') : 'Status unavailable');
+  const filename = typeof status?.print_stats?.filename === 'string' ? status.print_stats.filename.trim() : '';
+  setText('filename', filename || (isReady ? 'No active print' : 'Printer status unavailable'));
+  $('filename').title = filename;
+  let progress = status?.virtual_sdcard?.progress;
+  if (!finite(progress)) progress = status?.display_status?.progress;
+  const validProgress = fresh && finite(progress) && progress >= 0 && progress <= 1 && (isActive || state === 'complete');
+  $('progress-block').hidden = !validProgress;
+  if (validProgress) { $('progress').value = progress; setText('progress-value', Math.round(progress * 100) + '%'); }
+  setText('elapsed', duration(status?.print_stats?.print_duration));
+  $('job-actions').hidden = !isActive;
+  $('pause').hidden = state !== 'printing';
+  $('resume').hidden = state !== 'paused';
+  $('pause').disabled = !isReady || busy || stopBusy || $('confirmation').open || state !== 'printing';
+  $('resume').disabled = !isReady || busy || stopBusy || $('confirmation').open || state !== 'paused';
+  $('cancel').disabled = !isReady || busy || stopBusy || $('confirmation').open || !isActive;
+  setText('job-hint', busy ? 'Sending command…' : !fresh ? 'Controls need fresh printer status.' : !isReady ? (status?.webhooks?.state_message || 'Klipper is unavailable. Check the printer.') : state === 'printing' ? 'Pause is immediate. Cancel ends this print.' : state === 'paused' ? 'Check the printer before resuming.' : 'Send a file from Orca to start a print.');
+  setText('telemetry-error', printerError);
+  for (const [prefix, object] of [['nozzle', status?.extruder], ['bed', status?.heater_bed]]) {
+    setText(prefix, fresh && finite(object?.temperature) ? object.temperature.toFixed(1) : '—');
+    setText(prefix + '-target', 'Target ' + (fresh && finite(object?.target) ? object.target.toFixed(0) + ' °C' : '—'));
+  }
+  const offset = zOffset();
+  $('z-value').textContent = (fresh && offset !== null ? (offset > 0 ? '+' : '') + offset.toFixed(3) : '—') + ' mm';
+  $('z-down').disabled = $('z-up').disabled = !zAllowed() || busy || stopBusy || $('confirmation').open;
+  setText('z-hint', zAllowed() ? '0.01 mm per tap · applies to this session.' : 'Available during a print with XYZ homed.');
+  const age = lastPrinterAt ? Math.floor((performance.now() - lastPrinterAt) / 1000) : null;
+  setText('updated', age === null ? 'Waiting for telemetry' : fresh ? 'Updated ' + age + 's ago' : 'Last printer update ' + age + 's ago');
+  renderCamera();
+}
+
+function clearCamera() {
+  image.hidden = true;
+  if (image.hasAttribute('src')) image.removeAttribute('src');
+  cameraLoaded = false;
+}
+function renderCamera() {
+  const fresh = lastHealthAt > 0 && performance.now() - lastHealthAt <= STALE_MS;
+  const cameraState = typeof health?.camera === 'string' ? health.camera : '';
+  const frameAge = health?.frame_age_ms;
+  const live = fresh && !healthError && cameraState.startsWith('Live') && finite(frameAge) && frameAge >= 0 && frameAge + performance.now() - lastHealthAt <= 5000;
+  let label, title, detail;
+  if (live) {
+    if (!image.hasAttribute('src') && !document.hidden && !cameraFailed) {
+      cameraLoaded = false;
+      image.src = '/camera/stream?token=' + encodeURIComponent(token);
+    }
+    image.hidden = !cameraLoaded;
+    label = cameraLoaded ? 'Live' : cameraFailed ? 'Unavailable' : 'Connecting…';
+    title = cameraFailed ? 'Camera stream unavailable' : 'Connecting camera';
+    detail = cameraFailed ? 'The stream will retry automatically. Printer controls use their own connection.' : 'Waiting for the first camera frame.';
+  } else {
+    clearCamera();
+    const off = fresh && !healthError && /stopped|off/i.test(cameraState);
+    const stale = fresh && !healthError && (/stale/i.test(cameraState) || (finite(frameAge) && frameAge >= 0));
+    label = off ? 'Off' : stale ? 'Stale' : 'Unavailable';
+    title = off ? 'Camera is off' : stale ? 'Camera frame is stale' : 'Camera unavailable';
+    detail = off ? 'Turn on the camera in the Voron app on your Pixel.' : stale ? 'Check the camera in the Voron app on your Pixel. The last image is hidden.' : healthError || cameraState || 'Check the Voron app on your Pixel.';
+  }
+  $('camera-state').classList.toggle('live', live && cameraLoaded);
+  setText('camera-state', label);
+  $('camera-empty').hidden = live && cameraLoaded;
+  setText('camera-title', title);
+  setText('camera-detail', detail);
+}
+image.onload = () => { cameraLoaded = true; cameraFailed = false; renderCamera(); };
+image.onerror = () => { clearCamera(); cameraFailed = true; renderCamera(); };
+
+async function readPrinter() {
+  try {
+    const result = await api('/printer/objects/query?webhooks&print_stats&virtual_sdcard&display_status&extruder&heater_bed&toolhead&gcode_move');
+    const value = result?.result?.status;
+    if (!value?.webhooks || typeof value.webhooks.state !== 'string' || !value.webhooks.state) throw Error('Printer telemetry is unavailable.');
+    return value;
+  } catch (original) {
+    try {
+      const server = await api('/server/info');
+      const engine = server?.result?.klippy_state;
+      if (typeof engine === 'string' && engine && engine !== 'ready') return {webhooks: {state: engine, state_message: 'Klipper is ' + engine + '. Check the printer.'}};
+    } catch (_) { /* Preserve the original telemetry failure. */ }
+    throw original;
+  }
+}
+function refresh() {
+  if (pollPromise) return pollPromise;
+  clearTimeout(pollTimer);
+  const requestEpoch = epoch;
+  pollPromise = (async () => {
+    await Promise.all([
+      (async () => {
+        try { const value = await readPrinter(); if (requestEpoch === epoch) { status = value; lastPrinterAt = performance.now(); printerError = ''; } }
+        catch (error) { if (requestEpoch === epoch) printerError = error.message; }
+      })(),
+      (async () => {
+        try { health = await api('/health'); lastHealthAt = performance.now(); healthError = ''; cameraFailed = false; }
+        catch (error) { healthError = error.message; }
+      })()
+    ]);
+    render();
+  })().finally(() => {
+    pollPromise = null;
+    pollTimer = setTimeout(refresh, document.hidden ? 10000 : 2500);
+  });
+  return pollPromise;
+}
+async function refreshAfterCommand() {
+  if (pollPromise) await pollPromise;
+  await refresh();
+}
+function confirmAction(title, detail, action, dangerous) {
+  const dialog = $('confirmation');
+  setText('confirm-title', title); setText('confirm-detail', detail); setText('confirm-action', action);
+  $('confirm-action').className = dangerous ? 'danger' : 'primary';
+  dialog.returnValue = '';
+  return new Promise(resolve => {
+    dialog.addEventListener('close', () => { render(); resolve(dialog.returnValue === 'confirm'); }, {once: true});
+    // Keep the header's emergency stop reachable while a confirmation is open.
+    dialog.show(); render();
+  });
+}
+function jobIdentity(value) {
+  const stats = value?.print_stats;
+  const id = stats?.job_id;
+  return {
+    filename: typeof stats?.filename === 'string' ? stats.filename : '',
+    id: typeof id === 'string' || finite(id) ? String(id) : null
+  };
+}
+function matchesConfirmedJob(value, expected) {
+  const currentJob = jobIdentity(value);
+  return value?.webhooks?.state === 'ready' && expected.filename !== ''
+    && currentJob.filename === expected.filename
+    && (expected.id === null || currentJob.id === expected.id)
+    && expected.states.includes(value?.print_stats?.state)
+    && (!expected.z || (['x', 'y', 'z'].every(axis => (value?.toolhead?.homed_axes || '').includes(axis))
+      && finite(value?.gcode_move?.homing_origin?.[2])));
+}
+async function command(path, body, message, expectedJob) {
+  if (busy || stopBusy || !ready()) {
+    if (expectedJob) setText('action-message', 'Printer status changed. Nothing sent. Check the current print and try again.');
+    return;
+  }
+  const startedBeforeStop = emergencyVersion;
+  let dispatched = false;
+  busy = true; epoch++; render();
+  setText('action-message', expectedJob ? 'Checking the current print…' : 'Sending command…');
+  try {
+    if (expectedJob) {
+      const checked = await readPrinter();
+      if (startedBeforeStop !== emergencyVersion) return;
+      status = checked; lastPrinterAt = performance.now(); printerError = '';
+      if (!matchesConfirmedJob(checked, expectedJob)) {
+        setText('action-message', 'The current print changed. Nothing sent. Check the print and confirm again.');
+        return;
+      }
+    }
+    dispatched = true;
+    await api(path, 'POST', body, 20000);
+    if (startedBeforeStop !== emergencyVersion) return;
+    lastPrinterAt = 0; epoch++;
+    setText('action-message', message);
+    await refreshAfterCommand();
+  } catch (error) {
+    if (startedBeforeStop !== emergencyVersion) return;
+    lastPrinterAt = 0; epoch++;
+    printerError = dispatched ? 'Command result is uncertain. Waiting for fresh printer status.' : 'Could not verify the current print. Nothing sent. Waiting for fresh printer status.';
+    setText('action-message', error.message);
+    await refreshAfterCommand();
+  } finally { busy = false; render(); }
+}
+$('pause').onclick = () => { if (status?.print_stats?.state === 'printing') command('/printer/print/pause', undefined, 'Pause requested.', {...jobIdentity(status), states: ['printing']}); };
+$('resume').onclick = async () => {
+  if (!ready() || busy || stopBusy || status?.print_stats?.state !== 'paused') return;
+  const expected = {...jobIdentity(status), states: ['paused']};
+  if (await confirmAction('Resume this print?', 'Make sure the bed and toolhead are clear. The printer will move and continue heating.', 'Resume', false)) {
+    command('/printer/print/resume', undefined, 'Resume requested.', expected);
+  }
+};
+$('cancel').onclick = async () => {
+  if (!ready() || busy || stopBusy || !active()) return;
+  const expected = {...jobIdentity(status), states: ['printing', 'paused']};
+  if (await confirmAction('Cancel this print?', 'This ends the current print. You will need to start it again from the beginning.', 'Cancel print', true)) {
+    command('/printer/print/cancel', undefined, 'Cancel requested.', expected);
+  }
+};
+for (const [id, amount] of [['z-down', '-0.01'], ['z-up', '0.01']]) $(id).onclick = () => {
+  if (zAllowed()) command('/printer/gcode/script', {script: 'SET_GCODE_OFFSET Z_ADJUST=' + amount + ' MOVE=1'}, 'Z adjustment sent.', {...jobIdentity(status), states: ['printing', 'paused'], z: true});
+};
+$('emergency').onclick = async () => {
+  if (stopBusy) return;
+  stopBusy = true; emergencyVersion++; epoch++; lastPrinterAt = 0;
+  if ($('confirmation').open) $('confirmation').close('cancel');
+  $('emergency').disabled = true;
+  render(); setText('action-message', 'Sending emergency stop…');
+  try {
+    await api('/printer/emergency_stop', 'POST', undefined, 4500);
+    setText('action-message', 'Emergency stop sent. Check the printer. Klipper must be restarted before use.');
+  } catch (error) { setText('action-message', 'Emergency stop was not confirmed. ' + error.message + ' Use the physical power switch if needed.'); }
+  finally { epoch++; lastPrinterAt = 0; stopBusy = false; $('emergency').disabled = false; await refreshAfterCommand(); render(); }
+};
+document.addEventListener('visibilitychange', () => { if (document.hidden) clearCamera(); else refresh(); });
+setInterval(render, 1000);
+render(); refresh();
+</script>
+</body>
+</html>

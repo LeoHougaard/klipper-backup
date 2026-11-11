@@ -27,7 +27,7 @@ def main():
         target.mkdir()
     run(TOOLS / "aapt2.exe", "compile", "--dir", ROOT / "app/res", "-o", BUILD / "resources.zip")
     run(TOOLS / "aapt2.exe", "link", "-o", BUILD / "unsigned.apk", "-I", ANDROID,
-        "--manifest", ROOT / "app/AndroidManifest.xml", BUILD / "resources.zip")
+        "--manifest", ROOT / "app/AndroidManifest.xml", "-A", ROOT / "app/assets", BUILD / "resources.zip")
     run(JDK / "bin/javac.exe", "--release", "8", "-encoding", "UTF-8", "-classpath", ANDROID,
         "-d", BUILD / "classes", *sorted((ROOT / "app/src").glob("*.java")))
     run(JDK / "bin/java.exe", "-cp", TOOLS / "lib/d8.jar", "com.android.tools.r8.D8", "--lib", ANDROID,

@@ -21,16 +21,24 @@ def adb(*args):
 
 
 def snapshot():
-    adb("shell", "uiautomator", "dump", "/data/local/tmp/voron-controls-test.xml")
+    result = adb("shell", "uiautomator", "dump", "/data/local/tmp/voron-controls-test.xml")
+    if "UI hierchary dumped to" not in result:
+        raise RuntimeError("Android did not refresh its UI snapshot; refusing to reuse old XML")
     return ET.fromstring(adb("shell", "cat", "/data/local/tmp/voron-controls-test.xml"))
 
 
-def tap(label):
-    root = snapshot()
-    nodes = [n for n in root.iter("node") if n.get("text", "").casefold() == label.casefold() and n.get("clickable") == "true"]
+def tap(label, root=None):
+    if root is None:
+        root = snapshot()
+    nodes = [n for n in root.iter("node") if n.get("clickable") == "true" and (
+        n.get("text", "").casefold() == label.casefold() or
+        n.get("content-desc", "").casefold() in (label.casefold(), "open " + label.casefold()))]
     assert len(nodes) == 1, f"Expected one clickable {label!r}, found {len(nodes)}"
     left, top, right, bottom = map(int, re.findall(r"\d+", nodes[0].get("bounds")))
     adb("shell", "input", "tap", str((left + right) // 2), str((top + bottom) // 2))
+    # Input injection returning does not mean a newly rebuilt native view tree
+    # has reached Accessibility yet. Let the next frame publish before reading.
+    time.sleep(.25)
 
 
 def wait_for_requests(fixture, count):
@@ -42,6 +50,7 @@ def wait_for_requests(fixture, count):
 
 def main():
     fixture = Fixture()
+    fixture.fail_discovery = {"/printer/objects/list": 1, "/printer/gcode/help": 1}
     server = fixture.server(0)
     port = server.server_address[1]
     worker = threading.Thread(target=server.serve_forever, daemon=True)
@@ -50,15 +59,17 @@ def main():
     try:
         adb("shell", "am", "force-stop", PACKAGE)
         adb("shell", "am", "start", "-n", PACKAGE + "/.MainActivity", "--es", "test_endpoint", f"http://127.0.0.1:{port}")
-        tap("Control")
+        tap("Prepare")
         tap("X +")
-        tap("Extrude 5 mm")
+        tap("Filament")
+        tap("Feed 5 mm")
         assert fixture.requests == [], "Unhomed/cold controls sent a command"
         print("PASS: unhomed motion and cold extrusion blocked on real app")
 
         fixture.status["toolhead"]["homed_axes"] = "xyz"
         fixture.status["toolhead"]["position"] = [50, 50, 10, 0]
         fixture.status["extruder"].update(temperature=220, can_extrude=True)
+        tap("Move")
         # Wait for observable fresh state, not a fixed delay.
         deadline = time.monotonic() + 10
         while time.monotonic() < deadline:
@@ -68,14 +79,19 @@ def main():
         else:
             raise AssertionError("New fixture position was not displayed")
         tap("X +")
-        tap("Extrude 5 mm")
+        tap("Filament")
+        tap("Feed 5 mm")
         wait_for_requests(fixture, 2)
         assert "G0 X10" in fixture.requests[0]["body"]
         assert "G1 E5" in fixture.requests[1]["body"]
         assert all("RESTORE_GCODE_STATE" in item["body"] for item in fixture.requests)
+        root = snapshot()
+        assert any(n.get("text") == "Load filament" and n.get("enabled") == "true" for n in root.iter("node")), "Failed discovery was cached permanently"
         print("PASS: relative movement and extrusion preserve G-code state")
+        print("PASS: capability discovery recovers from initial transient failures")
 
         fixture.status["toolhead"]["position"] = [119, 50, 10, 0]
+        tap("Move")
         deadline = time.monotonic() + 10
         while time.monotonic() < deadline:
             if any("X 119.0" in n.get("text", "") for n in snapshot().iter("node")):
@@ -86,10 +102,10 @@ def main():
 
         tap("Files")
         root = snapshot()
-        labels = [n.get("text") for n in root.iter("node") if n.get("text", "").startswith("test-plate.gcode")]
+        labels = [n.get("content-desc") for n in root.iter("node") if n.get("content-desc", "") == "Print details: test-plate.gcode"]
         assert len(labels) == 1
         tap(labels[0])
-        tap("Continue")
+        tap("Start print")
         wait_for_requests(fixture, 3)
         assert fixture.requests[-1]["path"] == "/printer/print/start"
         assert "test-plate.gcode" in fixture.requests[-1]["body"]
