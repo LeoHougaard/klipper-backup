@@ -10,3 +10,4 @@ printer-[0-9]*_[0-9]*.cfg
 ShakeTune_results
 variables.cfg
 __pycache__/
+pixel-panel/.build/
