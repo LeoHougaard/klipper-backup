@@ -4,7 +4,7 @@ import json
 import subprocess
 import threading
 from pathlib import Path
-from check_controls import adb, snapshot, PACKAGE, ADB
+from check_controls import adb, snapshot, PACKAGE, ADB, verify_fixture
 from check_workflows import click, wait_text, wait_until, send_and_observe, scripts
 from fixture_server import Fixture
 
@@ -29,6 +29,7 @@ def main():
     try:
         adb("shell", "am", "force-stop", PACKAGE)
         adb("shell", "am", "start", "-n", PACKAGE + "/.MainActivity", "--es", "test_endpoint", f"http://127.0.0.1:{port}")
+        verify_fixture(port)
         click("More")
         fast_before = any(n.get("text") == "Fast controls: on" for n in snapshot().iter("node"))
         if fast_before:
@@ -56,8 +57,31 @@ def main():
         click("Pause")
         wait_text("Print paused")
         click("Change filament")
-        wait_text("Heat to 240°")
+        wait_text("At temperature")
         capture("02-paused-filament")
+        click("240° target")
+        click("−5°")
+        click("−5°")
+        send_and_observe(fixture, "Set 230°", "SET_HEATER_TEMPERATURE HEATER=extruder TARGET=230")
+        fixture.status["extruder"].update(temperature=180, can_extrude=True)
+        wait_text("230° selected")
+        capture("06-custom-heating")
+        fixture.status["extruder"].update(temperature=230, can_extrude=True)
+        wait_text("At temperature")
+        send_and_observe(fixture, "Feed 5 mm", "SAVE_GCODE_STATE NAME=panel_extrude\nM83\nG1 E5 F180\nRESTORE_GCODE_STATE NAME=panel_extrude")
+        capture("07-custom-ready")
+        click("230° target")
+        click("Off")
+        click("Set 0°")
+        click("Turn heater off")
+        fixture.status["extruder"].update(temperature=22, can_extrude=False)
+        wait_text("Heat the nozzle to 230°")
+        capture("08-custom-heater-off")
+        click("ABS 240°")
+        send_and_observe(fixture, "Heat to 240°", "SET_HEATER_TEMPERATURE HEATER=extruder TARGET=240")
+        fixture.status["extruder"].update(temperature=239.6, can_extrude=True)
+        wait_text("At temperature")
+        print("PASS: custom 230° selection heats, becomes ready and feeds; heater off preserves selection; preset restore works", flush=True)
         send_and_observe(fixture, "Load filament", "SAVE_GCODE_STATE NAME=panel_filament\nLOAD_FILAMENT\nRESTORE_GCODE_STATE NAME=panel_filament")
         click("Resume print")
         click("Resume")

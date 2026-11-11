@@ -1,4 +1,60 @@
-# Pixel panel 0.3.0 verification
+# Pixel panel 0.3.1 verification
+
+## Prepare refinement: individual category gate
+
+Leo subsequently rated the current appearance around 7/10, particularly the
+incohesive Prepare controls, and requested 9.5 in **every** category. This is a
+new acceptance contract, not the earlier weighted 9.04 result. Categories are
+visual cohesion, layout/hierarchy, readability, touch usability, workflow
+efficiency, and state/feedback clarity. No average can compensate for a category
+below 9.5. Evidence must include paired actual-Pixel Move, cold/paused Filament,
+bed setup and front/rear contact states, plus preserved functional checks.
+
+First candidate category scores: cohesion 8.6, hierarchy 8.4, readability 9.1,
+touch 9.5, workflow 8.9 and state/feedback 8.8. It was rejected. The reviewer
+identified elastic blank regions separating status from actions, homing emphasis
+that did not follow state, and insufficient off/heating/ready nozzle feedback.
+The next candidate uses composed content-height cards and fixed spacing, state
+dependent action emphasis, explicit actual/selected thermal information and
+larger unit captions.
+
+The second review passed the first four categories at 9.5, but rejected workflow
+and feedback at 9.2: a custom nozzle target did not update the filament selection.
+The successful target callback now synchronizes that selection; turning the
+heater off preserves it. Actual-Pixel fixture checks cover custom 230°C heating,
+readiness and feeding, heater-off selection retention, ABS preset restoration,
+loading and local Resume. No physical printer commands are used.
+
+The eight matched Prepare captures contain 171 clickable targets, including
+disabled controls, all at least 48 × 48 dp. The independent review counted 151
+enabled targets. The capture manifest records zero fixture commands. Test
+launches now wait for Android's activity start; the shortened workflow also
+verifies the fixture address before issuing any commands.
+
+Fresh final GPT-6.1 Sol review: visual cohesion **9.5**, layout/hierarchy **9.5**,
+readability **9.5**, touch usability **9.5**, workflow efficiency **9.5**, and
+state/feedback clarity **9.5**. Each category passes independently. The reviewer
+inspected the matched baseline, all eight candidate captures, custom-temperature
+sequence and resumed Home. These are judgments on Leo's anchored scale, not a
+universal product benchmark or physical-hardware acceptance.
+
+`prepare-workflows-final/results.json` reports `passed: true`, 13 fixture
+requests and zero physical-printer commands. The installed 0.3.1 build also
+passes `check_recovery_edges.py`: an intermediate calibration receipt never
+claims saved offsets/completed mesh, and E-stop cancels pending preflight work
+despite a stale Ready response. Earlier full calibration, guarded control and
+uncertain-command checks remain passing evidence for the unchanged dispatch.
+
+Installed 0.3.1 APK SHA-256:
+`240d2f60d2772e50e5cf5ca78dab64c87539059740d97c4a549908f62d8ce156`.
+No real motion, heating or print start was performed. Physical filament and
+paper-contact usability, dedicated-phone power/networking and stock-phone
+acceptance remain separate checks below.
+
+Matched capture command:
+`python -X utf8 -u pixel-panel/tests/capture_prepare.py --output pixel-panel/.build/design/prepare-round-2`.
+The eight states include unhomed/homed motion, cold/heating/paused filament,
+bed setup, and front/rear paper contacts. Capturing performs no printer commands.
 
 ## Stricter quality scale requested after 0.2.0
 

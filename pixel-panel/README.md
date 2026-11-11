@@ -152,8 +152,11 @@ python -X utf8 -u pixel-panel/tests/check_fast_controls.py
 # Partial calibration certainty and E-stop cancellation during delayed preflight.
 python -X utf8 -u pixel-panel/tests/check_recovery_edges.py
 
-# Shortened Home, recent plate, paused filament/Resume and inline read-back paths.
+# Home, custom filament temperature/off/preset, paused Resume and inline read-back.
 python -X utf8 -u pixel-panel/tests/check_quality_workflows.py --output pixel-panel/.build/design/quality-workflows
+
+# Eight matched Prepare states and native touch bounds; sends no commands.
+python -X utf8 -u pixel-panel/tests/capture_prepare.py --output pixel-panel/.build/design/prepare-review
 
 # Start with camera off. The test starts/stops it; the gateway stays active.
 python -X utf8 pixel-panel/tests/check_gateway.py

@@ -1268,6 +1268,71 @@ public final class MainActivity extends Activity {
     else bedPage(body);
   }
 
+  LinearLayout prepareColumns(LinearLayout body) {
+    LinearLayout columns = p.row();
+    columns.setGravity(Gravity.TOP);
+    add(body, columns, -1);
+    return columns;
+  }
+
+  LinearLayout prepareCard(LinearLayout columns, boolean main) {
+    LinearLayout card = p.panel();
+    p.pad(card, 12, 12);
+    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, -2, main ? 1.75f : 1f);
+    if (main) lp.rightMargin = p.dp(10);
+    columns.addView(card, lp);
+    return card;
+  }
+
+  void prepareSpace(LinearLayout card) {
+    p.gap(card, 12);
+  }
+
+  void prepareHeading(LinearLayout card, String title) {
+    add(card, p.heading(title), 26);
+    p.gap(card, 6);
+  }
+
+  Button prepareButton(String title, String icon, int style, Runnable click) {
+    Button control = button(title, icon, style, click);
+    if (style == 0) {
+      android.graphics.drawable.StateListDrawable states =
+          new android.graphics.drawable.StateListDrawable();
+      states.addState(new int[] {-android.R.attr.state_enabled}, p.shape(0xff192226, 8));
+      states.addState(new int[] {android.R.attr.state_focused}, p.outline(PanelUi.RAISED));
+      states.addState(new int[] {}, p.shape(PanelUi.RAISED, 8));
+      control.setBackground(
+          new android.graphics.drawable.RippleDrawable(
+              android.content.res.ColorStateList.valueOf(0x239bcabb),
+              states,
+              p.shape(0xffffffff, 8)));
+    }
+    return control;
+  }
+
+  void prepareButtons(LinearLayout parent, Button... controls) {
+    LinearLayout row = p.row();
+    for (int i = 0; i < controls.length; i++) {
+      LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, p.dp(48), 1);
+      if (i > 0) lp.leftMargin = p.dp(6);
+      row.addView(controls[i], lp);
+    }
+    add(parent, row, 48);
+  }
+
+  void preparePriority(Button control, BooleanSupplier primary) {
+    bindings.add(() -> {
+      boolean active = primary.getAsBoolean();
+      if (Boolean.valueOf(active).equals(control.getTag())) return;
+      control.setTag(active);
+      int ink = active ? PanelUi.BG : PanelUi.ACCENT;
+      control.setTextColor(p.ink(ink));
+      control.setBackground(p.buttonBackground(active ? 1 : 3));
+      for (android.graphics.drawable.Drawable drawable : control.getCompoundDrawables())
+        if (drawable instanceof PanelUi.Icon) ((PanelUi.Icon) drawable).setInk(ink);
+    });
+  }
+
   boolean homed(String axes) {
     String h = obj("toolhead").optString("homed_axes");
     for (char axis : axes.toCharArray()) if (h.indexOf(axis) < 0) return false;
@@ -1286,20 +1351,49 @@ public final class MainActivity extends Activity {
   }
 
   void movePage(LinearLayout body) {
-    TextView position = p.text("", 14, PanelUi.MUTED);
-    bindText(position, () -> position() + " mm");
-    add(body, position, 24);
-    p.gap(body, 8);
-    LinearLayout cols = p.row();
-    cols.setGravity(Gravity.TOP);
+    LinearLayout cols = prepareColumns(body);
+    LinearLayout motion = prepareCard(cols, true);
+    LinearLayout axes = p.row();
+    axes.setGravity(Gravity.TOP);
     LinearLayout xy = p.col();
     LinearLayout.LayoutParams left = new LinearLayout.LayoutParams(0, -2, 1.8f);
-    left.rightMargin = p.dp(16);
-    cols.addView(xy, left);
+    left.rightMargin = p.dp(12);
+    axes.addView(xy, left);
+    LinearLayout z = p.col();
+    axes.addView(z, new LinearLayout.LayoutParams(p.dp(150), -2));
+    TextView xyPosition = p.text("", 13, PanelUi.TEXT);
+    bindText(
+        xyPosition,
+        () -> {
+          JSONArray pos = obj("toolhead").optJSONArray("position");
+          return fresh() && pos != null
+              ? "X "
+                  + value(pos.optDouble(0, Double.NaN), 1)
+                  + "    Y "
+                  + value(pos.optDouble(1, Double.NaN), 1)
+                  + " mm"
+              : "Position unavailable";
+        });
+    add(xy, xyPosition, 22);
+    TextView zPosition = p.text("", 13, PanelUi.TEXT);
+    zPosition.setGravity(Gravity.CENTER);
+    bindText(
+        zPosition,
+        () -> {
+          JSONArray pos = obj("toolhead").optJSONArray("position");
+          return "Z "
+              + (fresh() && pos != null ? value(pos.optDouble(2, Double.NaN), 2) : "—")
+              + " mm";
+        });
+    add(z, zPosition, 22);
+    p.gap(xy, 4);
+    p.gap(z, 4);
     String[][] cells = {{"", "Y +", ""}, {"X −", "XY", "X +"}, {"", "Y −", ""}};
-    for (String[] line : cells) {
+    for (int index = 0; index < cells.length; index++) {
+      String[] line = cells[index];
       LinearLayout row = p.row();
-      for (String label : line) {
+      for (int cell = 0; cell < line.length; cell++) {
+        String label = line[cell];
         View v;
         if (label.isEmpty() || label.equals("XY")) {
           TextView t = p.text(label, 13, PanelUi.MUTED);
@@ -1308,40 +1402,36 @@ public final class MainActivity extends Activity {
         } else {
           String axis = label.substring(0, 1);
           Button b =
-              button(label, null, 0, () -> jog(axis, label.contains("+") ? xyStep : -xyStep));
+              prepareButton(
+                  label, null, 0, () -> jog(axis, label.contains("+") ? xyStep : -xyStep));
           gate(b, () -> idle() && !manual() && homed(axis.toLowerCase(Locale.US)));
           v = b;
         }
-        p.weighted(row, v, 48);
+        LinearLayout.LayoutParams cellLayout = new LinearLayout.LayoutParams(0, p.dp(48), 1);
+        if (cell > 0) cellLayout.leftMargin = p.dp(4);
+        row.addView(v, cellLayout);
       }
       add(xy, row, 48);
-      p.gap(xy, 4);
+      if (index < 2) p.gap(xy, 4);
     }
-    p.gap(xy, 4);
+    p.gap(xy, 6);
     stepSelector(xy, new double[] {.1, 1, 10}, () -> xyStep, v -> xyStep = v);
-    LinearLayout z = p.col();
-    LinearLayout.LayoutParams middle = new LinearLayout.LayoutParams(0, -2, 1);
-    middle.rightMargin = p.dp(16);
-    cols.addView(z, middle);
-    Button up = button("Z +", null, 0, () -> jog("Z", zStep)),
-        down = button("Z −", null, 0, () -> jog("Z", -zStep));
+    Button up = prepareButton("Z +", null, 0, () -> jog("Z", zStep)),
+        down = prepareButton("Z −", null, 0, () -> jog("Z", -zStep));
     gate(up, () -> idle() && !manual() && homed("z"));
     gate(down, () -> idle() && !manual() && homed("z"));
     add(z, up, 48);
     p.gap(z, 4);
-    TextView zLabel = p.text("BED / NOZZLE", 11, PanelUi.MUTED);
+    TextView zLabel = p.text("Z AXIS", 11, PanelUi.MUTED);
     zLabel.setGravity(Gravity.CENTER);
     add(z, zLabel, 48);
     p.gap(z, 4);
     add(z, down, 48);
-    p.gap(z, 8);
+    p.gap(z, 6);
     stepSelector(z, new double[] {.025, .1, 1}, () -> zStep, v -> zStep = v);
-    LinearLayout tools = p.col();
-    cols.addView(tools, new LinearLayout.LayoutParams(0, -2, 1.2f));
-    Button home = button("Home all", "home", 1, this::homeAxes);
-    gate(home, () -> idle() && !manual());
-    add(tools, home, 48);
-    p.gap(tools, 8);
+    motion.addView(axes, new LinearLayout.LayoutParams(-1, -2));
+    LinearLayout tools = prepareCard(cols, false);
+    prepareHeading(tools, "Machine");
     TextView homing = p.text("", 13, PanelUi.MUTED);
     bindText(
         homing,
@@ -1352,10 +1442,15 @@ public final class MainActivity extends Activity {
                     ? "Movement locked during a print"
                     : homed("xyz") ? "All axes homed" : "Home before moving");
     homing.setMaxLines(2);
-    add(tools, homing, 48);
+    add(tools, homing, 32);
+    prepareSpace(tools);
+    Button home = prepareButton("Home all", "home", 1, this::homeAxes);
+    preparePriority(home, () -> !homed("xyz"));
+    gate(home, () -> idle() && !manual());
+    add(tools, home, 48);
     p.gap(tools, 8);
     Button motors =
-        button(
+        prepareButton(
             "Release motors",
             null,
             0,
@@ -1368,15 +1463,15 @@ public final class MainActivity extends Activity {
     gate(motors, () -> idle() && !manual());
     add(tools, motors, 48);
     p.gap(tools, 8);
-    Button fan = button("Part cooling fan", null, 0, () -> fanSheet());
+    Button fan = prepareButton("Part cooling fan", null, 0, () -> fanSheet());
     gate(fan, () -> ready() && !manual());
     add(tools, fan, 48);
-    body.addView(cols);
   }
 
   void stepSelector(
       LinearLayout parent, double[] values, DoubleSupplier selected, DoubleConsumer choose) {
     LinearLayout row = p.row();
+    row.setBackground(p.shape(PanelUi.BG, 8));
     for (double step : values) {
       String label = trimNumber(step);
       Button b =
@@ -1390,12 +1485,21 @@ public final class MainActivity extends Activity {
               });
       b.setTextSize(12);
       b.setPadding(p.dp(5), 0, p.dp(5), 0);
+      SpannableString caption = new SpannableString(label + "\nmm");
+      caption.setSpan(
+          new android.text.style.AbsoluteSizeSpan(11, true),
+          label.length() + 1,
+          caption.length(),
+          Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+      b.setMaxLines(2);
+      b.setText(caption);
       bindings.add(() -> {
         boolean active = Math.abs(selected.getAsDouble() - step) < .00001;
         PanelUi.selection(b, active, p);
       });
       b.setContentDescription("Move step " + label + " mm");
-      p.weighted(row, b, 48);
+      LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, p.dp(48), 1);
+      row.addView(b, lp);
     }
     add(parent, row, 48);
   }
@@ -1439,16 +1543,11 @@ public final class MainActivity extends Activity {
   }
 
   void filamentPage(LinearLayout body) {
-    LinearLayout cols = p.row();
-    cols.setGravity(Gravity.TOP);
-    LinearLayout instructions = p.col();
-    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, -1, 1);
-    lp.rightMargin = p.dp(20);
-    cols.addView(instructions, lp);
-    instructions.addView(p.heading("Change filament"));
-    p.gap(instructions, 8);
+    LinearLayout cols = prepareColumns(body);
+    LinearLayout instructions = prepareCard(cols, true);
+    prepareHeading(instructions, "Change filament");
     TextView stage = p.text("", 14, PanelUi.MUTED);
-    stage.setMinHeight(p.dp(48));
+    stage.setMaxLines(2);
     bindText(
         stage,
         () ->
@@ -1457,32 +1556,75 @@ public final class MainActivity extends Activity {
                 : jobState().equals("printing")
                     ? "Pause the print before changing filament."
                     : filamentReady()
-                        ? "Nozzle ready. Load or unload the filament."
-                        : "Heat the nozzle to " + filamentTemperature + "° to begin.");
-    instructions.addView(stage);
-    p.gap(instructions, 8);
-    Button load = button("Load filament", "filament", 1, () -> filamentMacro(true)),
-        unload = button("Unload filament", null, 0, () -> filamentMacro(false));
+                        ? "Nozzle ready. Feed or Retract for fine adjustments."
+                        : filamentHeating()
+                            ? "Nozzle heating. Filament controls unlock when ready."
+                            : "Heat the nozzle to " + filamentTemperature + "° to begin.");
+    add(instructions, stage, 32);
+    prepareSpace(instructions);
+    Button load = prepareButton("Load filament", "filament", 1, () -> filamentMacro(true)),
+        unload = prepareButton("Unload filament", null, 0, () -> filamentMacro(false));
+    preparePriority(load, () -> !jobState().equals("paused"));
     gate(load, () -> filamentReady() && capable("LOAD_FILAMENT"));
     gate(unload, () -> filamentReady() && capable("UNLOAD_FILAMENT"));
-    rowButtons(instructions, load, unload);
+    prepareButtons(instructions, load, unload);
     p.gap(instructions, 8);
-    Button feed = button("Feed 5 mm", null, 0, () -> feed(5)),
-        retract = button("Retract 5 mm", null, 0, () -> feed(-5));
+    Button feed = prepareButton("Feed 5 mm", null, 0, () -> feed(5)),
+        retract = prepareButton("Retract 5 mm", null, 0, () -> feed(-5));
     gate(feed, () -> filamentReady());
     gate(retract, () -> filamentReady());
-    rowButtons(instructions, feed, retract);
-    p.gap(instructions, 8);
-    Button resume = button("Resume print", "play", 1, () -> pauseResume(() -> show("Home")));
-    bindings.add(
-        () -> resume.setVisibility(jobState().equals("paused") ? View.VISIBLE : View.GONE));
+    prepareButtons(instructions, feed, retract);
+    View resumeGap = new View(this);
+    instructions.addView(resumeGap, new LinearLayout.LayoutParams(-1, p.dp(8)));
+    Button resume = prepareButton("Resume print", "play", 1, () -> pauseResume(() -> show("Home")));
+    bindings.add(() -> {
+      boolean paused = jobState().equals("paused");
+      resume.setVisibility(paused ? View.VISIBLE : View.GONE);
+      resumeGap.setVisibility(paused ? View.VISIBLE : View.GONE);
+    });
     gate(resume, () -> ready() && jobState().equals("paused"));
     add(instructions, resume, 48);
-    LinearLayout heat = p.col();
-    cols.addView(heat, new LinearLayout.LayoutParams(p.dp(240), -1));
-    heaterCard(heat, "Nozzle", "extruder", "heat");
-    p.gap(heat, 10);
+    LinearLayout heat = prepareCard(cols, false);
+    prepareHeading(heat, "Nozzle setup");
+    TextView thermalState = p.text("", 12, PanelUi.MUTED);
+    bindText(
+        thermalState,
+        () -> {
+          String state =
+              !ready()
+                  ? "Unavailable"
+                  : jobState().equals("printing")
+                      ? "Printing"
+                      : filamentReady()
+                          ? "Ready"
+                          : filamentHeating()
+                              ? "Heating"
+                              : finite(obj("extruder"), "target") > 0 ? "Target set" : "Off";
+          return state
+              + " · "
+              + temperature("extruder")
+              + " / "
+              + filamentTemperature
+              + "° selected";
+        });
+    bindings.add(() ->
+        thermalState.setTextColor(
+            filamentReady() ? PanelUi.ACCENT : filamentHeating() ? PanelUi.AMBER : PanelUi.MUTED));
+    add(heat, thermalState, 24);
+    p.gap(heat, 6);
+    Button targetButton =
+        prepareButton("Set target", "edit", 0, () -> temperatureSheet("extruder"));
+    targetButton.setContentDescription("Set nozzle temperature");
+    bindings.add(() -> {
+      double n = finite(obj("extruder"), "target");
+      targetButton.setText(
+          fresh() && Double.isFinite(n) && n > 0 ? value(n, 0) + "° target" : "Set target");
+    });
+    gate(targetButton, () -> ready() && !manual());
+    add(heat, targetButton, 48);
+    p.gap(heat, 8);
     LinearLayout materials = p.row();
+    materials.setBackground(p.shape(PanelUi.BG, 8));
     for (int target : new int[] {200, 240}) {
       Button b =
           button(
@@ -1496,19 +1638,38 @@ public final class MainActivity extends Activity {
       bindings.add(() -> {
         PanelUi.selection(b, filamentTemperature == target, p);
       });
-      p.weighted(materials, b, 48);
+      materials.addView(b, new LinearLayout.LayoutParams(0, p.dp(48), 1));
     }
     add(heat, materials, 48);
-    p.gap(heat, 10);
-    Button warm =
-        button(
-            "Heat nozzle", "heat", 1, () -> setTemperature("extruder", filamentTemperature, null));
-    bindings.add(() -> warm.setText("Heat to " + filamentTemperature + "°"));
-    gate(warm, () -> ready() && !jobState().equals("printing") && !manual());
-    add(heat, warm, 48);
     p.gap(heat, 8);
-    subtext(heat, "Use Feed or Retract for small adjustments after loading.");
-    add(body, cols, -1);
+    Button warm =
+        prepareButton(
+            "Heat nozzle", "heat", 3, () -> setTemperature("extruder", filamentTemperature, null));
+    preparePriority(warm, () -> !filamentReady() && !jobState().equals("paused"));
+    bindings.add(() ->
+        warm.setText(
+            filamentReady()
+                ? finite(obj("extruder"), "target") == filamentTemperature
+                    ? "At temperature"
+                    : "Keep at " + filamentTemperature + "°"
+                : filamentHeating() ? "Heating…" : "Heat to " + filamentTemperature + "°"));
+    gate(
+        warm,
+        () ->
+            ready()
+                && !jobState().equals("printing")
+                && !manual()
+                && (!filamentReady() || finite(obj("extruder"), "target") != filamentTemperature)
+                && !filamentHeating());
+    add(heat, warm, 48);
+  }
+
+  boolean filamentHeating() {
+    return ready()
+        && !filamentReady()
+        && !jobState().equals("printing")
+        && finite(obj("extruder"), "temperature") < filamentTemperature - 5
+        && finite(obj("extruder"), "target") >= filamentTemperature;
   }
 
   boolean filamentReady() {
@@ -1562,14 +1723,9 @@ public final class MainActivity extends Activity {
 
   void bedPage(LinearLayout body) {
     bedMode = manual() ? "paper" : "setup";
-    LinearLayout cols = p.row();
-    cols.setGravity(Gravity.TOP);
-    LinearLayout main = p.col();
-    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, -1, 1);
-    lp.rightMargin = p.dp(20);
-    cols.addView(main, lp);
-    LinearLayout options = p.col();
-    cols.addView(options, new LinearLayout.LayoutParams(p.dp(220), -1));
+    LinearLayout cols = prepareColumns(body);
+    LinearLayout main = prepareCard(cols, true);
+    LinearLayout options = prepareCard(cols, false);
     if (manual()) {
       TextView title = p.heading("");
       bindText(
@@ -1577,29 +1733,27 @@ public final class MainActivity extends Activity {
           () ->
               (obj("y_axis_z_offset").optInt("calibration_point", 0) == 0 ? "Front" : "Rear")
                   + " paper contact");
-      main.addView(title);
-      p.gap(main, 8);
+      add(main, title, 26);
+      p.gap(main, 6);
       subtext(
           main,
-          "Slide paper under the nozzle. Move closer until it just grips the paper, then accept"
-              + " this point.");
-      p.gap(main, 12);
+          "Slide paper under the nozzle. Move closer until it just grips, then accept this point.");
+      prepareSpace(main);
       LinearLayout pos = p.row();
       pos.addView(p.label("NOZZLE HEIGHT"), new LinearLayout.LayoutParams(0, -2, 1));
-      TextView z = p.text("", 24, PanelUi.TEXT);
+      TextView z = p.text("", 22, PanelUi.TEXT);
       bindText(z, () -> value(finite(obj("manual_probe"), "z_position"), 3) + " mm");
       pos.addView(z);
-      add(main, pos, 38);
-      p.gap(main, 8);
-      Button closer = button("Closer", null, 0, () -> paperAdjust(-paperStep)),
-          further = button("Further", null, 0, () -> paperAdjust(paperStep));
+      add(main, pos, 32);
+      p.gap(main, 6);
+      Button closer = prepareButton("Closer", null, 0, () -> paperAdjust(-paperStep)),
+          further = prepareButton("Further", null, 0, () -> paperAdjust(paperStep));
       gate(closer, this::manual);
       gate(further, this::manual);
-      rowButtons(main, closer, further);
+      prepareButtons(main, closer, further);
       p.gap(main, 8);
       stepSelector(main, new double[] {.01, .025, .1}, () -> paperStep, v -> paperStep = v);
-      options.addView(p.label("PAPER CALIBRATION"));
-      p.gap(options, 10);
+      prepareHeading(options, "Paper calibration");
       String[] stages = {"Front contact", "Rear contact", "Corrected heightmap"};
       for (int index = 0; index < 3; index++) {
         final int step = index;
@@ -1612,18 +1766,18 @@ public final class MainActivity extends Activity {
           if (!Boolean.valueOf(selected).equals(line.getTag())) {
             line.setTag(selected);
             line.setTextColor(selected ? PanelUi.ACCENT : PanelUi.MUTED);
-            line.setBackground(p.shape(selected ? PanelUi.ACCENT_BG : PanelUi.BG, 6));
+            line.setBackground(p.shape(selected ? PanelUi.ACCENT_BG : PanelUi.SURFACE, 6));
           }
         });
-        add(options, line, 26);
+        add(options, line, 28);
       }
-      p.gap(options, 12);
-      Button accept = button("Accept contact", "check", 1, this::acceptPaper);
+      prepareSpace(options);
+      Button accept = prepareButton("Accept contact", "check", 1, this::acceptPaper);
       gate(accept, this::manual);
       add(options, accept, 48);
       p.gap(options, 8);
       Button abort =
-          button(
+          prepareButton(
               "Abort calibration",
               null,
               2,
@@ -1644,13 +1798,12 @@ public final class MainActivity extends Activity {
       gate(abort, this::manual);
       add(options, abort, 48);
     } else {
-      main.addView(p.heading("Front / rear bed calibration"));
-      p.gap(main, 10);
+      prepareHeading(main, "Front / rear bed calibration");
       subtext(
           main,
-          "Clean the nozzle and clear the bed. The printer creates a mesh, then guides you through"
-              + " front and rear paper contacts.");
-      p.gap(main, 12);
+          "Clean the nozzle and clear the bed. A mesh comes first, then front and rear paper"
+              + " contacts.");
+      p.gap(main, 8);
       TextView phase = p.text("", 14, PanelUi.ACCENT);
       bindText(
           phase,
@@ -1664,9 +1817,9 @@ public final class MainActivity extends Activity {
           () -> phase.setVisibility(phase.getText().length() == 0 ? View.GONE : View.VISIBLE));
       bindings.add(() -> phase.setTextColor(calibrationResultColor));
       add(main, phase, 40);
-      p.gap(main, 8);
+      prepareSpace(main);
       Button start =
-          button(
+          prepareButton(
               "Start paper calibration",
               "calibrate",
               1,
@@ -1692,13 +1845,13 @@ public final class MainActivity extends Activity {
       gate(start, () -> idle() && capable("CALIBRATE_BED_TILT"));
       add(main, start, 48);
       p.gap(main, 8);
-      subtext(
-          main,
-          "After both paper contacts, the printer saves the correction and refreshes the"
-              + " heightmap.");
-      options.addView(p.label("MESH DETAIL"));
-      p.gap(options, 10);
+      TextView result =
+          p.text("Both contacts save the correction and refresh the heightmap.", 12, PanelUi.MUTED);
+      result.setMaxLines(2);
+      add(main, result, 34);
+      prepareHeading(options, "Mesh detail");
       LinearLayout choices = p.row();
+      choices.setBackground(p.shape(PanelUi.BG, 8));
       for (int n : new int[] {5, 9, 13}) {
         Button b =
             button(
@@ -1714,14 +1867,17 @@ public final class MainActivity extends Activity {
         bindings.add(() -> {
           PanelUi.selection(b, probeCount == n, p);
         });
-        p.weighted(choices, b, 48);
+        choices.addView(b, new LinearLayout.LayoutParams(0, p.dp(48), 1));
       }
       add(options, choices, 48);
-      p.gap(options, 12);
-      subtext(options, "After adjusting bed screws, refresh the corrected heightmap.");
       p.gap(options, 8);
+      TextView hint =
+          p.text("After adjusting bed screws, refresh the corrected heightmap.", 12, PanelUi.MUTED);
+      hint.setMaxLines(2);
+      add(options, hint, 34);
+      prepareSpace(options);
       Button mesh =
-          button(
+          prepareButton(
               "Refresh heightmap",
               "refresh",
               0,
@@ -1740,11 +1896,10 @@ public final class MainActivity extends Activity {
       gate(mesh, () -> idle() && capable("CALIBRATE_COMPENSATED_BED_MESH"));
       add(options, mesh, 48);
       p.gap(options, 8);
-      Button viewMesh = button("View heightmap", "calibrate", 0, this::heightmapSheet);
+      Button viewMesh = prepareButton("View heightmap", "calibrate", 0, this::heightmapSheet);
       gate(viewMesh, this::ready);
       add(options, viewMesh, 48);
     }
-    add(body, cols, -1);
   }
 
   void paperAdjust(double amount) {
@@ -2000,7 +2155,14 @@ public final class MainActivity extends Activity {
                   d.gcode(
                       "SET_HEATER_TEMPERATURE HEATER=" + heater + " TARGET=" + trimNumber(target));
                 },
-                success);
+                () -> {
+                  if (heater.equals("extruder")
+                      && target > 0
+                      && page.equals("Prepare")
+                      && prepareTab.equals("Filament"))
+                    filamentTemperature = (int) Math.round(target);
+                  if (success != null) success.run();
+                });
     if (target == 0 && activePrint())
       confirm(
           "Turn this heater off?",

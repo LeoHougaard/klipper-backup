@@ -17,6 +17,8 @@ PACKAGE = "dev.leo.voronpanel"
 
 
 def adb(*args):
+    if args[:3] == ("shell", "am", "start") and "-W" not in args:
+        args = (*args[:3], "-W", *args[3:])
     return subprocess.check_output([str(ADB), *args], text=True, encoding="utf-8", stderr=subprocess.STDOUT)
 
 
@@ -46,6 +48,14 @@ def wait_for_requests(fixture, count):
     while len(fixture.requests) < count and time.monotonic() < deadline:
         time.sleep(.05)
     assert len(fixture.requests) == count, fixture.requests
+
+
+def verify_fixture(port):
+    tap("Connection details")
+    expected = f"http://127.0.0.1:{port}"
+    assert any(n.get("content-desc") == "Moonraker address" and n.get("text") == expected
+               for n in snapshot().iter("node")), "App is not connected to the isolated fixture"
+    tap("Home")
 
 
 def main():
