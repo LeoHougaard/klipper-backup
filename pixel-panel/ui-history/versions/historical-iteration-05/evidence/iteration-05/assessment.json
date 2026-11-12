@@ -1,0 +1,20 @@
+{
+  "decision": "promote connected preview and restrained presets; final interaction gate pending",
+  "bambu_anchor": 8,
+  "scores": {
+    "alignment": 9.5,
+    "spacing": 8.5,
+    "icons": 8.5,
+    "borders": 8.5,
+    "type": 8.5,
+    "legibility": 8.5,
+    "grouping": 9,
+    "density": 9,
+    "touch": 8.5,
+    "clarity": 9,
+    "states": 8.5,
+    "cross_screen": 8.5
+  },
+  "gate": "not met",
+  "apk_sha256": "d07d2840eb9d0ae7ee450cb6d1370a353353091e5fcfdc21356396762bc7d42f"
+}

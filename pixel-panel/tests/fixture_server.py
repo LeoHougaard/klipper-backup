@@ -155,6 +155,8 @@ class Fixture:
                     self.reply({"objects": list(fixture.status)})
                 elif path == "/printer/gcode/help":
                     self.reply({name: "Fixture command" for name in fixture.commands})
+                elif path == "/server/info":
+                    self.reply({"klippy_connected": True, "klippy_state": fixture.status["webhooks"]["state"]})
                 elif path == "/server/gcode_store":
                     self.reply({"gcode_store": fixture.gcode_store[-1000:]})
                 elif path == "/server/files/list":
@@ -203,9 +205,13 @@ class Fixture:
                         fixture.status["print_stats"]["state"] = "cancelled"
                     elif self.path == "/printer/emergency_stop":
                         fixture.status["webhooks"].update(state="shutdown", state_message="Emergency stop")
+                        fixture.status["print_stats"].update(state="error", message="Emergency stop")
+                        for heater in ("extruder", "heater_bed"):
+                            fixture.status[heater]["target"] = 0
                     elif self.path in ("/printer/restart", "/printer/firmware_restart"):
                         fixture.status["webhooks"].update(state="ready", state_message="Printer ready")
-                        fixture.status["print_stats"]["state"] = "standby"
+                        fixture.status["print_stats"].update(state="standby", message="")
+                        fixture.status["virtual_sdcard"]["progress"] = 0
                 self.reply("ok")
 
             def reply(self, result):

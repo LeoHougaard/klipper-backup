@@ -48,7 +48,7 @@ def main():
         parser.error('Review controls require an emulator serial, never a physical phone')
     os.environ['ANDROID_SERIAL'] = args.serial
     from check_controls import ADB_COMMAND, AGENT_DEVICE_COMMAND, adb, device, snapshot, tap, verify_fixture
-    from check_workflows import click
+    from check_workflows import click, wait_text
 
     fixture = Fixture()
     if args.fixture_snapshot:
@@ -69,6 +69,7 @@ def main():
                 filename='Voron_parts/HeatCore_4_toolhead_front_ABS_0.2mm.gcode',
                 print_duration=3760, info={'current_layer': 45, 'total_layer': 168})
             s['virtual_sdcard']['progress'] = 1 if name == 'complete' else .27
+            if name == 'complete': s['print_stats']['info']['current_layer'] = 168
             if name in ('printing', 'paused'):
                 s['extruder'].update(temperature=239.6, target=240, can_extrude=True)
                 s['heater_bed'].update(temperature=99.8, target=100)
@@ -90,7 +91,9 @@ def main():
     def close_dialogs():
         for _ in range(3):
             root = snapshot()
-            if any(n.get('text') == 'Close' and n.get('clickable') == 'true' for n in root.iter('node')):
+            if any(n.get('text') == 'Cancel' and n.get('clickable') == 'true' for n in root.iter('node')):
+                tap('Cancel', root)
+            elif any(n.get('text') == 'Close' and n.get('clickable') == 'true' for n in root.iter('node')):
                 tap('Close', root)
             else: break
 
@@ -150,6 +153,12 @@ def main():
                     close_dialogs()
                     set_state(state)
                     time.sleep(2.4)
+                    expected = {'idle':'Ready', 'heating':'Heating', 'printing':'Printing',
+                                'paused':'Print paused', 'complete':'Print complete',
+                                'cancelled':'Ready', 'error':'Print failed',
+                                'unhomed':'Ready', 'shutdown':'Printer shutdown',
+                                'offline':'Disconnected', 'front':'Paper calibration', 'rear':'Paper calibration'}
+                    wait_text(expected[state])
                     open_screen(screen)
                     selection['screen'] = screen
                     # Android publishes the accessibility tree before the final

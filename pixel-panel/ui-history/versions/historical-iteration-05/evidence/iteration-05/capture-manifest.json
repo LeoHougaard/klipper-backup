@@ -1,0 +1,34 @@
+{
+  "idle-home": {
+    "state": "idle",
+    "screen": "home",
+    "sha256": "a6bc052f6d4ec0ba5635aef60e7d231cc923047ced5cacb05a96fce94baba821"
+  },
+  "heating-home": {
+    "state": "heating",
+    "screen": "home",
+    "sha256": "dc009e0e783c5999fefb2f79dfaa3a7bff22bdde8b6b509d794d5faee3dfe738"
+  },
+  "printing-home": {
+    "state": "printing",
+    "screen": "home",
+    "sha256": "b2f27cc4c84b21a404b6200683bbb1d1b6d33131c551a5e3108dcf4d440c3dca"
+  },
+  "idle-filament": {
+    "state": "idle",
+    "screen": "filament",
+    "sha256": "91e134d770560314ec6dbc6c384f289054488971972eef9cd31295a453290d46"
+  },
+  "idle-more": {
+    "state": "idle",
+    "screen": "more",
+    "sha256": "bbc9d7625fc1a7bc0f74b5d0202d67e22db989d4daa3baab5d1ee53e28ee6249"
+  },
+  "idle-temperature-keypad": {
+    "state": "idle",
+    "screen": "temperature-keypad",
+    "sha256": "f4798dd9640ec95e2a1eda622ef176b995bc9e8a98ed1232be9178f756f4d67c"
+  },
+  "_source_commit": "9b906b256def2e5783484ba1eb7f1b11351238ae",
+  "_apk_sha256": "d07d2840eb9d0ae7ee450cb6d1370a353353091e5fcfdc21356396762bc7d42f"
+}

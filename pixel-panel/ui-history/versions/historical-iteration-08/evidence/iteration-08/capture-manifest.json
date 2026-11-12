@@ -1,0 +1,73 @@
+{
+  "_device": {
+    "serial": "emulator-5554",
+    "density": "Physical density: 420",
+    "font_scale": "1.0"
+  },
+  "idle-move": {
+    "state": "idle",
+    "screen": "move",
+    "sha256": "01970b5b6bc712a157a065ac86eb114fb8a884ea5db7fc6ac503b602292a60ec"
+  },
+  "idle-more": {
+    "state": "idle",
+    "screen": "more",
+    "sha256": "16c8b5791f462d7a23aa60766835f02d326fcb4247c9370289efeaec84d1fddb"
+  },
+  "idle-calibration": {
+    "state": "idle",
+    "screen": "calibration",
+    "sha256": "39a360dbfb28ebfa0bb00ddecbf91407b38c49316ee2babd5fa2f9979c4b12bc"
+  },
+  "idle-home": {
+    "state": "idle",
+    "screen": "home",
+    "sha256": "a6bc052f6d4ec0ba5635aef60e7d231cc923047ced5cacb05a96fce94baba821"
+  },
+  "_source_commit": "9b906b256def2e5783484ba1eb7f1b11351238ae",
+  "_source_sha256": {
+    "pixel-panel\\app\\AndroidManifest.xml": "7a070aeb9517964e267e477f42652e34c17590499a99e5d01bb87c8fbc11234f",
+    "pixel-panel\\app\\assets\\device.html": "50ed6cd73b906549d8b167c83be89d71413382a5c8f5f959889af6804da1533b",
+    "pixel-panel\\app\\res\\drawable\\icon.xml": "6239d6305b3ba47b5af9e5e6cb0ce5647e0ebea40b931d47db51b9464eb921b0",
+    "pixel-panel\\app\\res\\drawable\\panel_arrow.xml": "e06a0e39637d9d303e3d20075dcd5d835261487f89c178ee675756baea6ab36c",
+    "pixel-panel\\app\\res\\drawable\\panel_back.xml": "d84bb9e60a0adc1dfbf276d04710c31cb995f4a46eea2ce99a904ff357da81d0",
+    "pixel-panel\\app\\res\\drawable\\panel_bed.xml": "ee935b74a2f5d32634bc915a646d6da50f32fe341ba0f5979c3a34860b5c8ad4",
+    "pixel-panel\\app\\res\\drawable\\panel_calibrate.xml": "33a53d85e74cca9ab2db7926b07d218d297d98b6aeb13b523da496c22c4f1ae6",
+    "pixel-panel\\app\\res\\drawable\\panel_camera.xml": "ec3e27e70c20ac80c6c843832c2587e480755903be73341036af29eff3c9d833",
+    "pixel-panel\\app\\res\\drawable\\panel_check.xml": "2dfb3b0261d55a1ed09f0c4e8221c077935c815a4bfab9aee4e88dfc833bc191",
+    "pixel-panel\\app\\res\\drawable\\panel_cool.xml": "0c9e1f108d43bad35df0e7cbb910edc95401908eaccb8cc4e6c94eed9e725c91",
+    "pixel-panel\\app\\res\\drawable\\panel_down.xml": "1b8efc89947aa9580f1a4bdd0f72a24d50119adc242a6cf8aeb1f29bfc860dba",
+    "pixel-panel\\app\\res\\drawable\\panel_edit.xml": "2b8a881292c964a6beb33875befb6c7669dfeb8f01884896f1c0ac43d7c9fb50",
+    "pixel-panel\\app\\res\\drawable\\panel_external.xml": "0e24eb179e80f9d3d0c7de3dfeb461e228d3f98d157c9f722579ddd56feeaf55",
+    "pixel-panel\\app\\res\\drawable\\panel_filament.xml": "ae0ebc17492ce58cae870822fd853d540d8eec91ef3db97e1510763866a4dd01",
+    "pixel-panel\\app\\res\\drawable\\panel_files.xml": "2cc9fdff6905a56632f979f16e646506132e157fd92d57e34551fb17412e6d8f",
+    "pixel-panel\\app\\res\\drawable\\panel_heat.xml": "c3ccb1c24657258b3a40ae721a22b301bf9316314c248391c76b3cac54b1505e",
+    "pixel-panel\\app\\res\\drawable\\panel_home.xml": "282718bf0b7a9cf90c49d7ce6dac7876e971bfa87b243410a5bd76d360afd03d",
+    "pixel-panel\\app\\res\\drawable\\panel_left.xml": "4617a26cd9f2065fa857d62ccacd07a25e4f60a29707c46506ab35e43eae1240",
+    "pixel-panel\\app\\res\\drawable\\panel_light.xml": "ff972fbbf0ce3676ce2d15d0476970153af00ac6825bddb18dfa30a7413d80ef",
+    "pixel-panel\\app\\res\\drawable\\panel_load.xml": "b5fcd4819207428e2466bcf5d49baf2197a88bc22a6003e145c16457034a6895",
+    "pixel-panel\\app\\res\\drawable\\panel_mesh.xml": "4be3f4c1f1e13f548deeb84bee37e43ea970483a51f31cca380d38eaaefee4f7",
+    "pixel-panel\\app\\res\\drawable\\panel_more.xml": "d44af77d639326fcade6075f4af35134afedb73f92556dea8037efdfd354b06b",
+    "pixel-panel\\app\\res\\drawable\\panel_move.xml": "4ecba3aeb3cfaa6c62b67925e9c22b9858aa5977f3b841684f171a05d2506f3b",
+    "pixel-panel\\app\\res\\drawable\\panel_pause.xml": "729683570c4f6787bcd03222fb97d160d69804c4653dd9c88da4f6e2b979346f",
+    "pixel-panel\\app\\res\\drawable\\panel_play.xml": "d3aa0343ae790ac7d5187659eea97dc289ec75c7bc41d06a5cf47b87626c60dc",
+    "pixel-panel\\app\\res\\drawable\\panel_refresh.xml": "3030f1695acb75499c3944c0f73af1a8ea91f2e9fc69c0d1f08e90f4fd31a1d4",
+    "pixel-panel\\app\\res\\drawable\\panel_right.xml": "e06a0e39637d9d303e3d20075dcd5d835261487f89c178ee675756baea6ab36c",
+    "pixel-panel\\app\\res\\drawable\\panel_speed.xml": "b71096ae98b665c3a6874ccaff6461c2e141e56ca56889cbd1a9d54632ce3536",
+    "pixel-panel\\app\\res\\drawable\\panel_stop.xml": "f2b50ac9ecbe192ece85aaa7e4368cbe5a3d863945522c4c73e60bd1abd5ec4a",
+    "pixel-panel\\app\\res\\drawable\\panel_tools.xml": "ba4ce7d184aa19e597f84b96d3beb3def5d717cfe7c26f74039412ece042019e",
+    "pixel-panel\\app\\res\\drawable\\panel_unload.xml": "7c632d578be4234f7879d73033522441238ab2449cffe6bb829639796446f335",
+    "pixel-panel\\app\\res\\drawable\\panel_up.xml": "9f0302b8c771ca38741a49c62ab4ab8bafd5c8562e818556ac934c225115db32",
+    "pixel-panel\\app\\res\\drawable\\panel_wifi.xml": "e2f146aeab468c2bbf4f3131598274f67ba86f34597ebc69f982cc2665955420",
+    "pixel-panel\\app\\res\\values\\styles.xml": "91cbdcb7e5bb62119bf6e55a8b5044d8af12c57a30115fbe40a6eaa9eb8fdc99",
+    "pixel-panel\\app\\src\\BedMeshView.java": "83cc2505cbb3fc5b417361aa08d4e765dd3ba29a284dfda28a5ea8f77a0057cf",
+    "pixel-panel\\app\\src\\ConnectionService.java": "cdf7bed4ef3e5cba98de1e0174dddd33f644fc87f14108703be676e92ef19338",
+    "pixel-panel\\app\\src\\IconMetrics.java": "fdd443b5112edffa40c323241bfd548ee2339bec339e439d9a2d145f6f10284b",
+    "pixel-panel\\app\\src\\MainActivity.java": "36a23d374e4babde9db048b8a2bbdd6e51bdc45b676d2914de8c2dc9c22be44a",
+    "pixel-panel\\app\\src\\MonitorService.java": "74d80b9417000bc35367150894a5a7be4184dc7994ba82442ee04b08b1b21e98",
+    "pixel-panel\\app\\src\\PanelUi.java": "de62057b5bfbfe4244b75ba3ee187aa823c48af21c634a6336e8a3b196d8108e",
+    "pixel-panel\\app\\src\\PrinterClient.java": "ac44f87336a09394c3ff89e965144ddd151b349715bc10c4c287affcd547cca8",
+    "pixel-panel\\app\\src\\PrinterGateway.java": "fa853e18bc3bc987e5ff38566733eb5d26ffbf8bf53c19431b771b8c10aab083"
+  },
+  "_apk_sha256": "c75af0bb5082bf219aebaec6934c869d3d721d297625cb1b62eecc35aac49bd0"
+}

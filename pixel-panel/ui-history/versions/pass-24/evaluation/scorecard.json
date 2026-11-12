@@ -1,0 +1,70 @@
+{
+  "model": "sol",
+  "candidate_version": "0.3.9",
+  "iteration": 24,
+  "starting_build_anchor": 1,
+  "bambu_scores": {
+    "Alignment": 8,
+    "Spacing": 8,
+    "Icon quality": 8,
+    "Borders and surfaces": 8,
+    "Type hierarchy": 8,
+    "Legibility": 8,
+    "Functional grouping": 8,
+    "Density and restraint": 8,
+    "Touch geometry": 8,
+    "Interaction clarity": 8,
+    "State consistency": 8,
+    "Cross-screen finish": 8
+  },
+  "candidate_estimates": {
+    "Alignment": 9.5,
+    "Spacing": 9.5,
+    "Icon quality": 9,
+    "Borders and surfaces": 9,
+    "Type hierarchy": 9,
+    "Legibility": 9,
+    "Functional grouping": 9.5,
+    "Density and restraint": 9,
+    "Touch geometry": 9.5,
+    "Interaction clarity": 9.5,
+    "State consistency": 9.5,
+    "Cross-screen finish": 9
+  },
+  "uncertainty": "Roughly half a point for anchored visual estimates; not a tenth-point aesthetic certification.",
+  "target": {
+    "minimum_score": 9.8,
+    "minimum_categories": 10
+  },
+  "categories_at_target": 0,
+  "acceptance": "unverified; not passed",
+  "reference_images": {
+    "1064.jpeg": "2da725656c82c47497e063176669f1e4696c7e6e1f5cfad6c71715e2fa1e055b",
+    "1066.jpeg": "38c00edebd48610e886ea17a3f74baafa013f6ee1bd21be32c9cb8d862677300",
+    "1231.jpeg": "d30b1e8061a1cedf03523b65c4b55f6f5b65ac3047d975d9161f4bc649a57983",
+    "1232.png": "2ea2ebc9368701f95d3f028e4e0c561043d5834e3bae70d97f8cc36fadd9d64d",
+    "1233.png": "72e589d78d7107c5729e5a3ee07b24b7f1ed0e5ba8c0f5ab18212c8be7b71356",
+    "1068.jpeg": "85c7d8380b7bb27cbca78ca7ecfdad577bd0845cce246b49c5a9cc7e15c09bcc"
+  },
+  "assessment_method": "rubric-v2.json",
+  "actuation_scores": {
+    "intent_fidelity": 10.0,
+    "input_efficiency": 10.0,
+    "context_and_editing": 10.0,
+    "interruption_and_recovery": 10.0
+  },
+  "actuation_evidence": "actuation-comparison-24.json",
+  "animation_quality": {
+    "score": null,
+    "target": 9.8,
+    "bambu_motion_score": null,
+    "behavior": "Normal/reduced motion and rapid interruption verified",
+    "performance": "Emulator layout work improved; physical-phone smoothness unverified",
+    "comparison": "pass-24.json"
+  },
+  "open_visual_gates": [
+    "First-use discoverability and real-phone readability/touch are unmeasured.",
+    "Remaining optical/spacing/surface preference is an anchored judgment, not established to 0.1 point.",
+    "No ten original visual categories have been verified at 9.8."
+  ]
+}

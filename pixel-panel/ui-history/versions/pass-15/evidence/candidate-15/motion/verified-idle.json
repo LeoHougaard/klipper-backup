@@ -1,0 +1,130 @@
+{
+  "label": "verified-idle",
+  "animator_duration_scale": "null",
+  "recording_active": true,
+  "renderer": "GLES: Google (Google Inc.), Android Emulator OpenGL ES Translator (Google SwiftShader), OpenGL ES 3.0 (OpenGL ES 3.0 SwiftShader 4.0.0.1)",
+  "cpu_online": "0-1",
+  "focus": "filament-home",
+  "markers": [
+    {
+      "target": "Filament temperature",
+      "start_seconds": 0.066,
+      "end_seconds": 2.492,
+      "frame_ms": [
+        15.47967,
+        109.907404,
+        222.81574,
+        167.115154,
+        40.413138,
+        39.446672,
+        243.46074,
+        181.445014,
+        197.934616,
+        116.367054,
+        102.929324,
+        119.468026,
+        130.233094,
+        10.352104,
+        21.300238,
+        40.452472,
+        40.446506,
+        53.84164
+      ]
+    },
+    {
+      "target": "Use 240 \u00b0C",
+      "start_seconds": 2.615,
+      "end_seconds": 4.481,
+      "frame_ms": [
+        34.517074,
+        56.80641,
+        82.152344,
+        76.792812,
+        101.27548,
+        116.316114
+      ]
+    },
+    {
+      "target": "Filament temperature",
+      "start_seconds": 4.525,
+      "end_seconds": 6.889,
+      "frame_ms": [
+        13.454014,
+        118.528852,
+        126.882558,
+        192.195394,
+        101.51287,
+        39.879482,
+        51.263616,
+        139.665452,
+        145.054956,
+        163.737258,
+        135.981794,
+        134.465064,
+        93.937434,
+        84.260802,
+        123.64577,
+        9.162082,
+        26.394516,
+        42.88085
+      ]
+    },
+    {
+      "target": "Cancel",
+      "start_seconds": 7.048,
+      "end_seconds": 8.902,
+      "frame_ms": [
+        44.062984,
+        65.41252,
+        106.462254,
+        122.491122,
+        122.07969
+      ]
+    },
+    {
+      "target": "Prepare",
+      "start_seconds": 8.944,
+      "end_seconds": 10.448,
+      "frame_ms": [
+        18.528524,
+        60.786698,
+        67.210832,
+        51.2036,
+        51.168768
+      ]
+    },
+    {
+      "target": "Filament",
+      "start_seconds": 10.492,
+      "end_seconds": 12.101,
+      "frame_ms": [
+        17.687986,
+        401.12892,
+        51.433636,
+        34.448304,
+        42.115938,
+        51.438272
+      ]
+    },
+    {
+      "target": "Home",
+      "start_seconds": 12.142,
+      "end_seconds": 14.213,
+      "frame_ms": [
+        16.535352,
+        752.510586,
+        115.078446,
+        59.784916,
+        65.11365,
+        53.529918,
+        50.790286
+      ]
+    }
+  ],
+  "renderer_frame_count": 65,
+  "renderer_p95_ms": 222.81574,
+  "renderer_over_33ms": 56,
+  "rapid_navigation_final_state_correct": true,
+  "measurement_scope": "Activity renderer on emulator; WindowManager transitions assessed from actual recording",
+  "physical_printer_commands": 0
+}

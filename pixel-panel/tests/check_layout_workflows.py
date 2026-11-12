@@ -11,7 +11,7 @@ import subprocess
 from pathlib import Path
 from urllib.request import Request, urlopen
 import xml.etree.ElementTree as ET
-from check_controls import ADB, SERIAL, adb, snapshot, tap, verify_fixture
+from check_controls import ADB, SERIAL, AGENT_DEVICE_COMMAND, adb, device, snapshot, tap, verify_fixture
 from check_workflows import click, wait_text, wait_until
 
 
@@ -49,8 +49,11 @@ def main():
         root = snapshot()
         (args.output / (name + '.xml')).write_text(
             ET.tostring(root, encoding='unicode'), encoding='utf-8')
-        (args.output / (name + '.png')).write_bytes(subprocess.check_output(
-            [str(ADB), '-s', SERIAL, 'exec-out', 'screencap', '-p']))
+        if AGENT_DEVICE_COMMAND:
+            device('screenshot', str((args.output / (name + '.png')).resolve()))
+        else:
+            (args.output / (name + '.png')).write_bytes(subprocess.check_output(
+                [str(ADB), '-s', SERIAL, 'exec-out', 'screencap', '-p']))
         return root
 
     verify_fixture(args.port)
@@ -122,19 +125,21 @@ def main():
         # Vertical gestures on the side rail still commit only once on release.
         x,y,r,b = nozzle
         before = len(scripts())
-        adb('shell','input','swipe',str((x+r)//2),str((y+b)//2),str((x+r)//2),str((y+b)//2+168),'450')
+        if AGENT_DEVICE_COMMAND: device('gesture', 'pan', str((x+r)//2), str((y+b)//2), '0', '168', '450')
+        else: adb('shell','input','swipe',str((x+r)//2),str((y+b)//2),str((x+r)//2),str((y+b)//2+168),'450')
         wait_until(lambda: len(scripts()) == before+1, 'one heater gesture command')
         assert scripts()[-1] == 'SET_HEATER_TEMPERATURE HEATER=extruder TARGET=40'
         tap('Set nozzle temperature')
         wait_text('Nozzle temperature')
         tap('Custom target')
-        wait_text('Temperature target')
+        wait_text('Nozzle target (°C)')
         keypad = capture('02-temperature-keypad')
         for n in keypad.iter('node'):
             if n.get('clickable') == 'true' and n.get('enabled') == 'true':
                 a,b,c,d = bounds(n)
                 assert c <= rail_x and b >= 0 and d <= 1080, (n.attrib, rail_x)
-        adb('shell','input','keyevent','4')
+        if AGENT_DEVICE_COMMAND: device('back')
+        else: adb('shell','input','keyevent','4')
         wait_text('Nozzle temperature')
         tap('Close')
         print('PASS: vertical heater gesture and keypad fit beside persistent emergency controls', flush=True)
@@ -224,11 +229,12 @@ def main():
         tap('Home')
         tap('Set nozzle temperature')
         tap('Custom target')
-        wait_text('Temperature target')
+        wait_text('Nozzle target (°C)')
         # Native accessibility reports only the dialog window, so use saved
         # emergency bounds from the verified main screen, which stays fixed.
         a,b,c,d = stop
-        adb('shell','input','tap',str((a+c)//2),str((b+d)//2))
+        if AGENT_DEVICE_COMMAND: device('press', str((a+c)//2), str((b+d)//2))
+        else: adb('shell','input','tap',str((a+c)//2),str((b+d)//2))
         wait_until(lambda: any(r['path']=='/printer/emergency_stop'
                               for r in get('/fixture/requests')[initial_requests:]), 'emergency stop through keypad')
         wait_text('Printer shutdown')
@@ -240,7 +246,8 @@ def main():
         (args.output/'results.json').write_text(json.dumps({'passed':True,'serial':SERIAL,'physical_printer_commands':0},indent=2))
     finally:
         # Back closes a sheet; Home then returns to the normal review state.
-        adb('shell','input','keyevent','4')
+        if AGENT_DEVICE_COMMAND: device('back')
+        else: adb('shell','input','keyevent','4')
         set_state(**original)
         tap('Home')
 

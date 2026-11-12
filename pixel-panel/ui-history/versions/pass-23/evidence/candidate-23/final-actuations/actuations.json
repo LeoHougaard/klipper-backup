@@ -1,0 +1,534 @@
+{
+  "source_commit": "c7f4a690faffc95e564d0abb48482621955af761",
+  "installed_apk_sha256": "8581c56f0e1ea0e3f5b7af32ee77e6656c5b9685b240c4cf90e395ec2a461541",
+  "model": "sol",
+  "serial": "emulator-5554",
+  "task_traces": [
+    {
+      "task": "XY common jog",
+      "input_count": 3,
+      "navigation_transitions": 2,
+      "inputs": [
+        {
+          "target": "XY move distance",
+          "before": "Screen: Home",
+          "after": "editor: XY move distance (mm)",
+          "automation_seconds": 2.556
+        },
+        {
+          "target": "Use 1 mm",
+          "before": "editor: XY move distance (mm)",
+          "after": "Screen: Home",
+          "automation_seconds": 1.979
+        },
+        {
+          "target": "X +",
+          "before": "Screen: Home",
+          "after": "Screen: Home",
+          "automation_seconds": 1.755
+        }
+      ],
+      "commands": [
+        "SAVE_GCODE_STATE NAME=panel_move\nG91\nG0 X1 F1200\nRESTORE_GCODE_STATE NAME=panel_move"
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/printer/gcode/script",
+          "body": "{\"script\":\"SAVE_GCODE_STATE NAME=panel_move\\nG91\\nG0 X1 F1200\\nRESTORE_GCODE_STATE NAME=panel_move\"}",
+          "content_type": "application/json",
+          "length": 100,
+          "time": 947145.4161125
+        }
+      ],
+      "automation_seconds": 7.176,
+      "human_completion_time": null,
+      "first_use_discoverability": "not measured",
+      "correct_command": true
+    },
+    {
+      "task": "Z common jog",
+      "input_count": 3,
+      "navigation_transitions": 2,
+      "inputs": [
+        {
+          "target": "Z move distance",
+          "before": "Screen: Home",
+          "after": "editor: Z move distance (mm)",
+          "automation_seconds": 2.538
+        },
+        {
+          "target": "Use 1 mm",
+          "before": "editor: Z move distance (mm)",
+          "after": "Screen: Home",
+          "automation_seconds": 1.991
+        },
+        {
+          "target": "Z +",
+          "before": "Screen: Home",
+          "after": "Screen: Home",
+          "automation_seconds": 2.06
+        }
+      ],
+      "commands": [
+        "SAVE_GCODE_STATE NAME=panel_move\nG91\nG0 Z1 F300\nRESTORE_GCODE_STATE NAME=panel_move"
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/printer/gcode/script",
+          "body": "{\"script\":\"SAVE_GCODE_STATE NAME=panel_move\\nG91\\nG0 Z1 F300\\nRESTORE_GCODE_STATE NAME=panel_move\"}",
+          "content_type": "application/json",
+          "length": 99,
+          "time": 947172.6631303
+        }
+      ],
+      "automation_seconds": 7.49,
+      "human_completion_time": null,
+      "first_use_discoverability": "not measured",
+      "correct_command": true
+    },
+    {
+      "task": "Exact E distance and speed",
+      "input_count": 9,
+      "navigation_transitions": 4,
+      "inputs": [
+        {
+          "target": "Extrusion distance",
+          "before": "Screen: Home",
+          "after": "editor: Extrusion distance (mm)",
+          "automation_seconds": 2.578
+        },
+        {
+          "target": "Digit 7",
+          "before": "editor: Extrusion distance (mm)",
+          "after": "editor: Extrusion distance (mm)",
+          "automation_seconds": 1.81
+        },
+        {
+          "target": "Decimal point",
+          "before": "editor: Extrusion distance (mm)",
+          "after": "editor: Extrusion distance (mm)",
+          "automation_seconds": 1.771
+        },
+        {
+          "target": "Digit 5",
+          "before": "editor: Extrusion distance (mm)",
+          "after": "editor: Extrusion distance (mm)",
+          "automation_seconds": 1.788
+        },
+        {
+          "target": "Apply",
+          "before": "editor: Extrusion distance (mm)",
+          "after": "Screen: Home",
+          "automation_seconds": 2.003
+        },
+        {
+          "target": "E movement speed",
+          "before": "Screen: Home",
+          "after": "editor: E speed (mm/s)",
+          "automation_seconds": 2.56
+        },
+        {
+          "target": "Digit 4",
+          "before": "editor: E speed (mm/s)",
+          "after": "editor: E speed (mm/s)",
+          "automation_seconds": 1.773
+        },
+        {
+          "target": "Apply",
+          "before": "editor: E speed (mm/s)",
+          "after": "Screen: Home",
+          "automation_seconds": 2.155
+        },
+        {
+          "target": "Feed",
+          "before": "Screen: Home",
+          "after": "Screen: Home",
+          "automation_seconds": 2.071
+        }
+      ],
+      "commands": [
+        "SAVE_GCODE_STATE NAME=panel_extrude\nM83\nG1 E7.5 F240\nRESTORE_GCODE_STATE NAME=panel_extrude"
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/printer/gcode/script",
+          "body": "{\"script\":\"SAVE_GCODE_STATE NAME=panel_extrude\\nM83\\nG1 E7.5 F240\\nRESTORE_GCODE_STATE NAME=panel_extrude\"}",
+          "content_type": "application/json",
+          "length": 107,
+          "time": 947220.2869464
+        }
+      ],
+      "automation_seconds": 21.182,
+      "human_completion_time": null,
+      "first_use_discoverability": "not measured",
+      "correct_command": true
+    },
+    {
+      "task": "Nozzle exact target",
+      "input_count": 6,
+      "navigation_transitions": 3,
+      "inputs": [
+        {
+          "target": "Set nozzle temperature",
+          "before": "Screen: Home",
+          "after": "dialog: Nozzle temperature",
+          "automation_seconds": 1.863
+        },
+        {
+          "target": "Custom target",
+          "before": "dialog: Nozzle temperature",
+          "after": "editor: Nozzle target (\u00b0C)",
+          "automation_seconds": 2.276
+        },
+        {
+          "target": "Digit 2",
+          "before": "editor: Nozzle target (\u00b0C)",
+          "after": "editor: Nozzle target (\u00b0C)",
+          "automation_seconds": 1.816
+        },
+        {
+          "target": "Digit 1",
+          "before": "editor: Nozzle target (\u00b0C)",
+          "after": "editor: Nozzle target (\u00b0C)",
+          "automation_seconds": 1.846
+        },
+        {
+          "target": "Digit 5",
+          "before": "editor: Nozzle target (\u00b0C)",
+          "after": "editor: Nozzle target (\u00b0C)",
+          "automation_seconds": 1.857
+        },
+        {
+          "target": "Apply",
+          "before": "editor: Nozzle target (\u00b0C)",
+          "after": "Screen: Home",
+          "automation_seconds": 2.228
+        }
+      ],
+      "commands": [
+        "SET_HEATER_TEMPERATURE HEATER=extruder TARGET=215"
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/printer/gcode/script",
+          "body": "{\"script\":\"SET_HEATER_TEMPERATURE HEATER=extruder TARGET=215\"}",
+          "content_type": "application/json",
+          "length": 62,
+          "time": 947250.467836
+        }
+      ],
+      "automation_seconds": 14.271,
+      "human_completion_time": null,
+      "first_use_discoverability": "not measured",
+      "correct_command": true,
+      "editor_title": "Nozzle target (\u00b0C)",
+      "contextual_units": true
+    },
+    {
+      "task": "Bed exact target",
+      "input_count": 5,
+      "navigation_transitions": 3,
+      "inputs": [
+        {
+          "target": "Set bed temperature",
+          "before": "Screen: Home",
+          "after": "dialog: Bed temperature",
+          "automation_seconds": 2.586
+        },
+        {
+          "target": "Custom target",
+          "before": "dialog: Bed temperature",
+          "after": "editor: Bed target (\u00b0C)",
+          "automation_seconds": 2.168
+        },
+        {
+          "target": "Digit 6",
+          "before": "editor: Bed target (\u00b0C)",
+          "after": "editor: Bed target (\u00b0C)",
+          "automation_seconds": 1.856
+        },
+        {
+          "target": "Digit 5",
+          "before": "editor: Bed target (\u00b0C)",
+          "after": "editor: Bed target (\u00b0C)",
+          "automation_seconds": 1.838
+        },
+        {
+          "target": "Apply",
+          "before": "editor: Bed target (\u00b0C)",
+          "after": "Screen: Home",
+          "automation_seconds": 2.187
+        }
+      ],
+      "commands": [
+        "SET_HEATER_TEMPERATURE HEATER=heater_bed TARGET=65"
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/printer/gcode/script",
+          "body": "{\"script\":\"SET_HEATER_TEMPERATURE HEATER=heater_bed TARGET=65\"}",
+          "content_type": "application/json",
+          "length": 63,
+          "time": 947265.0072102
+        }
+      ],
+      "automation_seconds": 12.732,
+      "human_completion_time": null,
+      "first_use_discoverability": "not measured",
+      "correct_command": true,
+      "editor_title": "Bed target (\u00b0C)",
+      "contextual_units": true
+    },
+    {
+      "task": "Cancel nozzle custom target",
+      "input_count": 4,
+      "navigation_transitions": 3,
+      "inputs": [
+        {
+          "target": "Set nozzle temperature",
+          "before": "Screen: Home",
+          "after": "dialog: Nozzle temperature",
+          "automation_seconds": 2.0
+        },
+        {
+          "target": "Custom target",
+          "before": "dialog: Nozzle temperature",
+          "after": "editor: Nozzle target (\u00b0C)",
+          "automation_seconds": 2.195
+        },
+        {
+          "target": "Digit 3",
+          "before": "editor: Nozzle target (\u00b0C)",
+          "after": "editor: Nozzle target (\u00b0C)",
+          "automation_seconds": 1.844
+        },
+        {
+          "target": "Cancel",
+          "before": "editor: Nozzle target (\u00b0C)",
+          "after": "dialog: Nozzle temperature",
+          "automation_seconds": 2.167
+        }
+      ],
+      "commands": [],
+      "requests": [],
+      "automation_seconds": 10.276,
+      "human_completion_time": null,
+      "first_use_discoverability": "not measured",
+      "no_command": true,
+      "returns_to_heater_context": true
+    },
+    {
+      "task": "Cold Unload and cancel",
+      "input_count": 2,
+      "navigation_transitions": 1,
+      "inputs": [
+        {
+          "target": "Unload filament",
+          "before": "Screen: Home",
+          "after": "Screen: Prepare",
+          "automation_seconds": 2.411
+        },
+        {
+          "target": "Cancel heating",
+          "before": "Screen: Prepare",
+          "after": "Screen: Prepare",
+          "automation_seconds": 2.579
+        }
+      ],
+      "commands": [
+        "SET_HEATER_TEMPERATURE HEATER=extruder TARGET=200",
+        "SET_HEATER_TEMPERATURE HEATER=extruder TARGET=0"
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/printer/gcode/script",
+          "body": "{\"script\":\"SET_HEATER_TEMPERATURE HEATER=extruder TARGET=200\"}",
+          "content_type": "application/json",
+          "length": 62,
+          "time": 947290.0012869
+        },
+        {
+          "method": "POST",
+          "path": "/printer/gcode/script",
+          "body": "{\"script\":\"SET_HEATER_TEMPERATURE HEATER=extruder TARGET=0\"}",
+          "content_type": "application/json",
+          "length": 60,
+          "time": 947293.2051029
+        }
+      ],
+      "automation_seconds": 5.952,
+      "human_completion_time": null,
+      "first_use_discoverability": "not measured",
+      "correct_command": true,
+      "no_extrusion": true
+    },
+    {
+      "task": "Cold Load and cancel",
+      "input_count": 2,
+      "navigation_transitions": 1,
+      "inputs": [
+        {
+          "target": "Load filament",
+          "before": "Screen: Home",
+          "after": "Screen: Prepare",
+          "automation_seconds": 1.823
+        },
+        {
+          "target": "Cancel heating",
+          "before": "Screen: Prepare",
+          "after": "Screen: Prepare",
+          "automation_seconds": 2.578
+        }
+      ],
+      "commands": [
+        "SET_HEATER_TEMPERATURE HEATER=extruder TARGET=200",
+        "SET_HEATER_TEMPERATURE HEATER=extruder TARGET=0"
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/printer/gcode/script",
+          "body": "{\"script\":\"SET_HEATER_TEMPERATURE HEATER=extruder TARGET=200\"}",
+          "content_type": "application/json",
+          "length": 62,
+          "time": 947304.3807709
+        },
+        {
+          "method": "POST",
+          "path": "/printer/gcode/script",
+          "body": "{\"script\":\"SET_HEATER_TEMPERATURE HEATER=extruder TARGET=0\"}",
+          "content_type": "application/json",
+          "length": 60,
+          "time": 947307.0649424
+        }
+      ],
+      "automation_seconds": 5.384,
+      "human_completion_time": null,
+      "first_use_discoverability": "not measured",
+      "correct_command": true,
+      "no_extrusion": true
+    },
+    {
+      "task": "Paused filament change and resume",
+      "input_count": 5,
+      "navigation_transitions": 3,
+      "inputs": [
+        {
+          "target": "Unload filament",
+          "before": "Screen: Home",
+          "after": "Screen: Prepare",
+          "automation_seconds": 2.09
+        },
+        {
+          "target": "Feed 5 mm",
+          "before": "Screen: Prepare",
+          "after": "Screen: Prepare",
+          "automation_seconds": 1.716
+        },
+        {
+          "target": "Load filament",
+          "before": "Screen: Prepare",
+          "after": "Screen: Prepare",
+          "automation_seconds": 1.938
+        },
+        {
+          "target": "Resume print",
+          "before": "Screen: Prepare",
+          "after": "dialog: Resume this print?",
+          "automation_seconds": 2.468
+        },
+        {
+          "target": "Resume",
+          "before": "dialog: Resume this print?",
+          "after": "Screen: Home",
+          "automation_seconds": 2.144
+        }
+      ],
+      "commands": [
+        "SAVE_GCODE_STATE NAME=panel_filament\nUNLOAD_FILAMENT\nRESTORE_GCODE_STATE NAME=panel_filament",
+        "SAVE_GCODE_STATE NAME=panel_extrude\nM83\nG1 E5 F180\nRESTORE_GCODE_STATE NAME=panel_extrude",
+        "SAVE_GCODE_STATE NAME=panel_filament\nLOAD_FILAMENT\nRESTORE_GCODE_STATE NAME=panel_filament"
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/printer/gcode/script",
+          "body": "{\"script\":\"SAVE_GCODE_STATE NAME=panel_filament\\nUNLOAD_FILAMENT\\nRESTORE_GCODE_STATE NAME=panel_filament\"}",
+          "content_type": "application/json",
+          "length": 107,
+          "time": 947317.9703666
+        },
+        {
+          "method": "POST",
+          "path": "/printer/gcode/script",
+          "body": "{\"script\":\"SAVE_GCODE_STATE NAME=panel_extrude\\nM83\\nG1 E5 F180\\nRESTORE_GCODE_STATE NAME=panel_extrude\"}",
+          "content_type": "application/json",
+          "length": 105,
+          "time": 947320.1315441
+        },
+        {
+          "method": "POST",
+          "path": "/printer/gcode/script",
+          "body": "{\"script\":\"SAVE_GCODE_STATE NAME=panel_filament\\nLOAD_FILAMENT\\nRESTORE_GCODE_STATE NAME=panel_filament\"}",
+          "content_type": "application/json",
+          "length": 105,
+          "time": 947322.1725775
+        },
+        {
+          "method": "POST",
+          "path": "/printer/print/resume",
+          "body": "",
+          "content_type": "application/x-www-form-urlencoded",
+          "length": 0,
+          "time": 947327.2244067
+        }
+      ],
+      "automation_seconds": 12.132,
+      "human_completion_time": null,
+      "first_use_discoverability": "not measured",
+      "correct_command": true,
+      "resumed": true
+    },
+    {
+      "task": "E-stop from numeric editor",
+      "input_count": 1,
+      "navigation_transitions": 1,
+      "inputs": [
+        {
+          "target": "Emergency stop",
+          "before": "editor: Nozzle target (\u00b0C)",
+          "after": "Screen: Home",
+          "automation_seconds": 2.441
+        }
+      ],
+      "commands": [],
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/printer/emergency_stop",
+          "body": "",
+          "content_type": "application/x-www-form-urlencoded",
+          "length": 0,
+          "time": 947333.6008797
+        }
+      ],
+      "automation_seconds": 3.1,
+      "human_completion_time": null,
+      "first_use_discoverability": "not measured",
+      "correct_command": true,
+      "persistent_stop": true
+    }
+  ],
+  "baseline_clear_workaround": false,
+  "physical_printer_commands": 0,
+  "label_guided_automation": true,
+  "human_trial": false,
+  "cleanup_completed": true,
+  "completed": true
+}

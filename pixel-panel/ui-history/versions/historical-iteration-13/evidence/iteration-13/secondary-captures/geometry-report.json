@@ -1,0 +1,293 @@
+{
+  "complete-home": {
+    "controls": [
+      {
+        "label": "Reprint",
+        "bounds": [
+          232,
+          530,
+          757,
+          656
+        ],
+        "size_dp": [
+          200.0,
+          48.0
+        ],
+        "ink_center_error_dp": [
+          -0.19047619047619047,
+          0.9523809523809523
+        ]
+      },
+      {
+        "label": "Choose print",
+        "bounds": [
+          778,
+          530,
+          1304,
+          656
+        ],
+        "size_dp": [
+          200.38095238095238,
+          48.0
+        ],
+        "ink_center_error_dp": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "label": "Cool down",
+        "bounds": [
+          1389,
+          282,
+          2035,
+          408
+        ],
+        "size_dp": [
+          246.0952380952381,
+          48.0
+        ],
+        "ink_center_error_dp": [
+          -0.19047619047619047,
+          0.0
+        ]
+      },
+      {
+        "label": "Change filament",
+        "bounds": [
+          1389,
+          424,
+          2035,
+          550
+        ],
+        "size_dp": [
+          246.0952380952381,
+          48.0
+        ],
+        "ink_center_error_dp": [
+          -0.19047619047619047,
+          -0.19047619047619047
+        ]
+      },
+      {
+        "label": "Level",
+        "bounds": [
+          2088,
+          444,
+          2403,
+          635
+        ],
+        "size_dp": [
+          120.0,
+          72.76190476190476
+        ],
+        "ink_center_error_dp": [
+          -0.5714285714285714,
+          0.19047619047619047
+        ]
+      },
+      {
+        "label": "Emergency stop",
+        "bounds": [
+          2088,
+          868,
+          2403,
+          1059
+        ],
+        "size_dp": [
+          120.0,
+          72.76190476190476
+        ],
+        "ink_center_error_dp": [
+          -0.19047619047619047,
+          0.0
+        ]
+      }
+    ],
+    "horizontal_center_error_dp": {
+      "median": 0.19047619047619047,
+      "max": 0.5714285714285714
+    },
+    "targets_under_48dp": []
+  },
+  "idle-details": {
+    "controls": [
+      {
+        "label": "Close",
+        "bounds": [
+          1836,
+          63,
+          2025,
+          189
+        ],
+        "size_dp": [
+          72.0,
+          48.0
+        ],
+        "ink_center_error_dp": [
+          0.19047619047619047,
+          -0.5714285714285714
+        ]
+      },
+      {
+        "label": "Start print",
+        "bounds": [
+          639,
+          592,
+          2025,
+          718
+        ],
+        "size_dp": [
+          528.0,
+          48.0
+        ],
+        "ink_center_error_dp": [
+          0.19047619047619047,
+          0.9523809523809523
+        ]
+      }
+    ],
+    "horizontal_center_error_dp": {
+      "median": 0.19047619047619047,
+      "max": 0.19047619047619047
+    },
+    "targets_under_48dp": []
+  },
+  "idle-more": {
+    "controls": [
+      {
+        "label": "Fast controls: off",
+        "bounds": [
+          1364,
+          135,
+          2035,
+          261
+        ],
+        "size_dp": [
+          255.61904761904762,
+          48.0
+        ],
+        "ink_center_error_dp": [
+          0.19047619047619047,
+          0.0
+        ]
+      },
+      {
+        "label": "Level",
+        "bounds": [
+          2088,
+          444,
+          2403,
+          635
+        ],
+        "size_dp": [
+          120.0,
+          72.76190476190476
+        ],
+        "ink_center_error_dp": [
+          -0.5714285714285714,
+          0.19047619047619047
+        ]
+      },
+      {
+        "label": "Emergency stop",
+        "bounds": [
+          2088,
+          868,
+          2403,
+          1059
+        ],
+        "size_dp": [
+          120.0,
+          72.76190476190476
+        ],
+        "ink_center_error_dp": [
+          -0.19047619047619047,
+          0.0
+        ]
+      }
+    ],
+    "horizontal_center_error_dp": {
+      "median": 0.19047619047619047,
+      "max": 0.5714285714285714
+    },
+    "targets_under_48dp": []
+  },
+  "printing-camera": {
+    "controls": [
+      {
+        "label": "Turn camera on",
+        "bounds": [
+          1489,
+          105,
+          2067,
+          231
+        ],
+        "size_dp": [
+          220.1904761904762,
+          48.0
+        ],
+        "ink_center_error_dp": [
+          -0.19047619047619047,
+          0.0
+        ]
+      },
+      {
+        "label": "Pause print",
+        "bounds": [
+          1489,
+          671,
+          2067,
+          797
+        ],
+        "size_dp": [
+          220.1904761904762,
+          48.0
+        ],
+        "ink_center_error_dp": [
+          -0.19047619047619047,
+          1.1428571428571428
+        ]
+      },
+      {
+        "label": "Print tuning",
+        "bounds": [
+          2088,
+          444,
+          2403,
+          635
+        ],
+        "size_dp": [
+          120.0,
+          72.76190476190476
+        ],
+        "ink_center_error_dp": [
+          -0.19047619047619047,
+          0.0
+        ]
+      },
+      {
+        "label": "Emergency stop",
+        "bounds": [
+          2088,
+          868,
+          2403,
+          1059
+        ],
+        "size_dp": [
+          120.0,
+          72.76190476190476
+        ],
+        "ink_center_error_dp": [
+          -0.19047619047619047,
+          0.0
+        ]
+      }
+    ],
+    "horizontal_center_error_dp": {
+      "median": 0.19047619047619047,
+      "max": 0.19047619047619047
+    },
+    "targets_under_48dp": []
+  }
+}

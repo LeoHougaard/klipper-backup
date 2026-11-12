@@ -1,0 +1,21 @@
+{
+  "decision": "promote optical centering; final interaction gate pending",
+  "bambu_anchor": 8,
+  "evidence": "All sampled button groups under 0.6 dp horizontal raster offset; no targets below 48 dp",
+  "scores": {
+    "alignment": 9.5,
+    "spacing": 7,
+    "icons": 8,
+    "borders": 8,
+    "type": 6,
+    "legibility": 7,
+    "grouping": 6,
+    "density": 5,
+    "touch": 8.5,
+    "clarity": 7,
+    "states": 7,
+    "cross_screen": 8
+  },
+  "gate": "not met",
+  "apk_sha256": "ec6b39f16fde69196cfaf540af291397834b7376357148754c1e9f1a1279735b"
+}

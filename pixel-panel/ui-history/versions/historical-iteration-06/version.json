@@ -1,0 +1,74 @@
+{
+  "id": "historical-iteration-06",
+  "label": "iteration-06",
+  "decision": "historical evidence; see saved assessment and evaluation ledger",
+  "recorded_utc": "2026-11-12T15:14:27.053770+00:00",
+  "recording_commit": "c7f4a690faffc95e564d0abb48482621955af761",
+  "historical_import": true,
+  "files": {
+    "evidence/iteration-06/assessment.json": {
+      "sha256": "805ff3dd6f1b7761f619d8f40432adfe591825ee3c1968b6169c979f8258851b",
+      "bytes": 389
+    },
+    "evidence/iteration-06/capture-manifest.json": {
+      "sha256": "852330d6fcb06ff495e3700cb596b6144fb30fd5682998c424206582992d970a",
+      "bytes": 778
+    },
+    "evidence/iteration-06/geometry-report.json": {
+      "sha256": "05f448a790c26aed720eb39b504f58696f7e33593078ed0f913f0198a940d0a5",
+      "bytes": 16672
+    },
+    "evidence/iteration-06/IconMetrics.java": {
+      "sha256": "9aa13f7dd4d14e53f9cab1cd4c2294fe11a3a37848571f20d257de17656d8181",
+      "bytes": 2526
+    },
+    "evidence/iteration-06/idle-connection.png": {
+      "sha256": "23c9d29101b3f7b511adb27bde08dff7df4e0e7b80d538e8586c02e3eaa675d2",
+      "bytes": 176090
+    },
+    "evidence/iteration-06/idle-connection.xml": {
+      "sha256": "d1d04f1e305240072f38ac1149adae5498d06d874a6f25ba7b5bb35b50b2f856",
+      "bytes": 24018
+    },
+    "evidence/iteration-06/idle-filament.png": {
+      "sha256": "91e134d770560314ec6dbc6c384f289054488971972eef9cd31295a453290d46",
+      "bytes": 135395
+    },
+    "evidence/iteration-06/idle-filament.xml": {
+      "sha256": "9b53785ba9428f073609e220547c3d1751d8927eb5020d2435c0880306677a54",
+      "bytes": 23231
+    },
+    "evidence/iteration-06/idle-home.png": {
+      "sha256": "a6bc052f6d4ec0ba5635aef60e7d231cc923047ced5cacb05a96fce94baba821",
+      "bytes": 146151
+    },
+    "evidence/iteration-06/idle-home.xml": {
+      "sha256": "fb64129ed467a5c30373f6397507f9471cfb6f80289ab8cbe114aebcd0563a1b",
+      "bytes": 29547
+    },
+    "evidence/iteration-06/idle-more.png": {
+      "sha256": "a83426e5f25a5161a7991d6a69ef89d63b183398cfe48e07666fafea99e74718",
+      "bytes": 168393
+    },
+    "evidence/iteration-06/idle-more.xml": {
+      "sha256": "cf05914ef93602ba4ea36090989eaa808e3af74c85f1c58272b9acf8337d0995",
+      "bytes": 29277
+    },
+    "evidence/iteration-06/MainActivity.java": {
+      "sha256": "53db15db12275b62206933256c1151cf1ac79550da6dd123d80b5526177d8176",
+      "bytes": 155939
+    },
+    "evidence/iteration-06/PanelUi.java": {
+      "sha256": "de62057b5bfbfe4244b75ba3ee187aa823c48af21c634a6336e8a3b196d8108e",
+      "bytes": 16569
+    }
+  },
+  "screenshots": [
+    "evidence/iteration-06/idle-connection.png",
+    "evidence/iteration-06/idle-filament.png",
+    "evidence/iteration-06/idle-home.png",
+    "evidence/iteration-06/idle-more.png"
+  ],
+  "apks": [],
+  "restoration": "No original APK was preserved. Saved captures can be ranked; exact executable restoration is unavailable."
+}

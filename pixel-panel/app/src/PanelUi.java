@@ -37,6 +37,20 @@ final class PanelUi {
     context = c;
   }
 
+  static boolean motionEnabled() {
+    return android.animation.ValueAnimator.areAnimatorsEnabled();
+  }
+
+  void enterContent(View view) {
+    view.animate().cancel();
+    view.setAlpha(1f);
+    if (!motionEnabled()) return;
+    // Opacity only: motion controls and touch targets never travel on entry.
+    view.setAlpha(.75f);
+    view.animate().alpha(1f).setDuration(140)
+        .setInterpolator(new android.view.animation.DecelerateInterpolator()).start();
+  }
+
   int dp(float n) {
     return Math.round(n * context.getResources().getDisplayMetrics().density);
   }
@@ -50,6 +64,9 @@ final class PanelUi {
   LinearLayout row() {
     LinearLayout v = new LinearLayout(context);
     v.setOrientation(LinearLayout.HORIZONTAL);
+    // Centered rows do not use baseline alignment. Avoid the extra speculative
+    // measurement pass, which multiplies through nested weighted controls.
+    v.setBaselineAligned(false);
     v.setGravity(Gravity.CENTER_VERTICAL);
     return v;
   }
@@ -305,6 +322,7 @@ final class PanelUi {
   }
 
   static final class QuietButton extends Button {
+    final Rect textInk = new Rect();
     QuietButton(Context context) {
       super(context);
     }
@@ -328,7 +346,17 @@ final class PanelUi {
         left = Math.min(left, layout.getLineLeft(i));
         right = Math.max(right, layout.getLineRight(i));
       }
-      float tw = text ? right-left : 0, th = text ? layout.getHeight() : 0;
+      float textTop = 0, textBottom = text ? layout.getHeight() : 0;
+      if (text && !(getText() instanceof android.text.Spanned)) {
+        textTop = Float.MAX_VALUE;
+        textBottom = -Float.MAX_VALUE;
+        for (int i = 0; i < layout.getLineCount(); i++) {
+          getPaint().getTextBounds(getText(), layout.getLineStart(i), layout.getLineEnd(i), textInk);
+          textTop = Math.min(textTop, layout.getLineBaseline(i) + textInk.top);
+          textBottom = Math.max(textBottom, layout.getLineBaseline(i) + textInk.bottom);
+        }
+      }
+      float tw = text ? right-left : 0, th = textBottom-textTop;
       float gap = text ? getCompoundDrawablePadding() : 0;
       float cx = (getPaddingLeft()+getWidth()-getPaddingRight())/2f;
       float cy = (getPaddingTop()+getHeight()-getPaddingBottom())/2f;
@@ -338,12 +366,12 @@ final class PanelUi {
         x = icons[0] != null ? start : start+tw+gap;
         y = cy-ink.height()/2f;
         tx = icons[0] != null ? start+ink.width()+gap : start;
-        ty = cy-th/2f;
+        ty = cy-th/2f-textTop;
       } else {
         x = cx-ink.width()/2f;
         y = cy-(ink.height()+gap+th)/2f;
         tx = cx-tw/2f;
-        ty = y+ink.height()+gap;
+        ty = y+ink.height()+gap-textTop;
       }
       canvas.save();
       canvas.translate(x-ink.left, y-ink.top);

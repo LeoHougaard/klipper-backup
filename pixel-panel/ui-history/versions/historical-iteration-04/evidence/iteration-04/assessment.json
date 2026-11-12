@@ -1,0 +1,20 @@
+{
+  "decision": "promote quieter parameters and automatic-load priority; final interaction gate pending",
+  "bambu_anchor": 8,
+  "scores": {
+    "alignment": 9.5,
+    "spacing": 8,
+    "icons": 8.5,
+    "borders": 8,
+    "type": 8,
+    "legibility": 8.5,
+    "grouping": 8,
+    "density": 7.5,
+    "touch": 8.5,
+    "clarity": 8.5,
+    "states": 8,
+    "cross_screen": 8
+  },
+  "gate": "not met",
+  "apk_sha256": "de73397549e6abe61fec2354b9f26bd51d4a8f29598001dbb04e708288a3741a"
+}

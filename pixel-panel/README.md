@@ -257,7 +257,10 @@ validation and explicit Apply; Android's IME stays hidden. Inline tuning values
 open the same editor; the duplicate overflow sheet is removed. Text fields retain
 Android's text keyboard, disable fullscreen extraction and support Done/Go. Back
 returns to the previous page; within custom temperature entry it returns to the
-temperature editor. Close dismisses the sheet.
+temperature editor. Cancel discards a numeric edit and returns to that context;
+Close dismisses ordinary sheets. Numeric palettes offer common axis distances,
+feed rates and filament temperatures while retaining exact entry. The selected
+filament temperature is visible beside Home Load/Unload and survives app restart.
 
 Native color roles and geometry live in `PanelUi.java`: neutral backgrounds,
 muted mint accent, red E-stop and amber status. Cards have 12 dp insets, controls
@@ -293,3 +296,31 @@ maintenance. It doesn't copy branding or add unrelated multi-material controls.
 - [Android local-network permission](https://developer.android.com/privacy-and-security/local-network-permission)
 - [Android local-only hotspot API](https://developer.android.com/reference/android/net/wifi/WifiManager#startLocalOnlyHotspotWithConfiguration(android.net.wifi.SoftApConfiguration,%20java.util.concurrent.Executor,%20android.net.wifi.WifiManager.LocalOnlyHotspotCallback))
 - [Dedicated-device launcher startup](https://developer.android.com/work/dpc/dedicated-devices/cookbook)
+
+
+## UI improvement evidence
+
+The fixed comparison remains Bambu = 8 and the original starting UI = 1.
+`evaluation/rubric-v2.json` separates twelve visual categories from measured
+actuation tasks and animation quality. A functional pass never raises a visual
+score automatically. The ten frozen task budgets count all taps and digits;
+automation time does not measure first-use discovery or human task time.
+
+`ui-history/index.json` records every available candidate, including rejected
+versions. New candidates preserve the installed APK, exact source, captures,
+evaluation and available motion recordings with hashes. Use
+`python pixel-panel/scripts/record_ui.py verify` to check the archive.
+Historical versions explicitly say when their original APK is unavailable.
+
+Page entry uses a 140 ms opacity transition. Sheets enter in 140 ms and leave in
+100 ms. Controls stay fixed, commands execute immediately, live temperatures are
+never interpolated, and polling does not replay page entry. Android's reduced
+motion disables these transitions. Record actual normal/reduced-motion runs with
+`tests/record_ui_motion.py`; retain frame timing limitations rather than claiming
+physical-phone smoothness from emulator results.
+
+Additional primary-source examples are pinned in
+`evaluation/supplemental-references.json`: Blackmagic Camera and camera OS,
+Home Assistant and Prusa. They inform grouping and parameter editing without
+replacing or rescoring the frozen Bambu reference. Terra's requested audit and
+verified findings are recorded in `evaluation/terra-input.md`.

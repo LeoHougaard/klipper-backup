@@ -51,8 +51,8 @@ public final class MainActivity extends Activity {
   LinearLayout workspace, navigationRail, dialogFooter;
   Dialog activeDialog;
   final ArrayDeque<String> pageHistory = new ArrayDeque<>();
-  boolean navigatingBack;
-  Button emergencyButton;
+  boolean navigatingBack, emergencyShutdownObserved;
+  Button emergencyButton, dialogClose;
   int screenLeftInset, screenRightInset, screenTopInset, screenBottomInset;
   double xyStep = 10, zStep = .1, extrudeStep = 5, paperStep = .025;
   double xySpeed = 20, zSpeed = 5, extrudeSpeed = 3;
@@ -89,6 +89,7 @@ public final class MainActivity extends Activity {
   public void onCreate(Bundle saved) {
     super.onCreate(saved);
     p = new PanelUi(this);
+    filamentTemperature = getSharedPreferences("panel", 0).getInt("filament_temperature", 200);
     client = new PrinterClient(this);
     if ((getApplicationInfo().flags & android.content.pm.ApplicationInfo.FLAG_DEBUGGABLE) != 0
         && getIntent().hasExtra("test_endpoint")) {
@@ -169,6 +170,10 @@ public final class MainActivity extends Activity {
     if (draggingHeater != null) notice = "";
     draggingHeater = null;
     resumed = false;
+    if (workspace != null) {
+      workspace.animate().cancel();
+      workspace.setAlpha(activeDialog == null ? 1f : .58f);
+    }
     ui.removeCallbacks(heartbeat);
   }
 
@@ -313,6 +318,7 @@ public final class MainActivity extends Activity {
           ? "Printer shutdown"
           : engine().equals("error") ? "Printer error" : "Starting Klipper";
     if (!ready()) return "Status unavailable";
+    if (!urgentMessage.isEmpty()) return emergencyBusy ? "Stopping…" : "Check stop";
     if (manual()) return "Paper calibration";
     if (jobState().equals("paused")) return "Print paused";
     if (jobState().equals("printing")) return "Printing";
@@ -332,6 +338,13 @@ public final class MainActivity extends Activity {
 
   void updateViews() {
     if (destroyed || connection == null) return;
+    if (!urgentMessage.isEmpty() && fresh()) {
+      if (engine().equals("shutdown") || engine().equals("error")) emergencyShutdownObserved = true;
+      else if (engine().equals("ready") && emergencyShutdownObserved && !emergencyBusy) {
+        urgentMessage = "";
+        emergencyShutdownObserved = false;
+      }
+    }
     if (page.equals("Home") && !homeMode.equals(mode())) {
       show("Home");
       return;
@@ -455,6 +468,11 @@ public final class MainActivity extends Activity {
   }
 
   void show(String next) {
+    show(next, !next.equals(page));
+  }
+
+  void show(String next, boolean animate) {
+    if (workspace != null) workspace.animate().cancel();
     if (filamentOperation && !next.equals("Prepare")) filamentCancelled = true;
     if (!next.equals(page)) {
       hideKeyboard();
@@ -487,7 +505,7 @@ public final class MainActivity extends Activity {
       boolean calibrationPage = page.equals("Prepare") && prepareTab.equals("Bed setup");
       View item = p.navigation(name, icons[i], name.equals(page) && !calibrationPage
           || name.equals("More") && (page.equals("Connection") || calibrationPage),
-          () -> { if (name.equals("Prepare")) openPrepare("Move"); else show(name); });
+          () -> { if (name.equals("Prepare")) openPrepare("Move"); else if (!name.equals(page)) show(name); });
       LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(-1, 0, 1);
       if (i > 0) lp.topMargin = p.dp(GUTTER);
       rail.addView(item, lp);
@@ -572,10 +590,14 @@ public final class MainActivity extends Activity {
     }
     updateViews();
     if (activeDialog != null && activeDialog.isShowing()) sheetFocus(true);
+    else if (animate) p.enterContent(workspace);
   }
 
   void sheetFocus(boolean open) {
-    if (workspace != null) workspace.setAlpha(open ? .58f : 1f);
+    if (workspace != null) {
+      workspace.animate().cancel();
+      workspace.setAlpha(open ? .58f : 1f);
+    }
     if (navigationRail != null) navigationRail.setAlpha(open ? .35f : 1f);
   }
 
@@ -625,7 +647,7 @@ public final class MainActivity extends Activity {
       activeJob(job);
       return;
     }
-    if (ready() && !manual() && !Arrays.asList("complete", "error", "cancelled").contains(jobState())) {
+    if (ready() && !manual() && !Arrays.asList("error", "cancelled").contains(jobState())) {
       LinearLayout body = p.panel();
       add(workspace, body, -1);
       dashboard(body);
@@ -866,12 +888,16 @@ public final class MainActivity extends Activity {
     columns.addView(controls, new LinearLayout.LayoutParams(0, -1, 1.6f));
     add(body, columns, -1);
     LinearLayout recent = plateCard(() -> {
-      if (recentFile() != null) fileDetails(recentFile()); else show("Files");
+      JSONObject file = jobState().equals("complete")
+          ? listedFile(obj("print_stats").optString("filename")) : recentFile();
+      if (file != null) fileDetails(file); else show("Files");
     });
+    Supplier<String> plateName = () -> jobState().equals("complete")
+        ? obj("print_stats").optString("filename") : recentName();
     plate.addView(recent, new LinearLayout.LayoutParams(-1, 0, 1));
-    ImageView image = preview(recent, -1, -1, this::recentName);
+    ImageView image = preview(recent, -1, -1, plateName);
     image.setLayoutParams(new LinearLayout.LayoutParams(-1, 0, 1));
-    plateCaption(recent, () -> recentName().isEmpty() ? "Stored prints" : friendly(recentName()), 64);
+    plateCaption(recent, () -> plateName.get().isEmpty() ? "Stored prints" : friendly(plateName.get()), 64);
     p.gap(plate, GUTTER);
     Button heat = button("Heat", "heat", 0, this::preheatSheet);
     heat.setContentDescription("Temperature presets");
@@ -885,7 +911,15 @@ public final class MainActivity extends Activity {
     unload.setContentDescription("Unload filament");
     gate(load, () -> idle() && !manual() && capable("LOAD_FILAMENT"));
     gate(unload, () -> idle() && !manual() && capable("UNLOAD_FILAMENT"));
-    rowButtons(controls, load, unload);
+    LinearLayout filament = p.row();
+    Button material = p.parameterButton("", "edit", this::filamentTemperatureSheet);
+    material.setContentDescription("Filament temperature");
+    bindText(material, () -> filamentTemperature + "°");
+    gate(material, () -> idle() && !manual());
+    filament.addView(material, new LinearLayout.LayoutParams(p.dp(88), p.dp(48)));
+    p.weighted(filament, load, 48);
+    p.weighted(filament, unload, 48);
+    add(controls, filament, 48);
   }
 
   void quickFilament(boolean load) {
@@ -978,12 +1012,14 @@ public final class MainActivity extends Activity {
     plateCaption(model, () -> "Print details", 48);
     LinearLayout info = plateInfo(filename);
     TextView name = (TextView) info.getChildAt(0);
-    name.setTextSize(21);
-    name.setLayoutParams(new LinearLayout.LayoutParams(-1, p.dp(68)));
+    name.setTextSize(18);
+    name.setLayoutParams(new LinearLayout.LayoutParams(-1, -2));
     ((TextView) info.getChildAt(1)).setTextSize(14);
     ((TextView) info.getChildAt(2)).setTextSize(14);
-    add(left, info, 116);
+    add(left, info, -2);
     p.gap(left, GUTTER);
+    LinearLayout statsGroup = p.col();
+    statsGroup.setGravity(Gravity.CENTER_VERTICAL);
     LinearLayout stats = p.row();
     TextView percent = p.text("", 44, PanelUi.TEXT);
     bindText(percent, () -> value(progress() * 100, 0) + "%");
@@ -995,12 +1031,23 @@ public final class MainActivity extends Activity {
     bindText(eta, this::timeLeft);
     time.addView(eta);
     stats.addView(time);
-    left.addView(stats, new LinearLayout.LayoutParams(-1, 0, 1));
+    add(statsGroup, stats, 64);
+    Button speed = p.parameterButton("", "speed", this::printSpeedSheet);
+    bindText(speed, () -> "Speed " + value(finite(obj("gcode_move"), "speed_factor") * 100, 0) + "%");
+    gate(speed, this::activePrint);
+    statsGroup.addView(speed, new LinearLayout.LayoutParams(-2, p.dp(48)));
+    left.addView(statsGroup, new LinearLayout.LayoutParams(-1, 0, 1));
     ProgressBar bar = new ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal);
     bar.setProgressTintList(android.content.res.ColorStateList.valueOf(PanelUi.ACCENT));
     bar.setProgressBackgroundTintList(android.content.res.ColorStateList.valueOf(PanelUi.LINE));
-    bindings.add(() -> bar.setProgress((int) (progress() * 100)));
-    add(left, bar, 6);
+    // Opening a running job starts at its actual progress, never a fictitious 0%.
+    bar.setProgress((int) (progress() * 100));
+    bindings.add(() -> {
+      int target = (int) (progress() * 100);
+      if (bar.getProgress() != target) bar.setProgress(target, PanelUi.motionEnabled());
+    });
+    p.gap(statsGroup, GUTTER);
+    add(statsGroup, bar, 6);
     p.gap(left, 12);
     Button pause =
         button(
@@ -1012,8 +1059,6 @@ public final class MainActivity extends Activity {
     Button cancel = button("Cancel print", null, 0, this::cancelPrint);
     gate(cancel, this::activePrint);
     cancel.setTextColor(PanelUi.DANGER);
-    rowButtons(left, pause, cancel);
-    p.gap(left, 8);
     if (jobState().equals("paused")) {
       rowButtons(
           left,
@@ -1024,12 +1069,10 @@ public final class MainActivity extends Activity {
       LinearLayout actions = (LinearLayout) left.getChildAt(left.getChildCount() - 1);
       actions.getChildAt(0).setContentDescription("Load filament");
       actions.getChildAt(1).setContentDescription("Unload filament");
-    } else {
-      Button speed = button("", "speed", 3, this::printSpeedSheet);
-      bindText(speed, () -> "Speed " + value(finite(obj("gcode_move"), "speed_factor") * 100, 0) + "%");
-      gate(speed, this::activePrint);
-      add(left, speed, 48);
+      p.gap(left, GUTTER);
     }
+    // Keep Pause/Resume at the same bottom position across state changes.
+    rowButtons(left, pause, cancel);
   }
 
   void activePrintDetails() {
@@ -1076,7 +1119,7 @@ public final class MainActivity extends Activity {
         p.text(
             failed
                 ? obj("print_stats").optString("message", "The print was interrupted.")
-                : "Remove the finished plate before starting another print.",
+                : "Clear the plate before starting another print.",
             13,
             PanelUi.MUTED);
     outcome.setMaxLines(2);
@@ -1107,15 +1150,14 @@ public final class MainActivity extends Activity {
                     ? "Heaters are still on. Cool down when finished."
                     : "Heaters are off.");
     add(right, next, 42);
-    p.gap(right, 14);
-    add(
-        right,
-        button(
-            "Cool down",
-            "heat",
-            0,
-            () -> gcode("Turning heaters off", "TURN_OFF_HEATERS", Policy.IDLE, null)),
-        48);
+    LinearLayout cooldown = p.col();
+    p.gap(cooldown, 14);
+    add(cooldown, button("Cool down", "heat", 0,
+        () -> gcode("Turning heaters off", "TURN_OFF_HEATERS", Policy.IDLE, null)), 48);
+    add(right, cooldown, -2);
+    bindings.add(() -> cooldown.setVisibility(
+        finite(obj("extruder"), "target") > 0 || finite(obj("heater_bed"), "target") > 0
+            ? View.VISIBLE : View.GONE));
     p.gap(right, 6);
     add(right, button("Change filament", "filament", 0, () -> openPrepare("Filament")), 48);
   }
@@ -1301,10 +1343,12 @@ public final class MainActivity extends Activity {
 
   void emergencyStop() {
     if (emergencyBusy) return;
+    if (activeDialog != null) activeDialog.getWindow().setWindowAnimations(0);
     dismissSheet();
     connectionGeneration++;
     seen = 0;
     emergencyBusy = true;
+    emergencyShutdownObserved = false;
     final PrinterClient target = client;
     urgentMessage = "Sending emergency stop…";
     updateViews();
@@ -1353,6 +1397,7 @@ public final class MainActivity extends Activity {
                   "POST", firmware ? "/printer/firmware_restart" : "/printer/restart", null);
               ui.post(() -> {
                 urgentMessage = "";
+                emergencyShutdownObserved = false;
                 calibrationRequested = false;
                 tell("Restart requested", PanelUi.ACCENT);
               });
@@ -1423,10 +1468,11 @@ public final class MainActivity extends Activity {
         && !Objects.equals(filamentForJob, obj("print_stats").optString("filename"))) {
       filamentForJob = obj("print_stats").optString("filename");
       double target = finite(obj("extruder"), "target");
-      if (Double.isFinite(target) && target > 0) filamentTemperature = (int) Math.round(target);
+      if (Double.isFinite(target) && target > 0) rememberFilamentTemperature((int) Math.round(target));
     }
+    boolean changed = !page.equals("Prepare") || !prepareTab.equals(tab);
     prepareTab = tab;
-    show("Prepare");
+    if (changed) show("Prepare", true); else updateViews();
   }
 
   void prepare() {
@@ -1567,8 +1613,10 @@ public final class MainActivity extends Activity {
     p.gap(z, GUTTER);
     rowButtons(xy, motionDistanceButton("XY"), motionSpeedButton("XY"));
     add(z, motionSpeedButton("Z"), 48);
-    Button retract = p.quietButton("E −", "unload", () -> feed(-extrudeStep));
-    Button feed = p.quietButton("E +", "load", () -> feed(extrudeStep));
+    Button retract = p.quietButton("Retract", "unload", () -> feed(-extrudeStep));
+    Button feed = p.quietButton("Feed", "load", () -> feed(extrudeStep));
+    retract.setContentDescription("Retract filament manually");
+    feed.setContentDescription("Feed filament manually");
     gate(retract, this::manualMotionAllowed);
     gate(feed, this::manualMotionAllowed);
     LinearLayout filament = p.col();
@@ -1598,10 +1646,11 @@ public final class MainActivity extends Activity {
   Button motionDistanceButton(String axis) {
     boolean e = axis.equals("E"), z = axis.equals("Z");
     Button distance = p.parameterButton("", "edit", () -> numberSheet(
-        e ? "Extrusion distance" : axis + " move distance", e ? extrudeStep : z ? zStep : xyStep,
+        (e ? "Extrusion distance" : axis + " move distance") + " (mm)", e ? extrudeStep : z ? zStep : xyStep,
         e ? .1 : .001, e ? extrusionLimit(status) : 120,
         v -> { if (e) extrudeStep = v; else if (z) zStep = v; else xyStep = v;
-          dismissSheet(); updateViews(); }, this::dismissSheet));
+          dismissSheet(); updateViews(); }, this::dismissSheet,
+        e ? new double[] {1, 5, 10} : z ? new double[] {.01, .1, 1} : new double[] {.1, 1, 10}, "mm"));
     distance.setContentDescription(e ? "Extrusion distance" : axis + " move distance");
     distance.setTextSize(14);
     p.pad(distance, 2, 4);
@@ -1635,7 +1684,9 @@ public final class MainActivity extends Activity {
   void motionSpeedSheet(String axis) {
     numberSheet(axis + " speed (mm/s)", motionSpeed(axis), .1, motionSpeedLimit(status, axis),
         v -> { if (axis.equals("XY")) xySpeed = v; else if (axis.equals("Z")) zSpeed = v; else extrudeSpeed = v;
-          dismissSheet(); updateViews(); }, this::dismissSheet);
+          dismissSheet(); updateViews(); }, this::dismissSheet,
+        axis.equals("XY") ? new double[] {5, 20, 50} : axis.equals("Z") ? new double[] {1, 5, 10}
+            : new double[] {1, 3, 5}, "mm/s");
   }
 
   void printSpeedSheet() {
@@ -1649,7 +1700,7 @@ public final class MainActivity extends Activity {
     Button position = p.parameterButton("", "edit", () -> {
       try {
         JSONObject t = obj("toolhead");
-        numberSheet(axis + " position", t.getJSONArray("position").getDouble(index),
+        numberSheet(axis + " position (mm)", t.getJSONArray("position").getDouble(index),
             t.getJSONArray("axis_minimum").getDouble(index), t.getJSONArray("axis_maximum").getDouble(index),
             v -> moveAxis(axis, v, true), this::dismissSheet);
       } catch (Exception e) { tell("Position or travel limits unavailable", PanelUi.AMBER); }
@@ -1771,7 +1822,7 @@ public final class MainActivity extends Activity {
     materials.setBackground(p.shape(PanelUi.SURFACE, PanelUi.CONTROL_RADIUS));
     for (int target : new int[] {200, 240}) {
       Button b = button(target == 200 ? "PLA 200°" : "ABS 240°", null, 0,
-          () -> { filamentTemperature = target; updateViews(); });
+          () -> { rememberFilamentTemperature(target); updateViews(); });
       bindings.add(() -> {
         PanelUi.selection(b, filamentTemperature == target, p);
         b.setEnabled(!commandBusy);
@@ -1840,10 +1891,15 @@ public final class MainActivity extends Activity {
   }
 
   void filamentTemperatureSheet() {
-    numberSheet("Filament temperature", filamentTemperature,
+    numberSheet("Filament temperature (°C)", filamentTemperature,
         minimumExtrudeTemperature(status), heaterMax(status, "extruder"),
-        v -> { filamentTemperature = (int) Math.round(v); dismissSheet(); updateViews(); },
-        this::dismissSheet);
+        v -> { rememberFilamentTemperature((int) Math.round(v)); dismissSheet(); updateViews(); },
+        this::dismissSheet, new double[] {200, 240}, "°C");
+  }
+
+  void rememberFilamentTemperature(int target) {
+    filamentTemperature = target;
+    getSharedPreferences("panel", 0).edit().putInt("filament_temperature", target).apply();
   }
 
   boolean filamentHeating() {
@@ -2264,7 +2320,11 @@ public final class MainActivity extends Activity {
   }
 
   LinearLayout sheet(String title, int widthDp) {
-    if (activeDialog != null) activeDialog.dismiss();
+    if (activeDialog != null) {
+      // Replacing an editor must not leave its previous window fading over it.
+      activeDialog.getWindow().setWindowAnimations(0);
+      activeDialog.dismiss();
+    }
     dialogBindings.clear();
     Dialog d = new Dialog(this);
     LinearLayout frame = p.panel();
@@ -2272,6 +2332,7 @@ public final class MainActivity extends Activity {
     LinearLayout header = p.row();
     header.addView(p.heading(title), new LinearLayout.LayoutParams(0, -2, 1));
     Button close = button("Close", null, 0, d::dismiss);
+    dialogClose = close;
     header.addView(close, new LinearLayout.LayoutParams(p.dp(72), p.dp(48)));
     frame.addView(header);
     p.gap(frame, 16);
@@ -2329,6 +2390,8 @@ public final class MainActivity extends Activity {
     placement.x = screenRightInset + p.dp(STATUS_WIDTH + GUTTER);
     placement.y = screenTopInset + p.dp(GUTTER);
     d.getWindow().setAttributes(placement);
+    d.getWindow().setWindowAnimations(PanelUi.motionEnabled()
+        ? getResources().getIdentifier("PanelSheetMotion", "style", getPackageName()) : 0);
     d.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
     d.setCanceledOnTouchOutside(false);
     d.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
@@ -2493,7 +2556,7 @@ public final class MainActivity extends Activity {
                 },
                 () -> {
                   if (heater.equals("extruder") && target >= minimumExtrudeTemperature(status))
-                    filamentTemperature = (int) Math.round(target);
+                    rememberFilamentTemperature((int) Math.round(target));
                   if (success != null) success.run();
                 });
     if (target == 0 && activePrint())
@@ -2587,7 +2650,7 @@ public final class MainActivity extends Activity {
             0,
             () ->
                 numberSheet(
-                    "Temperature target",
+                    (heater.equals("extruder") ? "Nozzle" : "Bed") + " target (°C)",
                     target[0],
                     0,
                     max,
@@ -2599,8 +2662,16 @@ public final class MainActivity extends Activity {
 
   void numberSheet(
       String title, double initial, double min, double max, DoubleConsumer accept, Runnable back) {
+    numberSheet(title, initial, min, max, accept, back, null, "");
+  }
+
+  void numberSheet(
+      String title, double initial, double min, double max, DoubleConsumer accept, Runnable back,
+      double[] choices, String unit) {
     hideKeyboard();
     LinearLayout body = sheet(title, 480);
+    dialogClose.setText("Cancel");
+    dialogClose.setOnClickListener(v -> back.run());
     activeDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
     activeDialog
         .getWindow()
@@ -2633,6 +2704,19 @@ public final class MainActivity extends Activity {
     p.gap(entry, 4);
     TextView range = p.text(trimNumber(min) + " – " + trimNumber(max), 12, PanelUi.MUTED);
     add(entry, range, 24);
+    if (choices != null) {
+      p.gap(entry, 8);
+      LinearLayout quick = p.row();
+      for (double choice : choices) {
+        if (choice < min || choice > max) continue;
+        Button preset = button(trimNumber(choice) + " " + unit, null,
+            Math.abs(initial - choice) < .000001 ? 3 : 0, () -> accept.accept(choice));
+        preset.setContentDescription("Use " + trimNumber(choice) + " " + unit);
+        p.pad(preset, 4, 8);
+        p.weighted(quick, preset, 48);
+      }
+      add(entry, quick, 48);
+    }
     p.gap(entry, 8);
     add(entry, button("Clear", null, 0, () -> input.setText("")), 48);
     p.gap(entry, 8);
@@ -2678,8 +2762,14 @@ public final class MainActivity extends Activity {
                       b = Math.max(0, input.getSelectionEnd());
                   if (key.equals("⌫")) {
                     if (a == b && a > 0) a--;
-                    input.getText().delete(Math.min(a, b), Math.max(a, b));
-                  } else input.getText().replace(Math.min(a, b), Math.max(a, b), key);
+                    int start = Math.min(a, b);
+                    input.getText().delete(start, Math.max(a, b));
+                    input.setSelection(start);
+                  } else {
+                    int start = Math.min(a, b);
+                    input.getText().replace(start, Math.max(a, b), key);
+                    input.setSelection(start + key.length());
+                  }
                 });
         digit.setContentDescription(
             key.equals("⌫") ? "Delete digit" : key.equals(".") ? "Decimal point" : "Digit " + key);
@@ -2733,7 +2823,7 @@ public final class MainActivity extends Activity {
                   + bed);
         },
         () -> {
-          if (nozzle >= minimumExtrudeTemperature(status)) filamentTemperature = nozzle;
+          if (nozzle >= minimumExtrudeTemperature(status)) rememberFilamentTemperature(nozzle);
           dismissSheet();
         });
   }

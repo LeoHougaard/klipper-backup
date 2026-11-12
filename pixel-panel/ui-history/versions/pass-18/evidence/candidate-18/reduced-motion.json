@@ -1,0 +1,209 @@
+{
+  "label": "reduced-motion",
+  "animator_duration_scale": "0.0",
+  "recording_active": true,
+  "renderer": "GLES: Google (Google Inc.), Android Emulator OpenGL ES Translator (Google SwiftShader), OpenGL ES 3.0 (OpenGL ES 3.0 SwiftShader 4.0.0.1)",
+  "cpu_online": "0-1",
+  "focus": null,
+  "markers": [
+    {
+      "target": "Prepare",
+      "start_seconds": 0.056,
+      "end_seconds": 1.469,
+      "frame_ms": [
+        18.680928,
+        112.426362,
+        35.101366
+      ]
+    },
+    {
+      "target": "Filament",
+      "start_seconds": 1.513,
+      "end_seconds": 3.014,
+      "frame_ms": [
+        18.868922,
+        175.990956
+      ]
+    },
+    {
+      "target": "Filament temperature",
+      "start_seconds": 3.057,
+      "end_seconds": 4.98,
+      "frame_ms": [
+        17.425248,
+        56.702782,
+        108.79115,
+        68.262488,
+        85.944822,
+        137.76065,
+        45.839558,
+        61.531192
+      ]
+    },
+    {
+      "target": "Cancel",
+      "start_seconds": 5.024,
+      "end_seconds": 6.635,
+      "frame_ms": [
+        51.049868,
+        9.235638,
+        25.952372
+      ]
+    },
+    {
+      "target": "Move",
+      "start_seconds": 6.678,
+      "end_seconds": 8.023,
+      "frame_ms": [
+        14.388292,
+        76.717226,
+        34.174162
+      ]
+    },
+    {
+      "target": "XY move distance",
+      "start_seconds": 8.072,
+      "end_seconds": 9.988,
+      "frame_ms": [
+        15.331282,
+        68.227916,
+        110.938218,
+        50.554422,
+        69.453756,
+        105.784218,
+        52.525158,
+        68.065092
+      ]
+    },
+    {
+      "target": "Use 1 mm",
+      "start_seconds": 10.03,
+      "end_seconds": 11.596,
+      "frame_ms": [
+        56.147034,
+        42.732336,
+        41.59307
+      ]
+    },
+    {
+      "target": "Home",
+      "start_seconds": 11.639,
+      "end_seconds": 13.147,
+      "frame_ms": [
+        15.310458,
+        213.464192,
+        38.3705
+      ]
+    },
+    {
+      "target": "Set nozzle temperature",
+      "start_seconds": 13.192,
+      "end_seconds": 14.732,
+      "frame_ms": [
+        50.79892,
+        89.383154,
+        62.875758,
+        83.815992,
+        106.493554,
+        27.314628,
+        47.069062
+      ]
+    },
+    {
+      "target": "Custom target",
+      "start_seconds": 14.779,
+      "end_seconds": 16.396,
+      "frame_ms": [
+        106.225784,
+        91.222888,
+        85.128324,
+        78.523992,
+        63.987588,
+        46.468794,
+        60.719828
+      ]
+    },
+    {
+      "target": "Cancel",
+      "start_seconds": 16.44,
+      "end_seconds": 18.282,
+      "frame_ms": [
+        66.00882,
+        10.311224,
+        42.368058
+      ]
+    },
+    {
+      "target": "Close",
+      "start_seconds": 18.327,
+      "end_seconds": 19.917,
+      "frame_ms": [
+        41.201,
+        51.732902,
+        54.468436
+      ]
+    },
+    {
+      "target": "Files",
+      "start_seconds": 19.963,
+      "end_seconds": 21.412,
+      "frame_ms": [
+        17.627524,
+        106.651258,
+        58.338262,
+        35.098964
+      ]
+    },
+    {
+      "target": "More",
+      "start_seconds": 21.456,
+      "end_seconds": 22.798,
+      "frame_ms": [
+        13.90895,
+        101.447184,
+        26.521554
+      ]
+    },
+    {
+      "target": "Maintenance",
+      "start_seconds": 22.841,
+      "end_seconds": 24.442,
+      "frame_ms": [
+        18.003806,
+        58.93424,
+        91.176608,
+        68.458912,
+        76.923646,
+        125.622508,
+        40.438682,
+        46.790316
+      ]
+    },
+    {
+      "target": "Close",
+      "start_seconds": 24.491,
+      "end_seconds": 26.302,
+      "frame_ms": [
+        55.864576,
+        14.240212,
+        35.669346
+      ]
+    },
+    {
+      "target": "Home",
+      "start_seconds": 26.347,
+      "end_seconds": 27.831,
+      "frame_ms": [
+        21.833246,
+        201.50058,
+        40.580654
+      ]
+    }
+  ],
+  "renderer_frame_count": 74,
+  "renderer_p95_ms": 137.76065,
+  "renderer_over_33ms": 58,
+  "rapid_navigation_final_state_correct": true,
+  "measurement_scope": "Activity renderer on emulator; WindowManager transitions assessed from actual recording",
+  "physical_printer_commands": 0
+}

@@ -1,0 +1,7 @@
+{
+  "decision": "reject navigation geometry; keep border-removal direction for correction",
+  "bambu_anchor": 8,
+  "evidence": "Ordinary outlines removed and tuning segmented groups cleaner; navigation background consumes intended outer gutter",
+  "gate": "not met",
+  "apk_sha256": "49d48b1bd12e641be86e58335864464e0beb2f1f8d7cee7530b58183b2d8902f"
+}

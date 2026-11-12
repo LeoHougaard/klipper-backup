@@ -1,0 +1,192 @@
+{
+  "version": 2,
+  "baseline_commit": "c7f4a69",
+  "baseline_app": "0.3.8",
+  "reference_lock": "reference-lock.json",
+  "bambu_anchor": 8,
+  "starting_build_anchor": 1,
+  "target": {
+    "minimum_score": 9.8,
+    "minimum_original_categories": 10
+  },
+  "visual_method": {
+    "method": "Anchored review with an explicit defect ledger and matched native states; not a functional-pass-to-beauty conversion.",
+    "evidence": {
+      "Alignment": [
+        "Paired controls and reading columns share their intended axes.",
+        "Native button ink has no unexplained visible offset; both axes are measured.",
+        "Headers, values and controls retain alignment across matched states."
+      ],
+      "Spacing": [
+        "Peer controls have equal gutters within one device pixel.",
+        "Functional groups use a consistent spacing rhythm.",
+        "No accidental reserved-height bands or clipping appear in the evaluated views."
+      ],
+      "Icon quality": [
+        "One pinned vector family with consistent optical weight.",
+        "Symbols match the action and transport symbols remain recognizable.",
+        "Icons and labels form balanced groups at actual review scale."
+      ],
+      "Borders and surfaces": [
+        "Surfaces distinguish grouping, actions, selection and numeric entry.",
+        "Focus/danger outlines have a consistent purpose; no accidental double edges.",
+        "Primary actions and disabled controls do not impersonate status readings."
+      ],
+      "Type hierarchy": [
+        "Page titles, control labels, captions and primary readings have stable roles.",
+        "Long filenames and units retain an intelligible hierarchy.",
+        "The primary task reading remains stronger than secondary settings."
+      ],
+      "Legibility": [
+        "Active text meets 4.5:1 contrast, or 3:1 for large text.",
+        "Essential values and units remain visible without truncation.",
+        "Native captures are examined at full resolution and the user's landscape review scale."
+      ],
+      "Functional grouping": [
+        "Position, distance and speed remain related to their axis.",
+        "Filament temperature is visible or explicit before Load/Unload starts.",
+        "Job identity, progress, ETA and job controls form a coherent task."
+      ],
+      "Density and restraint": [
+        "Frequent actions stay directly reachable.",
+        "Secondary choices are disclosed in context rather than forming an unrelated button grid.",
+        "Space supports a task or hierarchy; adding controls is not rewarded by itself."
+      ],
+      "Touch geometry": [
+        "Visible and actual targets agree and retain at least 48 dp.",
+        "Spatial controls respond across their intended regions and a drag does not actuate.",
+        "E-stop stays reachable while a numeric editor is open."
+      ],
+      "Interaction clarity": [
+        "Editable values and selections are recognizable.",
+        "Multi-digit replacement, decimal entry, deletion and Cancel behave as shown.",
+        "A user can distinguish a proposed value from a committed actuator target."
+      ],
+      "State consistency": [
+        "Readings, labels and control states agree with the simulated printer state.",
+        "Pending, cancelled, paused, completed and shutdown states remain truthful.",
+        "No duplicate/conflicting progress or obsolete state icon remains."
+      ],
+      "Cross-screen finish": [
+        "Shared components retain the same hierarchy, geometry and meanings.",
+        "Dialogs name the controlled object and unit, with a consistent escape.",
+        "Main and secondary views receive matched visual inspection, not only Home."
+      ]
+    },
+    "penalties": {
+      "critical": "Blocks acceptance regardless of score.",
+      "major": 2,
+      "material": 0.75,
+      "minor": 0.25,
+      "trace": 0.1
+    },
+    "scoring": "Record a specific visible reference advantage and open defects for each score above 8. Use defect severity to distinguish candidates; do not award feature-count points. An unexamined criterion cannot be marked passed.",
+    "calibration": "Historical 0.3.8 estimates are not ground truth. New evidence may lower a rating. Supplemental references are examples, unscored, and do not replace Bambu.",
+    "precision": "A criterion score states conformance to this frozen review, not universal aesthetic quality. Retain residual uncertainty and original visual target separately from measured task scores."
+  },
+  "actuation_method": {
+    "environment": "Already-open emulator-5554 on verified loopback Moonraker fixture; no physical printer.",
+    "tasks": [
+      {
+        "task": "XY common jog",
+        "input_budget": 3,
+        "weight": 1
+      },
+      {
+        "task": "Z common jog",
+        "input_budget": 3,
+        "weight": 1
+      },
+      {
+        "task": "Exact E distance and speed",
+        "input_budget": 9,
+        "weight": 1
+      },
+      {
+        "task": "Nozzle exact target",
+        "input_budget": 6,
+        "weight": 1
+      },
+      {
+        "task": "Bed exact target",
+        "input_budget": 5,
+        "weight": 1
+      },
+      {
+        "task": "Cancel nozzle custom target",
+        "input_budget": 4,
+        "weight": 1
+      },
+      {
+        "task": "Cold Unload and cancel",
+        "input_budget": 2,
+        "weight": 1
+      },
+      {
+        "task": "Cold Load and cancel",
+        "input_budget": 2,
+        "weight": 1
+      },
+      {
+        "task": "Paused filament change and resume",
+        "input_budget": 5,
+        "weight": 1
+      },
+      {
+        "task": "E-stop from numeric editor",
+        "input_budget": 1,
+        "weight": 1
+      }
+    ],
+    "counting": "Count each tap, digit, correction, gesture and required confirmation. Setup/cleanup are excluded. Record exact requests and outcomes. Baseline Clear is counted only where the selected-range defect makes it necessary.",
+    "efficiency": "10 * mean(min(1, frozen input_budget / observed input_count)). Never remove a necessary confirmation to improve cost.",
+    "fidelity": "10 * fraction of verified intent/command checks. Any wrong or unintended actuation blocks acceptance.",
+    "context": "10 * fraction of pinned contextual checks: heater identity/unit, cancelled edit emits no command, Cancel returns to its parameter context, numeric selection replacement works.",
+    "interruption": "10 * fraction of pinned checks: Load cancel restores owned target without extrusion; Unload cancel likewise; paused change resumes same job; E-stop acts from numeric modal.",
+    "latency": "Record automated durations separately. They include tool/snapshot overhead and are not human task times.",
+    "discoverability": "Label-guided automation does not measure first-use discovery; report that limitation.",
+    "acceptance": "Actuation failures cannot be averaged away by visual scores or efficient tasks. These additional scores cannot substitute for the ten original visual categories."
+  },
+  "animation_method": {
+    "category": "Animation quality",
+    "target": 9.8,
+    "bambu_motion_score": null,
+    "reason": "The fixed Bambu images are static; do not invent a motion score for them.",
+    "criteria": [
+      "Touch feedback begins promptly without delaying or duplicating an actuation.",
+      "Page and dialog transitions have consistent, restrained timing and stable hit geometry.",
+      "Live readings remain truthful; animate a progress change rather than inventing intermediate temperatures.",
+      "Repeated navigation or dismissal cancels obsolete motion and leaves the latest destination correct.",
+      "System reduced-motion settings produce the final state immediately.",
+      "Record actual normal/reduced-motion clips, action markers and renderer timings per candidate.",
+      "Compare performance only under matched renderer/device conditions; keep emulator graphics faults separate from app changes."
+    ],
+    "evidence": [
+      "Native MP4 recordings",
+      "Per-action frame timing data with scope/limitations",
+      "Actuation traces, including interruption and E-stop",
+      "Reduced-motion runtime observation"
+    ],
+    "timing_targets_ms": {
+      "page_entry": [
+        100,
+        200
+      ],
+      "sheet_entry": [
+        100,
+        200
+      ],
+      "sheet_exit": [
+        80,
+        150
+      ],
+      "artificial_actuation_delay": 0
+    },
+    "style": "Functional standard motion, with no bounce or moving motor-control targets.",
+    "references": [
+      "https://m3.material.io/styles/motion/overview/how-it-works",
+      "https://developer.android.com/reference/android/animation/ValueAnimator"
+    ],
+    "acceptance": "An additional improvement criterion; it cannot substitute for the ten original visual categories."
+  }
+}

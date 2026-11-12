@@ -1,0 +1,108 @@
+Applications Graphics Acceleration Info:
+Uptime: 2666837 Realtime: 2666837
+
+** Graphics info for pid 16107 [dev.leo.voronpanel] **
+
+Stats since: 2664986610900ns
+Total frames rendered: 7
+Janky frames: 5 (71.43%)
+Janky frames (legacy): 7 (100.00%)
+50th percentile: 46ms
+90th percentile: 69ms
+95th percentile: 69ms
+99th percentile: 69ms
+Number Missed Vsync: 2
+Number High input latency: 4
+Number Slow UI thread: 4
+Number Slow bitmap uploads: 1
+Number Slow issue draw commands: 5
+Number Frame deadline missed: 5
+Number Frame deadline missed (legacy): 5
+HISTOGRAM: 5ms=0 6ms=0 7ms=0 8ms=0 9ms=0 10ms=0 11ms=0 12ms=0 13ms=0 14ms=0 15ms=0 16ms=0 17ms=0 18ms=0 19ms=0 20ms=0 21ms=0 22ms=0 23ms=0 24ms=1 25ms=0 26ms=0 27ms=0 28ms=0 29ms=0 30ms=0 31ms=0 32ms=0 34ms=0 36ms=0 38ms=0 40ms=0 42ms=2 44ms=0 46ms=1 48ms=1 53ms=1 57ms=0 61ms=0 65ms=0 69ms=1 73ms=0 77ms=0 81ms=0 85ms=0 89ms=0 93ms=0 97ms=0 101ms=0 105ms=0 109ms=0 113ms=0 117ms=0 121ms=0 125ms=0 129ms=0 133ms=0 150ms=0 200ms=0 250ms=0 300ms=0 350ms=0 400ms=0 450ms=0 500ms=0 550ms=0 600ms=0 650ms=0 700ms=0 750ms=0 800ms=0 850ms=0 900ms=0 950ms=0 1000ms=0 1050ms=0 1100ms=0 1150ms=0 1200ms=0 1250ms=0 1300ms=0 1350ms=0 1400ms=0 1450ms=0 1500ms=0 1550ms=0 1600ms=0 1650ms=0 1700ms=0 1750ms=0 1800ms=0 1850ms=0 1900ms=0 1950ms=0 2000ms=0 2050ms=0 2100ms=0 2150ms=0 2200ms=0 2250ms=0 2300ms=0 2350ms=0 2400ms=0 2450ms=0 2500ms=0 2550ms=0 2600ms=0 2650ms=0 2700ms=0 2750ms=0 2800ms=0 2850ms=0 2900ms=0 2950ms=0 3000ms=0 3050ms=0 3100ms=0 3150ms=0 3200ms=0 3250ms=0 3300ms=0 3350ms=0 3400ms=0 3450ms=0 3500ms=0 3550ms=0 3600ms=0 3650ms=0 3700ms=0 3750ms=0 3800ms=0 3850ms=0 3900ms=0 3950ms=0 4000ms=0 4050ms=0 4100ms=0 4150ms=0 4200ms=0 4250ms=0 4300ms=0 4350ms=0 4400ms=0 4450ms=0 4500ms=0 4550ms=0 4600ms=0 4650ms=0 4700ms=0 4750ms=0 4800ms=0 4850ms=0 4900ms=0 4950ms=0
+50th gpu percentile: 16ms
+90th gpu percentile: 4950ms
+95th gpu percentile: 4950ms
+99th gpu percentile: 4950ms
+GPU HISTOGRAM: 1ms=0 2ms=0 3ms=0 4ms=0 5ms=0 6ms=0 7ms=1 8ms=0 9ms=2 10ms=0 11ms=0 12ms=0 13ms=0 14ms=0 15ms=0 16ms=1 17ms=0 18ms=0 19ms=0 20ms=0 21ms=0 22ms=1 23ms=0 24ms=0 25ms=0 4950ms=2
+
+Pipeline=Skia (OpenGL)
+Memory policy:
+  Max surface area: 2617920
+  Max resource usage: 125.66MB (x48)
+  Background retention: 50% (altUiHidden = true)
+  GPU Context timeout: 10
+Contexts: 2 (stopped = 1)
+CPU Caches:
+  Glyph Cache: 274.55 KB (1 entry)
+  Glyph Count: 55 
+Total CPU memory usage:
+  281142 bytes, 274.55 KB (0.00 bytes is purgeable)
+GPU Caches:
+  Other:
+    Other: 19.70 KB (1 entry)
+  Image:
+    Texture: 491.18 KB (29 entries)
+  Scratch:
+    RenderTarget: 17.53 MB (4 entries)
+    Buffer Object: 112.00 KB (3 entries)
+    Texture: 2.57 MB (24 entries)
+Total GPU memory usage:
+  21712512 bytes, 20.71 MB (18.64 MB is purgeable)
+
+GraphicBufferAllocator buffers:
+        Handle |        Size |     W (Stride) x H | Layers |   Format |      Usage | Requestor
+0x77cb89da6b70 |     unknown | 2424 (   0) x 1080 |      1 |        1 | 0x     b00 | VRI[MainActivity]#0(BLAST Consumer)0
+0x77cb89da7d70 |     unknown | 2424 (   0) x 1080 |      1 |        1 | 0x     b00 | VRI[MainActivity]#0(BLAST Consumer)0
+0x77cb89da9510 |     unknown | 2424 (   0) x 1080 |      1 |        1 | 0x     b00 | VRI[MainActivity]#0(BLAST Consumer)0
+Total allocated by GraphicBufferAllocator (estimate): 0.00 KB
+GoldfishAllocator::dumpDebugInfo is not implemented
+Profile data in ms:
+
+	dev.leo.voronpanel/dev.leo.voronpanel.MainActivity/android.view.ViewRootImpl@eb02be3 (visibility=0)
+Window: dev.leo.voronpanel/dev.leo.voronpanel.MainActivity
+Stats since: 2664985440700ns
+Total frames rendered: 7
+Janky frames: 5 (71.43%)
+Janky frames (legacy): 7 (100.00%)
+50th percentile: 46ms
+90th percentile: 69ms
+95th percentile: 69ms
+99th percentile: 69ms
+Number Missed Vsync: 2
+Number High input latency: 4
+Number Slow UI thread: 4
+Number Slow bitmap uploads: 1
+Number Slow issue draw commands: 5
+Number Frame deadline missed: 5
+Number Frame deadline missed (legacy): 5
+HISTOGRAM: 5ms=0 6ms=0 7ms=0 8ms=0 9ms=0 10ms=0 11ms=0 12ms=0 13ms=0 14ms=0 15ms=0 16ms=0 17ms=0 18ms=0 19ms=0 20ms=0 21ms=0 22ms=0 23ms=0 24ms=1 25ms=0 26ms=0 27ms=0 28ms=0 29ms=0 30ms=0 31ms=0 32ms=0 34ms=0 36ms=0 38ms=0 40ms=0 42ms=2 44ms=0 46ms=1 48ms=1 53ms=1 57ms=0 61ms=0 65ms=0 69ms=1 73ms=0 77ms=0 81ms=0 85ms=0 89ms=0 93ms=0 97ms=0 101ms=0 105ms=0 109ms=0 113ms=0 117ms=0 121ms=0 125ms=0 129ms=0 133ms=0 150ms=0 200ms=0 250ms=0 300ms=0 350ms=0 400ms=0 450ms=0 500ms=0 550ms=0 600ms=0 650ms=0 700ms=0 750ms=0 800ms=0 850ms=0 900ms=0 950ms=0 1000ms=0 1050ms=0 1100ms=0 1150ms=0 1200ms=0 1250ms=0 1300ms=0 1350ms=0 1400ms=0 1450ms=0 1500ms=0 1550ms=0 1600ms=0 1650ms=0 1700ms=0 1750ms=0 1800ms=0 1850ms=0 1900ms=0 1950ms=0 2000ms=0 2050ms=0 2100ms=0 2150ms=0 2200ms=0 2250ms=0 2300ms=0 2350ms=0 2400ms=0 2450ms=0 2500ms=0 2550ms=0 2600ms=0 2650ms=0 2700ms=0 2750ms=0 2800ms=0 2850ms=0 2900ms=0 2950ms=0 3000ms=0 3050ms=0 3100ms=0 3150ms=0 3200ms=0 3250ms=0 3300ms=0 3350ms=0 3400ms=0 3450ms=0 3500ms=0 3550ms=0 3600ms=0 3650ms=0 3700ms=0 3750ms=0 3800ms=0 3850ms=0 3900ms=0 3950ms=0 4000ms=0 4050ms=0 4100ms=0 4150ms=0 4200ms=0 4250ms=0 4300ms=0 4350ms=0 4400ms=0 4450ms=0 4500ms=0 4550ms=0 4600ms=0 4650ms=0 4700ms=0 4750ms=0 4800ms=0 4850ms=0 4900ms=0 4950ms=0
+50th gpu percentile: 16ms
+90th gpu percentile: 4950ms
+95th gpu percentile: 4950ms
+99th gpu percentile: 4950ms
+GPU HISTOGRAM: 1ms=0 2ms=0 3ms=0 4ms=0 5ms=0 6ms=0 7ms=1 8ms=0 9ms=2 10ms=0 11ms=0 12ms=0 13ms=0 14ms=0 15ms=0 16ms=1 17ms=0 18ms=0 19ms=0 20ms=0 21ms=0 22ms=1 23ms=0 24ms=0 25ms=0 4950ms=2
+
+
+
+---PROFILEDATA---
+Flags,FrameTimelineVsyncId,IntendedVsync,Vsync,InputEventId,HandleInputStart,AnimationStart,PerformTraversalsStart,DrawStart,FrameDeadline,FrameInterval,FrameStartTime,SyncQueued,SyncStart,IssueDrawCommandsStart,SwapBuffers,FrameCompleted,DequeueBufferDuration,QueueBufferDuration,GpuCompleted,SwapBuffersCompleted,DisplayPresentTime,CommandSubmissionCompleted,
+0,177901,2665603341654,2665620008320,0,2665620844600,2665620864000,2665621105600,2665621171600,2665620008320,2665620830300,16666666,2665621400900,2665622622800,2665624067400,2665630658600,2665658257000,22600,3523300,2665658000000,2665658257000,0,2665630658600,
+0,177931,2665636674986,2665636674986,0,2665646149900,2665646168300,2665646234200,2665646315800,2665686674984,2665646136500,16666666,2665646344300,2665658456700,2665658837700,2665672145300,2665698843100,33100,1135500,2665698622100,2665698843100,0,2665672145300,
+0,177976,2665703341650,2665703341650,0,2665705986500,2665706005100,2665706031900,2665706140700,2665720008316,2665705972900,16666666,2665714885900,2665730112000,2665730458700,2665734762700,2665743522100,20300,725800,2665743404500,2665743522100,0,2665734762700,
+0,177991,2665720008316,2665720008316,0,2665731238800,2665731566500,2665733882200,2665733973500,2665770008314,2665731193200,16666666,2665735611700,2665743685100,2665743934400,2665745056900,2665770878000,17294200,3940000,2665753457900,2665770878000,0,2665745056900,
+0,177998,2665736674982,2665736674982,0,2665746082000,2665746108000,2665747232300,2665747619800,2665786674980,2665746042600,16666666,2665752833700,2665771185700,2665777063800,2665781383500,2665797151200,20500,324300,2665797020000,2665797151200,0,2665781383500,
+0,178006,2665753341648,2665770008314,0,2665785889800,2665785914400,2665787392800,2665787640600,2665820008312,2665785873800,16666666,2665792898000,2665797322000,2665797550600,2665803838800,2665825874100,20500,368300,2665825748300,2665825874100,0,2665803838800,
+0,178044,2665803341646,2665803341646,0,2665806748400,2665806774200,2665818298900,2665818445700,2665853341644,2665806729600,16666666,2665824845800,2665826017900,2665826184200,2665827452300,2665851435100,16940000,1509300,2665834375500,2665851435100,0,2665827452300,
+---PROFILEDATA---
+
+
+View hierarchy:
+
+  dev.leo.voronpanel/dev.leo.voronpanel.MainActivity/android.view.ViewRootImpl@eb02be3
+  85 views, 187.43 kB of render nodes
+
+
+Total ViewRootImpl   : 1
+Total attached Views : 85
+Total RenderNode     : 187.43 kB (used) / 577.40 kB (capacity)
+

@@ -1,0 +1,295 @@
+{
+  "id": "pass-21",
+  "label": "Visible glyph and icon centering",
+  "decision": "Promote; both axes below 0.8 dp in six affected views",
+  "recorded_utc": "2026-11-12T16:25:01.537305+00:00",
+  "recording_commit": "c7f4a690faffc95e564d0abb48482621955af761",
+  "historical_import": false,
+  "files": {
+    "evaluation/actuation-comparison-14.json": {
+      "sha256": "2afa62da927d608838770076d5b7147fd6259a782fcec501e27a8ca8fccdfdb8",
+      "bytes": 1924
+    },
+    "evaluation/actuation-comparison-19.json": {
+      "sha256": "2fb822ebd02cfc9cb9465504c0e72b07b61073bb9c3b249b2484a8ed631401fc",
+      "bytes": 1924
+    },
+    "evaluation/fixture-data.json": {
+      "sha256": "14bf9d57b1e27d06d9b9b95f316b26ec3e78809e14024fa62be15ea23a67b46e",
+      "bytes": 2948
+    },
+    "evaluation/pass-13.json": {
+      "sha256": "03c7ed973fafd47dc25cb55c109005e9ecc33d8118d13bf26034cbf4ece36302",
+      "bytes": 5156
+    },
+    "evaluation/reference-lock.json": {
+      "sha256": "15bf897819fd8f78a48566a3ac39323082a2b5f0cc1411cc22a197168ddbfaa3",
+      "bytes": 2953
+    },
+    "evaluation/rubric-v2.json": {
+      "sha256": "98f441f30a35221f533626ff33d99c94be1548ff1a49cdb63f3e9821ce809471",
+      "bytes": 8810
+    },
+    "evaluation/scorecard.json": {
+      "sha256": "a96cc7835924c3ec6252d47162cb93e6f627ed0b9be1861e285bc784e15fc9b4",
+      "bytes": 1604
+    },
+    "evaluation/supplemental-references.json": {
+      "sha256": "2d804202edd7a3461adc3eaf2432e0c0de2b9f88c6ae69102112ed9b933d1505",
+      "bytes": 8030
+    },
+    "evaluation/terra-input.md": {
+      "sha256": "f3bb6f4aa61a386cd235120f04afc387daab348567344ce759b77ebea8aeddb6",
+      "bytes": 1534
+    },
+    "evidence/candidate-21/capture-manifest.json": {
+      "sha256": "96c55aa6e1d7eb1adce3b6028a66d1f66ded76d618be1a58c22062954d772b68",
+      "bytes": 6793
+    },
+    "evidence/candidate-21/front-calibration.png": {
+      "sha256": "e304141ca2f1728846fb83bb8ad1670e45ab7939681e096cb8617ce4b2b6d823",
+      "bytes": 140517
+    },
+    "evidence/candidate-21/front-calibration.xml": {
+      "sha256": "7a393325235d523b8c7c1d6791869ec0222274f561dc4d4eb1bf8e74692e59fd",
+      "bytes": 12245
+    },
+    "evidence/candidate-21/geometry-report.json": {
+      "sha256": "5332e989ee928179392e6d432946b993f7d23a15a1a798971667e0c5d687ee44",
+      "bytes": 32857
+    },
+    "evidence/candidate-21/idle-filament.png": {
+      "sha256": "66a5c16d076358cebdea1f056c2e3a7f07d901b5f7f980d12a58b30c8918957f",
+      "bytes": 132855
+    },
+    "evidence/candidate-21/idle-filament.xml": {
+      "sha256": "bdd011840ab1bc584f618caec410ce303bf5e668a5bf46e34981b9aee2584a71",
+      "bytes": 12474
+    },
+    "evidence/candidate-21/idle-home.png": {
+      "sha256": "99c7fd6e129c469cb7ca06f804df78ce4c18b92cda2312774c51fcb5a0ecea3e",
+      "bytes": 125961
+    },
+    "evidence/candidate-21/idle-home.xml": {
+      "sha256": "12510896f09147f1bf80974560bec388504a97b4f0d4dd844a7c1c70c16fab40",
+      "bytes": 16029
+    },
+    "evidence/candidate-21/idle-move.png": {
+      "sha256": "2c397c3c64be7fc208c8c3985200135606e44586ea43cdfa56159bb79f70b754",
+      "bytes": 137671
+    },
+    "evidence/candidate-21/idle-move.xml": {
+      "sha256": "72d530f76bebc6292d70325dc99b1f1155c38691658205271d6c60f946ee6573",
+      "bytes": 14081
+    },
+    "evidence/candidate-21/idle-temperature-keypad.png": {
+      "sha256": "5b1a3595f4d26c4ee922d5faf9874d77f0e51d341112e75d2a50bcd1187b444c",
+      "bytes": 109881
+    },
+    "evidence/candidate-21/idle-temperature-keypad.xml": {
+      "sha256": "2556d17f517fe78adb1c7f778ea326dd53e913e24aa5570494e28efd9b71c111",
+      "bytes": 7066
+    },
+    "evidence/candidate-21/printing-tuning.png": {
+      "sha256": "1548b2e0633e1e365aab0001fb00922b39cf486a70356e1ace7ce378593a835e",
+      "bytes": 114627
+    },
+    "evidence/candidate-21/printing-tuning.xml": {
+      "sha256": "7cfb60da26493bc088887dcf52b7080cc4c4fc307189405bf155bf6b7c06be98",
+      "bytes": 7270
+    },
+    "source/app/AndroidManifest.xml": {
+      "sha256": "74c429bbcc0ed78b6efa133682c42741ca8ff387b7950536e195e77e91112c7c",
+      "bytes": 2548
+    },
+    "source/app/assets/device.html": {
+      "sha256": "50ed6cd73b906549d8b167c83be89d71413382a5c8f5f959889af6804da1533b",
+      "bytes": 25056
+    },
+    "source/app/res/anim/sheet_enter.xml": {
+      "sha256": "86814255b0633e5126cc2ee0c34389e258e86af84d5cbee0320601dab59101d1",
+      "bytes": 207
+    },
+    "source/app/res/anim/sheet_exit.xml": {
+      "sha256": "d607d5d6fc8155a5fdcffb7dfae15fb129af8eca87642996a83889c49c9fb382",
+      "bytes": 140
+    },
+    "source/app/res/drawable/icon.xml": {
+      "sha256": "6239d6305b3ba47b5af9e5e6cb0ce5647e0ebea40b931d47db51b9464eb921b0",
+      "bytes": 419
+    },
+    "source/app/res/drawable/panel_arrow.xml": {
+      "sha256": "e06a0e39637d9d303e3d20075dcd5d835261487f89c178ee675756baea6ab36c",
+      "bytes": 478
+    },
+    "source/app/res/drawable/panel_back.xml": {
+      "sha256": "d84bb9e60a0adc1dfbf276d04710c31cb995f4a46eea2ce99a904ff357da81d0",
+      "bytes": 546
+    },
+    "source/app/res/drawable/panel_bed.xml": {
+      "sha256": "ee935b74a2f5d32634bc915a646d6da50f32fe341ba0f5979c3a34860b5c8ad4",
+      "bytes": 688
+    },
+    "source/app/res/drawable/panel_calibrate.xml": {
+      "sha256": "33a53d85e74cca9ab2db7926b07d218d297d98b6aeb13b523da496c22c4f1ae6",
+      "bytes": 640
+    },
+    "source/app/res/drawable/panel_camera.xml": {
+      "sha256": "ec3e27e70c20ac80c6c843832c2587e480755903be73341036af29eff3c9d833",
+      "bytes": 740
+    },
+    "source/app/res/drawable/panel_check.xml": {
+      "sha256": "2dfb3b0261d55a1ed09f0c4e8221c077935c815a4bfab9aee4e88dfc833bc191",
+      "bytes": 472
+    },
+    "source/app/res/drawable/panel_cool.xml": {
+      "sha256": "0c9e1f108d43bad35df0e7cbb910edc95401908eaccb8cc4e6c94eed9e725c91",
+      "bytes": 1063
+    },
+    "source/app/res/drawable/panel_down.xml": {
+      "sha256": "1b8efc89947aa9580f1a4bdd0f72a24d50119adc242a6cf8aeb1f29bfc860dba",
+      "bytes": 479
+    },
+    "source/app/res/drawable/panel_edit.xml": {
+      "sha256": "2b8a881292c964a6beb33875befb6c7669dfeb8f01884896f1c0ac43d7c9fb50",
+      "bytes": 594
+    },
+    "source/app/res/drawable/panel_external.xml": {
+      "sha256": "0e24eb179e80f9d3d0c7de3dfeb461e228d3f98d157c9f722579ddd56feeaf55",
+      "bytes": 727
+    },
+    "source/app/res/drawable/panel_filament.xml": {
+      "sha256": "ae0ebc17492ce58cae870822fd853d540d8eec91ef3db97e1510763866a4dd01",
+      "bytes": 909
+    },
+    "source/app/res/drawable/panel_files.xml": {
+      "sha256": "2cc9fdff6905a56632f979f16e646506132e157fd92d57e34551fb17412e6d8f",
+      "bytes": 520
+    },
+    "source/app/res/drawable/panel_heat.xml": {
+      "sha256": "c3ccb1c24657258b3a40ae721a22b301bf9316314c248391c76b3cac54b1505e",
+      "bytes": 563
+    },
+    "source/app/res/drawable/panel_home.xml": {
+      "sha256": "282718bf0b7a9cf90c49d7ce6dac7876e971bfa87b243410a5bd76d360afd03d",
+      "bytes": 640
+    },
+    "source/app/res/drawable/panel_left.xml": {
+      "sha256": "4617a26cd9f2065fa857d62ccacd07a25e4f60a29707c46506ab35e43eae1240",
+      "bytes": 479
+    },
+    "source/app/res/drawable/panel_light.xml": {
+      "sha256": "ff972fbbf0ce3676ce2d15d0476970153af00ac6825bddb18dfa30a7413d80ef",
+      "bytes": 705
+    },
+    "source/app/res/drawable/panel_load.xml": {
+      "sha256": "b5fcd4819207428e2466bcf5d49baf2197a88bc22a6003e145c16457034a6895",
+      "bytes": 545
+    },
+    "source/app/res/drawable/panel_mesh.xml": {
+      "sha256": "4be3f4c1f1e13f548deeb84bee37e43ea970483a51f31cca380d38eaaefee4f7",
+      "bytes": 662
+    },
+    "source/app/res/drawable/panel_more.xml": {
+      "sha256": "d44af77d639326fcade6075f4af35134afedb73f92556dea8037efdfd354b06b",
+      "bytes": 626
+    },
+    "source/app/res/drawable/panel_move.xml": {
+      "sha256": "4ecba3aeb3cfaa6c62b67925e9c22b9858aa5977f3b841684f171a05d2506f3b",
+      "bytes": 1178
+    },
+    "source/app/res/drawable/panel_pause.xml": {
+      "sha256": "ee00acc6713ab3172480c36f5de7c987f9992d58b9d53089e3e9c94eda79b630",
+      "bytes": 545
+    },
+    "source/app/res/drawable/panel_play.xml": {
+      "sha256": "b7487880fb11616a72d8be146c5300a63f367e62d51f574bd7793932b0f7814d",
+      "bytes": 479
+    },
+    "source/app/res/drawable/panel_refresh.xml": {
+      "sha256": "3030f1695acb75499c3944c0f73af1a8ea91f2e9fc69c0d1f08e90f4fd31a1d4",
+      "bytes": 681
+    },
+    "source/app/res/drawable/panel_right.xml": {
+      "sha256": "e06a0e39637d9d303e3d20075dcd5d835261487f89c178ee675756baea6ab36c",
+      "bytes": 478
+    },
+    "source/app/res/drawable/panel_speed.xml": {
+      "sha256": "b71096ae98b665c3a6874ccaff6461c2e141e56ca56889cbd1a9d54632ce3536",
+      "bytes": 795
+    },
+    "source/app/res/drawable/panel_stop.xml": {
+      "sha256": "f2b50ac9ecbe192ece85aaa7e4368cbe5a3d863945522c4c73e60bd1abd5ec4a",
+      "bytes": 826
+    },
+    "source/app/res/drawable/panel_tools.xml": {
+      "sha256": "ba4ce7d184aa19e597f84b96d3beb3def5d717cfe7c26f74039412ece042019e",
+      "bytes": 821
+    },
+    "source/app/res/drawable/panel_unload.xml": {
+      "sha256": "7c632d578be4234f7879d73033522441238ab2449cffe6bb829639796446f335",
+      "bytes": 544
+    },
+    "source/app/res/drawable/panel_up.xml": {
+      "sha256": "9f0302b8c771ca38741a49c62ab4ab8bafd5c8562e818556ac934c225115db32",
+      "bytes": 461
+    },
+    "source/app/res/drawable/panel_wifi.xml": {
+      "sha256": "e2f146aeab468c2bbf4f3131598274f67ba86f34597ebc69f982cc2665955420",
+      "bytes": 776
+    },
+    "source/app/res/values/styles.xml": {
+      "sha256": "02e0ed96da2886a91f4da41163600564c81d1c20f1b9b9e01f7c26999d088e47",
+      "bytes": 691
+    },
+    "source/app/src/BedMeshView.java": {
+      "sha256": "83cc2505cbb3fc5b417361aa08d4e765dd3ba29a284dfda28a5ea8f77a0057cf",
+      "bytes": 7234
+    },
+    "source/app/src/ConnectionService.java": {
+      "sha256": "cdf7bed4ef3e5cba98de1e0174dddd33f644fc87f14108703be676e92ef19338",
+      "bytes": 8528
+    },
+    "source/app/src/IconMetrics.java": {
+      "sha256": "8444d424cc61a597312e561078de678ebd52db1229b1c7153b067b7e64ffe83f",
+      "bytes": 2777
+    },
+    "source/app/src/MainActivity.java": {
+      "sha256": "79e49f7c3c4826b171fd3d7a559ea3ba54f8cc1518a85f846f6377b23513ea7c",
+      "bytes": 161942
+    },
+    "source/app/src/MonitorService.java": {
+      "sha256": "74d80b9417000bc35367150894a5a7be4184dc7994ba82442ee04b08b1b21e98",
+      "bytes": 11210
+    },
+    "source/app/src/PanelUi.java": {
+      "sha256": "7a50b8173e5229ade356998949742a7bd4ac31a51b2ad7fb09d653d3e1288360",
+      "bytes": 17648
+    },
+    "source/app/src/PrinterClient.java": {
+      "sha256": "ac44f87336a09394c3ff89e965144ddd151b349715bc10c4c287affcd547cca8",
+      "bytes": 7386
+    },
+    "source/app/src/PrinterGateway.java": {
+      "sha256": "fa853e18bc3bc987e5ff38566733eb5d26ffbf8bf53c19431b771b8c10aab083",
+      "bytes": 12824
+    },
+    "Voron.apk": {
+      "sha256": "09062d673fa4f961863167ecd97b4838513965762e7df0e348e556ffaed50b13",
+      "bytes": 301890
+    }
+  },
+  "screenshots": [
+    "evidence/candidate-21/front-calibration.png",
+    "evidence/candidate-21/idle-filament.png",
+    "evidence/candidate-21/idle-home.png",
+    "evidence/candidate-21/idle-move.png",
+    "evidence/candidate-21/idle-temperature-keypad.png",
+    "evidence/candidate-21/printing-tuning.png"
+  ],
+  "apks": [
+    "Voron.apk"
+  ],
+  "videos": [],
+  "restoration": "Install the preserved APK for exact executable behavior; inspect saved source/capture manifests for provenance."
+}

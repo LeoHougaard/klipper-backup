@@ -7,4 +7,8 @@
         <item name="android:windowActionModeOverlay">true</item>
         <item name="android:windowBackground">#101211</item>
     </style>
+    <style name="PanelSheetMotion">
+        <item name="android:windowEnterAnimation">@anim/sheet_enter</item>
+        <item name="android:windowExitAnimation">@anim/sheet_exit</item>
+    </style>
 </resources>

@@ -1,0 +1,149 @@
+{
+  "version": "0.3.8",
+  "version_code": 11,
+  "iteration": 13,
+  "model": "sol",
+  "base_commit": "18fdd920ab10a15189aeb2986f4ce9d2a4cf9320",
+  "apk_sha256": "618302441b132709424e581beb0c097eac806296c7df524613b2b6fb9ba75537",
+  "source_sha256": {
+    "app/AndroidManifest.xml": "1eb869bc53c18b086744efe75610427088c6acee0659e9e135ef031698e49b41",
+    "app/src/MainActivity.java": "0cf97afc07334c7da94f5d1b14ff465c5c21c7b37608af153763aac2d89c7064",
+    "app/src/PanelUi.java": "57b4ef29a6519517060b723b85cd2ca7f64ea8e0807b00b2e84fa1788c985888",
+    "app/src/IconMetrics.java": "8444d424cc61a597312e561078de678ebd52db1229b1c7153b067b7e64ffe83f",
+    "app/res/drawable/panel_pause.xml": "ee00acc6713ab3172480c36f5de7c987f9992d58b9d53089e3e9c94eda79b630",
+    "app/res/drawable/panel_play.xml": "b7487880fb11616a72d8be146c5300a63f367e62d51f574bd7793932b0f7814d"
+  },
+  "device": {
+    "serial": "emulator-5554",
+    "density": "Physical density: 420",
+    "font_scale": "1.0"
+  },
+  "installed_apk_matched": true,
+  "views": {
+    "idle-home": {
+      "state": "idle",
+      "screen": "home",
+      "sha256": "fb8ee74571ed8465b7635c6660fac551e58e67c7afc3e4c427b167e049b31743"
+    },
+    "heating-home": {
+      "state": "heating",
+      "screen": "home",
+      "sha256": "4bab2f0835fb1c0bb5c9f88eb9e7f75b2b41c24f97550694c0614e58310d8ac0"
+    },
+    "printing-home": {
+      "state": "printing",
+      "screen": "home",
+      "sha256": "92c92017fdd28255451928ae3e171cae858dcc33dfca91ae07508ee283d61649"
+    },
+    "paused-home": {
+      "state": "paused",
+      "screen": "home",
+      "sha256": "3f93eb965dd7afc66d9917f7a3781ac37fe5c75371eb7d7a058e4aef50302cc3"
+    },
+    "idle-move": {
+      "state": "idle",
+      "screen": "move",
+      "sha256": "c6c576a28b034aee4aadf6f4c79b7fdb93d3d8d789011ff354e57583425ca28e"
+    },
+    "idle-filament": {
+      "state": "idle",
+      "screen": "filament",
+      "sha256": "ada98de547cfe67957aff9ad3df0cdbb25a30005ab0108c5dd85a62983d5df54"
+    },
+    "idle-files": {
+      "state": "idle",
+      "screen": "files",
+      "sha256": "982a3fbda65b228cc12a518d85c008479237ac5d2c65f6f7c7124fda8a0e0270"
+    },
+    "idle-more": {
+      "state": "idle",
+      "screen": "more",
+      "sha256": "4dd1657f0858ed86ca228df468c313ca3d3d78d863e2126c68169d6626e72510"
+    },
+    "idle-connection": {
+      "state": "idle",
+      "screen": "connection",
+      "sha256": "4f60d9b40154555c8a9b57d38890fd79a0b1da19e28b8606bd0c5be743606163"
+    },
+    "idle-temperature-keypad": {
+      "state": "idle",
+      "screen": "temperature-keypad",
+      "sha256": "ff11853318b36fd7cd4a94482f6cc6b607c11910b41ca21b5652be49db967247"
+    },
+    "printing-tuning": {
+      "state": "printing",
+      "screen": "tuning",
+      "sha256": "7943b354d17006feccb97c1d44359817cd8a3cb591b5ff7ab9f53d13df971dff"
+    },
+    "idle-maintenance": {
+      "state": "idle",
+      "screen": "maintenance",
+      "sha256": "2852c933adb498ca1943a26cbd8088a696e279f6ebaf49294f8b10bddda54dce"
+    },
+    "idle-calibration": {
+      "state": "idle",
+      "screen": "calibration",
+      "sha256": "e48621c58facebc8d6e09850c70603540633d71f589b40a170ea9f2c39649768"
+    },
+    "front-calibration": {
+      "state": "front",
+      "screen": "calibration",
+      "sha256": "b41a467d4168489c60c61572ddbe4e9d377f39174aac86a5b16323dc607af196"
+    },
+    "idle-heightmap": {
+      "state": "idle",
+      "screen": "heightmap",
+      "sha256": "367a5b5a29f7e53cae6735f3e87d6b3ad15ea75b81f35e5f2ef02651545b2763"
+    },
+    "idle-presets": {
+      "state": "idle",
+      "screen": "presets",
+      "sha256": "a342022a395ddabff443bc043b10b04f223747aa1fdcd330fbc575cc1a1260d2"
+    },
+    "paused-filament": {
+      "state": "paused",
+      "screen": "filament",
+      "sha256": "58013ad508707c74a7c76ffa5a24e086cf5223112260ca5aaa2ca69195617c34"
+    },
+    "idle-filament-keypad": {
+      "state": "idle",
+      "screen": "filament-temperature",
+      "sha256": "0fd04e929b9622afef30a31a2a4a27b60f90169d0363b873b99b90350d52f234"
+    },
+    "idle-details": {
+      "state": "idle",
+      "screen": "details",
+      "sha256": "0d49f63ed578e739cd57a4367b9f1669969c03fba150085c6be4cd1c4d4835b4"
+    },
+    "printing-camera": {
+      "state": "printing",
+      "screen": "camera",
+      "sha256": "16678183b95c4519327b684b5fa97c7accf790330c524af980b18ae612fc33f7"
+    },
+    "complete-home": {
+      "state": "complete",
+      "screen": "home",
+      "sha256": "e420d949b61d3b401c78b99ed157e11b7108f72cc31ad14599bcb3e190a64bef"
+    }
+  },
+  "distinct_review_views": 21,
+  "workflows": {
+    "layout": {
+      "passed": true,
+      "serial": "emulator-5554",
+      "physical_printer_commands": 0
+    },
+    "filament": {
+      "passed": true,
+      "physical_printer_commands": 0
+    }
+  },
+  "geometry": {
+    "sampled_targets_below_48dp": 0,
+    "max_horizontal_ink_offset_dp": 0.7619047619047619
+  },
+  "physical_printer_commands": 0,
+  "bambu_anchor": 8,
+  "reference_lock_unchanged": true,
+  "acceptance": "unverified; not passed"
+}

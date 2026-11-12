@@ -1,0 +1,1377 @@
+{
+  "label": "workflow-normal",
+  "animator_duration_scale": "1.0",
+  "recording_active": true,
+  "renderer": "GLES: Google (Google Inc.), Android Emulator OpenGL ES Translator (Google SwiftShader), OpenGL ES 3.0 (OpenGL ES 3.0 SwiftShader 4.0.0.1)",
+  "cpu_online": "0-1",
+  "focus": null,
+  "markers": [
+    {
+      "raw_framestats": "workflow-normal-00-framestats.txt",
+      "frame_components": [
+        {
+          "intended_vsync_to_input_ms": 1.64445,
+          "input_to_sync_queued_ms": 2.1838,
+          "sync_start_to_swap_ms": 9.882,
+          "swap_to_complete_ms": 7.7021
+        },
+        {
+          "intended_vsync_to_input_ms": 47.355084,
+          "input_to_sync_queued_ms": 12.5418,
+          "sync_start_to_swap_ms": 26.1252,
+          "swap_to_complete_ms": 14.5682
+        },
+        {
+          "intended_vsync_to_input_ms": 20.129286,
+          "input_to_sync_queued_ms": 9.1562,
+          "sync_start_to_swap_ms": 10.9387,
+          "swap_to_complete_ms": 14.0792
+        },
+        {
+          "intended_vsync_to_input_ms": 13.236254,
+          "input_to_sync_queued_ms": 18.061,
+          "sync_start_to_swap_ms": 14.4183,
+          "swap_to_complete_ms": 20.4483
+        },
+        {
+          "intended_vsync_to_input_ms": 24.346788,
+          "input_to_sync_queued_ms": 2.8475,
+          "sync_start_to_swap_ms": 3.6379,
+          "swap_to_complete_ms": 31.1607
+        },
+        {
+          "intended_vsync_to_input_ms": 42.853556,
+          "input_to_sync_queued_ms": 16.27,
+          "sync_start_to_swap_ms": 6.5504,
+          "swap_to_complete_ms": 24.2635
+        }
+      ],
+      "target": "Prepare",
+      "start_seconds": 0.079,
+      "end_seconds": 1.579,
+      "frame_ms": [
+        21.60765,
+        101.822584,
+        70.868386,
+        72.676754,
+        93.060688,
+        90.799056
+      ]
+    },
+    {
+      "raw_framestats": "workflow-normal-01-framestats.txt",
+      "frame_components": [
+        {
+          "intended_vsync_to_input_ms": 92.325548,
+          "input_to_sync_queued_ms": 41.2166,
+          "sync_start_to_swap_ms": 13.1831,
+          "swap_to_complete_ms": 16.997
+        },
+        {
+          "intended_vsync_to_input_ms": 40.416352,
+          "input_to_sync_queued_ms": 3.9704,
+          "sync_start_to_swap_ms": 4.6171,
+          "swap_to_complete_ms": 19.8601
+        },
+        {
+          "intended_vsync_to_input_ms": 3.867154,
+          "input_to_sync_queued_ms": 2.6382,
+          "sync_start_to_swap_ms": 8.4693,
+          "swap_to_complete_ms": 25.6865
+        },
+        {
+          "intended_vsync_to_input_ms": 12.646088,
+          "input_to_sync_queued_ms": 2.1603,
+          "sync_start_to_swap_ms": 12.2737,
+          "swap_to_complete_ms": 13.9945
+        },
+        {
+          "intended_vsync_to_input_ms": 32.524122,
+          "input_to_sync_queued_ms": 7.3393,
+          "sync_start_to_swap_ms": 6.7412,
+          "swap_to_complete_ms": 29.621
+        },
+        {
+          "intended_vsync_to_input_ms": 9.130524,
+          "input_to_sync_queued_ms": 2.63,
+          "sync_start_to_swap_ms": 7.5518,
+          "swap_to_complete_ms": 9.6629
+        }
+      ],
+      "target": "Filament",
+      "start_seconds": 1.637,
+      "end_seconds": 3.247,
+      "frame_ms": [
+        164.309248,
+        77.664752,
+        62.077554,
+        74.421988,
+        94.282122,
+        61.751924
+      ]
+    },
+    {
+      "raw_framestats": "workflow-normal-02-framestats.txt",
+      "frame_components": [
+        {
+          "intended_vsync_to_input_ms": 6.92465,
+          "input_to_sync_queued_ms": 3.3132,
+          "sync_start_to_swap_ms": 3.3838,
+          "swap_to_complete_ms": 6.5397
+        },
+        {
+          "intended_vsync_to_input_ms": 172.801884,
+          "input_to_sync_queued_ms": 2.8351,
+          "sync_start_to_swap_ms": 13.2633,
+          "swap_to_complete_ms": 6.1183
+        },
+        {
+          "intended_vsync_to_input_ms": 201.608458,
+          "input_to_sync_queued_ms": 1.3422,
+          "sync_start_to_swap_ms": 4.148,
+          "swap_to_complete_ms": 21.9212
+        },
+        {
+          "intended_vsync_to_input_ms": 33.651,
+          "input_to_sync_queued_ms": 7.1721,
+          "sync_start_to_swap_ms": 29.1088,
+          "swap_to_complete_ms": 13.6009
+        },
+        {
+          "intended_vsync_to_input_ms": 95.028968,
+          "input_to_sync_queued_ms": 26.3709,
+          "sync_start_to_swap_ms": 16.3081,
+          "swap_to_complete_ms": 37.4764
+        },
+        {
+          "intended_vsync_to_input_ms": 4.676852,
+          "input_to_sync_queued_ms": 0.5326,
+          "sync_start_to_swap_ms": 4.8423,
+          "swap_to_complete_ms": 37.3571
+        },
+        {
+          "intended_vsync_to_input_ms": 5.91922,
+          "input_to_sync_queued_ms": 0.5981,
+          "sync_start_to_swap_ms": 3.7215,
+          "swap_to_complete_ms": 14.6536
+        },
+        {
+          "intended_vsync_to_input_ms": 201.608458,
+          "input_to_sync_queued_ms": 24.6982,
+          "sync_start_to_swap_ms": 1.039,
+          "swap_to_complete_ms": 40.1736
+        },
+        {
+          "intended_vsync_to_input_ms": 33.651,
+          "input_to_sync_queued_ms": 35.3588,
+          "sync_start_to_swap_ms": 12.6618,
+          "swap_to_complete_ms": 33.1714
+        },
+        {
+          "intended_vsync_to_input_ms": 95.028968,
+          "input_to_sync_queued_ms": 54.8753,
+          "sync_start_to_swap_ms": 10.2084,
+          "swap_to_complete_ms": 8.4551
+        },
+        {
+          "intended_vsync_to_input_ms": 118.034072,
+          "input_to_sync_queued_ms": 52.3415,
+          "sync_start_to_swap_ms": 13.0393,
+          "swap_to_complete_ms": 9.2505
+        },
+        {
+          "intended_vsync_to_input_ms": 5.845746,
+          "input_to_sync_queued_ms": 1.8864,
+          "sync_start_to_swap_ms": 7.096,
+          "swap_to_complete_ms": 17.9561
+        },
+        {
+          "intended_vsync_to_input_ms": 70.24108,
+          "input_to_sync_queued_ms": 34.1077,
+          "sync_start_to_swap_ms": 1.5017,
+          "swap_to_complete_ms": 35.4682
+        }
+      ],
+      "target": "Filament temperature",
+      "start_seconds": 3.319,
+      "end_seconds": 5.741,
+      "frame_ms": [
+        22.90645,
+        214.827084,
+        235.095558,
+        108.412,
+        195.825168,
+        66.746052,
+        52.17432,
+        280.547058,
+        152.9668,
+        226.992268,
+        204.953772,
+        85.814446,
+        151.85728
+      ]
+    },
+    {
+      "raw_framestats": "workflow-normal-03-framestats.txt",
+      "frame_components": [
+        {
+          "intended_vsync_to_input_ms": 4.263992,
+          "input_to_sync_queued_ms": 0.2772,
+          "sync_start_to_swap_ms": 12.6621,
+          "swap_to_complete_ms": 21.9964
+        },
+        {
+          "intended_vsync_to_input_ms": 21.343628,
+          "input_to_sync_queued_ms": 17.9479,
+          "sync_start_to_swap_ms": 4.4146,
+          "swap_to_complete_ms": 24.0111
+        },
+        {
+          "intended_vsync_to_input_ms": 26.360596,
+          "input_to_sync_queued_ms": 21.9031,
+          "sync_start_to_swap_ms": 5.5338,
+          "swap_to_complete_ms": 24.6937
+        },
+        {
+          "intended_vsync_to_input_ms": 21.688864,
+          "input_to_sync_queued_ms": 17.6825,
+          "sync_start_to_swap_ms": 6.2875,
+          "swap_to_complete_ms": 23.8756
+        },
+        {
+          "intended_vsync_to_input_ms": 23.180332,
+          "input_to_sync_queued_ms": 12.6616,
+          "sync_start_to_swap_ms": 21.6097,
+          "swap_to_complete_ms": 5.5158
+        },
+        {
+          "intended_vsync_to_input_ms": 21.4853,
+          "input_to_sync_queued_ms": 6.1055,
+          "sync_start_to_swap_ms": 4.5804,
+          "swap_to_complete_ms": 44.4838
+        }
+      ],
+      "target": "Cancel",
+      "start_seconds": 5.904,
+      "end_seconds": 7.921,
+      "frame_ms": [
+        51.034992,
+        73.651928,
+        84.540396,
+        74.119464,
+        68.155832,
+        84.1147
+      ]
+    },
+    {
+      "raw_framestats": "workflow-normal-04-framestats.txt",
+      "frame_components": [
+        {
+          "intended_vsync_to_input_ms": 2.396868,
+          "input_to_sync_queued_ms": 2.4239,
+          "sync_start_to_swap_ms": 2.4938,
+          "swap_to_complete_ms": 9.48
+        },
+        {
+          "intended_vsync_to_input_ms": 61.760702,
+          "input_to_sync_queued_ms": 24.459,
+          "sync_start_to_swap_ms": 22.0508,
+          "swap_to_complete_ms": 7.9805
+        },
+        {
+          "intended_vsync_to_input_ms": 39.595938,
+          "input_to_sync_queued_ms": 3.7615,
+          "sync_start_to_swap_ms": 22.7734,
+          "swap_to_complete_ms": 8.8723
+        },
+        {
+          "intended_vsync_to_input_ms": 29.07504,
+          "input_to_sync_queued_ms": 19.3632,
+          "sync_start_to_swap_ms": 20.4099,
+          "swap_to_complete_ms": 14.2381
+        },
+        {
+          "intended_vsync_to_input_ms": 21.164208,
+          "input_to_sync_queued_ms": 17.3623,
+          "sync_start_to_swap_ms": 5.3536,
+          "swap_to_complete_ms": 30.8644
+        },
+        {
+          "intended_vsync_to_input_ms": 12.066876,
+          "input_to_sync_queued_ms": 24.15,
+          "sync_start_to_swap_ms": 10.9442,
+          "swap_to_complete_ms": 8.195
+        }
+      ],
+      "target": "Move",
+      "start_seconds": 7.975,
+      "end_seconds": 9.545,
+      "frame_ms": [
+        16.942368,
+        133.464302,
+        99.366138,
+        84.18914,
+        78.645008,
+        65.605976
+      ]
+    },
+    {
+      "raw_framestats": "workflow-normal-05-framestats.txt",
+      "frame_components": [
+        {
+          "intended_vsync_to_input_ms": 92.067166,
+          "input_to_sync_queued_ms": 4.2288,
+          "sync_start_to_swap_ms": 19.5093,
+          "swap_to_complete_ms": 6.5583
+        },
+        {
+          "intended_vsync_to_input_ms": 145.48367,
+          "input_to_sync_queued_ms": 1.0473,
+          "sync_start_to_swap_ms": 5.1193,
+          "swap_to_complete_ms": 18.3794
+        },
+        {
+          "intended_vsync_to_input_ms": 31.399876,
+          "input_to_sync_queued_ms": 97.646,
+          "sync_start_to_swap_ms": 26.4485,
+          "swap_to_complete_ms": 26.0629
+        },
+        {
+          "intended_vsync_to_input_ms": 129.512844,
+          "input_to_sync_queued_ms": 4.0667,
+          "sync_start_to_swap_ms": 8.9884,
+          "swap_to_complete_ms": 35.6539
+        },
+        {
+          "intended_vsync_to_input_ms": 117.435616,
+          "input_to_sync_queued_ms": 53.9733,
+          "sync_start_to_swap_ms": 21.7129,
+          "swap_to_complete_ms": 12.911
+        },
+        {
+          "intended_vsync_to_input_ms": 55.517988,
+          "input_to_sync_queued_ms": 30.6052,
+          "sync_start_to_swap_ms": 18.1298,
+          "swap_to_complete_ms": 28.9424
+        },
+        {
+          "intended_vsync_to_input_ms": 2.967734,
+          "input_to_sync_queued_ms": 0.6494,
+          "sync_start_to_swap_ms": 10.1908,
+          "swap_to_complete_ms": 27.9864
+        },
+        {
+          "intended_vsync_to_input_ms": 3.296868,
+          "input_to_sync_queued_ms": 1.0095,
+          "sync_start_to_swap_ms": 6.7175,
+          "swap_to_complete_ms": 27.3304
+        },
+        {
+          "intended_vsync_to_input_ms": 145.48367,
+          "input_to_sync_queued_ms": 16.8217,
+          "sync_start_to_swap_ms": 18.1677,
+          "swap_to_complete_ms": 10.9739
+        },
+        {
+          "intended_vsync_to_input_ms": 31.399876,
+          "input_to_sync_queued_ms": 9.4849,
+          "sync_start_to_swap_ms": 22.1864,
+          "swap_to_complete_ms": 28.9722
+        },
+        {
+          "intended_vsync_to_input_ms": 129.512844,
+          "input_to_sync_queued_ms": 97.6894,
+          "sync_start_to_swap_ms": 1.3443,
+          "swap_to_complete_ms": 20.8019
+        },
+        {
+          "intended_vsync_to_input_ms": 117.435616,
+          "input_to_sync_queued_ms": 9.1769,
+          "sync_start_to_swap_ms": 1.168,
+          "swap_to_complete_ms": 21.3684
+        },
+        {
+          "intended_vsync_to_input_ms": 55.517988,
+          "input_to_sync_queued_ms": 10.1442,
+          "sync_start_to_swap_ms": 0.9852,
+          "swap_to_complete_ms": 24.5186
+        },
+        {
+          "intended_vsync_to_input_ms": 58.418424,
+          "input_to_sync_queued_ms": 32.1769,
+          "sync_start_to_swap_ms": 3.8124,
+          "swap_to_complete_ms": 28.53
+        },
+        {
+          "intended_vsync_to_input_ms": 44.48036,
+          "input_to_sync_queued_ms": 26.7976,
+          "sync_start_to_swap_ms": 1.0078,
+          "swap_to_complete_ms": 26.223
+        },
+        {
+          "intended_vsync_to_input_ms": 1.921134,
+          "input_to_sync_queued_ms": 0.6501,
+          "sync_start_to_swap_ms": 1.9002,
+          "swap_to_complete_ms": 6.0433
+        },
+        {
+          "intended_vsync_to_input_ms": 4.047468,
+          "input_to_sync_queued_ms": 0.5414,
+          "sync_start_to_swap_ms": 0.9458,
+          "swap_to_complete_ms": 13.1134
+        },
+        {
+          "intended_vsync_to_input_ms": 1.760602,
+          "input_to_sync_queued_ms": 1.8339,
+          "sync_start_to_swap_ms": 1.7688,
+          "swap_to_complete_ms": 25.2777
+        },
+        {
+          "intended_vsync_to_input_ms": 11.456536,
+          "input_to_sync_queued_ms": 2.5856,
+          "sync_start_to_swap_ms": 11.9264,
+          "swap_to_complete_ms": 12.3686
+        },
+        {
+          "intended_vsync_to_input_ms": 22.36257,
+          "input_to_sync_queued_ms": 1.3839,
+          "sync_start_to_swap_ms": 3.3237,
+          "swap_to_complete_ms": 34.717
+        },
+        {
+          "intended_vsync_to_input_ms": 0.866938,
+          "input_to_sync_queued_ms": 0.5755,
+          "sync_start_to_swap_ms": 10.9214,
+          "swap_to_complete_ms": 8.8592
+        },
+        {
+          "intended_vsync_to_input_ms": 31.512072,
+          "input_to_sync_queued_ms": 3.1693,
+          "sync_start_to_swap_ms": 1.7112,
+          "swap_to_complete_ms": 26.7587
+        },
+        {
+          "intended_vsync_to_input_ms": 5.362074,
+          "input_to_sync_queued_ms": 0.7351,
+          "sync_start_to_swap_ms": 1.384,
+          "swap_to_complete_ms": 29.9775
+        },
+        {
+          "intended_vsync_to_input_ms": 2.328008,
+          "input_to_sync_queued_ms": 1.2469,
+          "sync_start_to_swap_ms": 16.9667,
+          "swap_to_complete_ms": 4.7661
+        },
+        {
+          "intended_vsync_to_input_ms": 22.403542,
+          "input_to_sync_queued_ms": 0.8302,
+          "sync_start_to_swap_ms": 2.0701,
+          "swap_to_complete_ms": 43.4086
+        },
+        {
+          "intended_vsync_to_input_ms": 4.32131,
+          "input_to_sync_queued_ms": 1.364,
+          "sync_start_to_swap_ms": 3.3618,
+          "swap_to_complete_ms": 4.343
+        },
+        {
+          "intended_vsync_to_input_ms": 26.597244,
+          "input_to_sync_queued_ms": 4.49,
+          "sync_start_to_swap_ms": 1.2899,
+          "swap_to_complete_ms": 26.6045
+        }
+      ],
+      "target": "XY move distance",
+      "start_seconds": 9.597,
+      "end_seconds": 12.361,
+      "frame_ms": [
+        146.536166,
+        170.50677,
+        201.217076,
+        223.262244,
+        215.779916,
+        139.002588,
+        50.578634,
+        57.567168,
+        201.05667,
+        147.352576,
+        269.247444,
+        185.936016,
+        108.669388,
+        138.589324,
+        109.67426,
+        11.198534,
+        21.359168,
+        31.903602,
+        39.795836,
+        61.89967,
+        48.751038,
+        63.205972,
+        39.876374,
+        45.201208,
+        74.197642,
+        48.87361,
+        60.305744
+      ]
+    },
+    {
+      "raw_framestats": "workflow-normal-06-framestats.txt",
+      "frame_components": [
+        {
+          "intended_vsync_to_input_ms": 13.511014,
+          "input_to_sync_queued_ms": 0.6505,
+          "sync_start_to_swap_ms": 2.1283,
+          "swap_to_complete_ms": 24.1753
+        },
+        {
+          "intended_vsync_to_input_ms": 3.325748,
+          "input_to_sync_queued_ms": 0.4125,
+          "sync_start_to_swap_ms": 2.2411,
+          "swap_to_complete_ms": 40.7671
+        },
+        {
+          "intended_vsync_to_input_ms": 17.83095,
+          "input_to_sync_queued_ms": 11.8301,
+          "sync_start_to_swap_ms": 4.1274,
+          "swap_to_complete_ms": 32.7179
+        },
+        {
+          "intended_vsync_to_input_ms": 21.183918,
+          "input_to_sync_queued_ms": 3.8066,
+          "sync_start_to_swap_ms": 6.2113,
+          "swap_to_complete_ms": 54.8096
+        },
+        {
+          "intended_vsync_to_input_ms": 11.117586,
+          "input_to_sync_queued_ms": 4.0934,
+          "sync_start_to_swap_ms": 3.9558,
+          "swap_to_complete_ms": 23.2803
+        },
+        {
+          "intended_vsync_to_input_ms": 56.19782,
+          "input_to_sync_queued_ms": 35.8535,
+          "sync_start_to_swap_ms": 4.5386,
+          "swap_to_complete_ms": 16.9763
+        }
+      ],
+      "target": "Use 1 mm",
+      "start_seconds": 12.427,
+      "end_seconds": 14.34,
+      "frame_ms": [
+        42.001514,
+        52.477248,
+        73.32775,
+        90.289818,
+        84.765786,
+        114.56202
+      ]
+    },
+    {
+      "raw_framestats": "workflow-normal-07-framestats.txt",
+      "frame_components": [
+        {
+          "intended_vsync_to_input_ms": 5.249658,
+          "input_to_sync_queued_ms": 3.2111,
+          "sync_start_to_swap_ms": 1.9402,
+          "swap_to_complete_ms": 6.7833
+        },
+        {
+          "intended_vsync_to_input_ms": 106.824192,
+          "input_to_sync_queued_ms": 9.654,
+          "sync_start_to_swap_ms": 21.5121,
+          "swap_to_complete_ms": 6.2491
+        },
+        {
+          "intended_vsync_to_input_ms": 37.37043,
+          "input_to_sync_queued_ms": 5.6882,
+          "sync_start_to_swap_ms": 15.1809,
+          "swap_to_complete_ms": 22.7525
+        },
+        {
+          "intended_vsync_to_input_ms": 2.206432,
+          "input_to_sync_queued_ms": 27.0913,
+          "sync_start_to_swap_ms": 9.1579,
+          "swap_to_complete_ms": 14.2496
+        },
+        {
+          "intended_vsync_to_input_ms": 14.254766,
+          "input_to_sync_queued_ms": 15.6759,
+          "sync_start_to_swap_ms": 7.2645,
+          "swap_to_complete_ms": 24.2463
+        },
+        {
+          "intended_vsync_to_input_ms": 25.8053,
+          "input_to_sync_queued_ms": 24.6506,
+          "sync_start_to_swap_ms": 16.0076,
+          "swap_to_complete_ms": 15.7037
+        },
+        {
+          "intended_vsync_to_input_ms": 29.544168,
+          "input_to_sync_queued_ms": 15.4531,
+          "sync_start_to_swap_ms": 3.3313,
+          "swap_to_complete_ms": 23.8196
+        }
+      ],
+      "target": "Home",
+      "start_seconds": 14.388,
+      "end_seconds": 15.997,
+      "frame_ms": [
+        17.846558,
+        162.413692,
+        84.11673,
+        52.931232,
+        68.639266,
+        84.1365,
+        72.241468
+      ]
+    },
+    {
+      "raw_framestats": "workflow-normal-08-framestats.txt",
+      "frame_components": [
+        {
+          "intended_vsync_to_input_ms": 39.793224,
+          "input_to_sync_queued_ms": 5.3649,
+          "sync_start_to_swap_ms": 12.1257,
+          "swap_to_complete_ms": 6.8273
+        },
+        {
+          "intended_vsync_to_input_ms": 188.161826,
+          "input_to_sync_queued_ms": 1.2195,
+          "sync_start_to_swap_ms": 1.9098,
+          "swap_to_complete_ms": 23.5384
+        },
+        {
+          "intended_vsync_to_input_ms": 89.69157,
+          "input_to_sync_queued_ms": 8.3756,
+          "sync_start_to_swap_ms": 26.159,
+          "swap_to_complete_ms": 6.5949
+        },
+        {
+          "intended_vsync_to_input_ms": 84.948374,
+          "input_to_sync_queued_ms": 41.1723,
+          "sync_start_to_swap_ms": 27.3078,
+          "swap_to_complete_ms": 13.9511
+        },
+        {
+          "intended_vsync_to_input_ms": 57.904678,
+          "input_to_sync_queued_ms": 1.3432,
+          "sync_start_to_swap_ms": 1.8795,
+          "swap_to_complete_ms": 37.9541
+        },
+        {
+          "intended_vsync_to_input_ms": 1.779594,
+          "input_to_sync_queued_ms": 0.2773,
+          "sync_start_to_swap_ms": 3.0699,
+          "swap_to_complete_ms": 16.499
+        },
+        {
+          "intended_vsync_to_input_ms": 4.297428,
+          "input_to_sync_queued_ms": 0.4849,
+          "sync_start_to_swap_ms": 10.1574,
+          "swap_to_complete_ms": 4.9004
+        },
+        {
+          "intended_vsync_to_input_ms": 188.161826,
+          "input_to_sync_queued_ms": 29.1254,
+          "sync_start_to_swap_ms": 3.6176,
+          "swap_to_complete_ms": 12.6554
+        },
+        {
+          "intended_vsync_to_input_ms": 52.258334,
+          "input_to_sync_queued_ms": 41.9437,
+          "sync_start_to_swap_ms": 14.7902,
+          "swap_to_complete_ms": 43.2228
+        },
+        {
+          "intended_vsync_to_input_ms": 89.69157,
+          "input_to_sync_queued_ms": 50.6706,
+          "sync_start_to_swap_ms": 0.9134,
+          "swap_to_complete_ms": 22.8979
+        },
+        {
+          "intended_vsync_to_input_ms": 84.948374,
+          "input_to_sync_queued_ms": 6.0594,
+          "sync_start_to_swap_ms": 18.2247,
+          "swap_to_complete_ms": 5.6318
+        },
+        {
+          "intended_vsync_to_input_ms": 57.904678,
+          "input_to_sync_queued_ms": 22.3264,
+          "sync_start_to_swap_ms": 4.1304,
+          "swap_to_complete_ms": 26.2127
+        },
+        {
+          "intended_vsync_to_input_ms": 67.303114,
+          "input_to_sync_queued_ms": 0.9339,
+          "sync_start_to_swap_ms": 3.1048,
+          "swap_to_complete_ms": 23.9804
+        },
+        {
+          "intended_vsync_to_input_ms": 1.89799,
+          "input_to_sync_queued_ms": 0.4435,
+          "sync_start_to_swap_ms": 1.099,
+          "swap_to_complete_ms": 13.4328
+        },
+        {
+          "intended_vsync_to_input_ms": 6.212724,
+          "input_to_sync_queued_ms": 0.5416,
+          "sync_start_to_swap_ms": 1.0523,
+          "swap_to_complete_ms": 4.8196
+        }
+      ],
+      "target": "Set nozzle temperature",
+      "start_seconds": 16.054,
+      "end_seconds": 18.417,
+      "frame_ms": [
+        65.419024,
+        231.789126,
+        162.40937,
+        174.420674,
+        119.076678,
+        27.426794,
+        26.084628,
+        266.813626,
+        152.485034,
+        187.56727,
+        132.226474,
+        150.854478,
+        101.053114,
+        17.25109,
+        24.780524
+      ]
+    },
+    {
+      "raw_framestats": "workflow-normal-09-framestats.txt",
+      "frame_components": [
+        {
+          "intended_vsync_to_input_ms": 87.684528,
+          "input_to_sync_queued_ms": 0.2395,
+          "sync_start_to_swap_ms": 4.5064,
+          "swap_to_complete_ms": 22.6679
+        },
+        {
+          "intended_vsync_to_input_ms": 101.521032,
+          "input_to_sync_queued_ms": 2.0166,
+          "sync_start_to_swap_ms": 7.8293,
+          "swap_to_complete_ms": 18.4825
+        },
+        {
+          "intended_vsync_to_input_ms": 17.91007,
+          "input_to_sync_queued_ms": 1.8221,
+          "sync_start_to_swap_ms": 3.269,
+          "swap_to_complete_ms": 9.9928
+        },
+        {
+          "intended_vsync_to_input_ms": 5.955938,
+          "input_to_sync_queued_ms": 4.6249,
+          "sync_start_to_swap_ms": 4.5972,
+          "swap_to_complete_ms": 42.0325
+        },
+        {
+          "intended_vsync_to_input_ms": 14.954672,
+          "input_to_sync_queued_ms": 23.206,
+          "sync_start_to_swap_ms": 39.3062,
+          "swap_to_complete_ms": 40.7962
+        },
+        {
+          "intended_vsync_to_input_ms": 63.703406,
+          "input_to_sync_queued_ms": 6.6663,
+          "sync_start_to_swap_ms": 7.939,
+          "swap_to_complete_ms": 35.231
+        },
+        {
+          "intended_vsync_to_input_ms": 40.654442,
+          "input_to_sync_queued_ms": 22.7749,
+          "sync_start_to_swap_ms": 9.8064,
+          "swap_to_complete_ms": 39.8643
+        },
+        {
+          "intended_vsync_to_input_ms": 35.851244,
+          "input_to_sync_queued_ms": 12.7826,
+          "sync_start_to_swap_ms": 3.5117,
+          "swap_to_complete_ms": 5.1567
+        },
+        {
+          "intended_vsync_to_input_ms": 21.316446,
+          "input_to_sync_queued_ms": 2.3746,
+          "sync_start_to_swap_ms": 5.0995,
+          "swap_to_complete_ms": 29.4496
+        },
+        {
+          "intended_vsync_to_input_ms": 2.507714,
+          "input_to_sync_queued_ms": 17.3312,
+          "sync_start_to_swap_ms": 1.2328,
+          "swap_to_complete_ms": 36.6703
+        },
+        {
+          "intended_vsync_to_input_ms": 17.484548,
+          "input_to_sync_queued_ms": 2.6447,
+          "sync_start_to_swap_ms": 12.3795,
+          "swap_to_complete_ms": 23.8776
+        }
+      ],
+      "target": "Custom target",
+      "start_seconds": 18.582,
+      "end_seconds": 20.85,
+      "frame_ms": [
+        116.372228,
+        130.660732,
+        35.37417,
+        67.901538,
+        119.058872,
+        132.293306,
+        115.579142,
+        74.507044,
+        59.242646,
+        63.991114,
+        83.912748
+      ]
+    },
+    {
+      "raw_framestats": "workflow-normal-10-framestats.txt",
+      "frame_components": [
+        {
+          "intended_vsync_to_input_ms": 61.349964,
+          "input_to_sync_queued_ms": 1.7585,
+          "sync_start_to_swap_ms": 1.3389,
+          "swap_to_complete_ms": 21.2381
+        },
+        {
+          "intended_vsync_to_input_ms": 3.3383,
+          "input_to_sync_queued_ms": 11.2391,
+          "sync_start_to_swap_ms": 2.6449,
+          "swap_to_complete_ms": 35.2211
+        },
+        {
+          "intended_vsync_to_input_ms": 43.047034,
+          "input_to_sync_queued_ms": 4.8042,
+          "sync_start_to_swap_ms": 1.1581,
+          "swap_to_complete_ms": 26.4009
+        },
+        {
+          "intended_vsync_to_input_ms": 4.938636,
+          "input_to_sync_queued_ms": 14.8905,
+          "sync_start_to_swap_ms": 1.461,
+          "swap_to_complete_ms": 27.56
+        },
+        {
+          "intended_vsync_to_input_ms": 27.926438,
+          "input_to_sync_queued_ms": 2.3603,
+          "sync_start_to_swap_ms": 6.5921,
+          "swap_to_complete_ms": 5.6604
+        },
+        {
+          "intended_vsync_to_input_ms": 52.755006,
+          "input_to_sync_queued_ms": 9.1049,
+          "sync_start_to_swap_ms": 2.0442,
+          "swap_to_complete_ms": 19.7174
+        }
+      ],
+      "target": "Cancel",
+      "start_seconds": 20.898,
+      "end_seconds": 23.187,
+      "frame_ms": [
+        85.808064,
+        52.9944,
+        80.335534,
+        59.994736,
+        83.315338,
+        89.934206
+      ]
+    },
+    {
+      "raw_framestats": "workflow-normal-11-framestats.txt",
+      "frame_components": [
+        {
+          "intended_vsync_to_input_ms": 1.63299,
+          "input_to_sync_queued_ms": 0.3604,
+          "sync_start_to_swap_ms": 11.3356,
+          "swap_to_complete_ms": 41.2001
+        },
+        {
+          "intended_vsync_to_input_ms": 1.32376,
+          "input_to_sync_queued_ms": 7.1135,
+          "sync_start_to_swap_ms": 20.7747,
+          "swap_to_complete_ms": 30.9456
+        },
+        {
+          "intended_vsync_to_input_ms": 12.890294,
+          "input_to_sync_queued_ms": 9.5958,
+          "sync_start_to_swap_ms": 16.853,
+          "swap_to_complete_ms": 21.3342
+        },
+        {
+          "intended_vsync_to_input_ms": 50.005228,
+          "input_to_sync_queued_ms": 9.8152,
+          "sync_start_to_swap_ms": 22.4752,
+          "swap_to_complete_ms": 15.1587
+        },
+        {
+          "intended_vsync_to_input_ms": 15.313164,
+          "input_to_sync_queued_ms": 14.3323,
+          "sync_start_to_swap_ms": 4.4641,
+          "swap_to_complete_ms": 23.9225
+        }
+      ],
+      "target": "Close",
+      "start_seconds": 23.235,
+      "end_seconds": 25.408,
+      "frame_ms": [
+        66.85319,
+        74.66086,
+        96.461194,
+        117.646528,
+        70.605364
+      ]
+    },
+    {
+      "raw_framestats": "workflow-normal-12-framestats.txt",
+      "frame_components": [
+        {
+          "intended_vsync_to_input_ms": 2.097,
+          "input_to_sync_queued_ms": 1.7198,
+          "sync_start_to_swap_ms": 4.4905,
+          "swap_to_complete_ms": 10.9565
+        },
+        {
+          "intended_vsync_to_input_ms": 55.815334,
+          "input_to_sync_queued_ms": 18.8271,
+          "sync_start_to_swap_ms": 41.1927,
+          "swap_to_complete_ms": 8.1131
+        },
+        {
+          "intended_vsync_to_input_ms": 13.12817,
+          "input_to_sync_queued_ms": 1.9,
+          "sync_start_to_swap_ms": 4.6173,
+          "swap_to_complete_ms": 24.2652
+        },
+        {
+          "intended_vsync_to_input_ms": 48.246504,
+          "input_to_sync_queued_ms": 1.198,
+          "sync_start_to_swap_ms": 18.593,
+          "swap_to_complete_ms": 8.4476
+        },
+        {
+          "intended_vsync_to_input_ms": 52.593406,
+          "input_to_sync_queued_ms": 3.6257,
+          "sync_start_to_swap_ms": 5.7957,
+          "swap_to_complete_ms": 22.9768
+        },
+        {
+          "intended_vsync_to_input_ms": 2.083942,
+          "input_to_sync_queued_ms": 0.5964,
+          "sync_start_to_swap_ms": 2.6317,
+          "swap_to_complete_ms": 18.7034
+        },
+        {
+          "intended_vsync_to_input_ms": 10.422176,
+          "input_to_sync_queued_ms": 0.7018,
+          "sync_start_to_swap_ms": 13.3513,
+          "swap_to_complete_ms": 6.324
+        },
+        {
+          "intended_vsync_to_input_ms": 10.60531,
+          "input_to_sync_queued_ms": 1.2733,
+          "sync_start_to_swap_ms": 3.5672,
+          "swap_to_complete_ms": 34.9983
+        },
+        {
+          "intended_vsync_to_input_ms": 10.649944,
+          "input_to_sync_queued_ms": 1.0283,
+          "sync_start_to_swap_ms": 3.1167,
+          "swap_to_complete_ms": 7.165
+        },
+        {
+          "intended_vsync_to_input_ms": 37.051578,
+          "input_to_sync_queued_ms": 3.7466,
+          "sync_start_to_swap_ms": 1.4803,
+          "swap_to_complete_ms": 23.7721
+        }
+      ],
+      "target": "Files",
+      "start_seconds": 25.459,
+      "end_seconds": 27.411,
+      "frame_ms": [
+        19.38,
+        127.173234,
+        89.79777,
+        100.381404,
+        85.136306,
+        40.021042,
+        43.322076,
+        65.38821,
+        59.289144,
+        68.050978
+      ]
+    },
+    {
+      "raw_framestats": "workflow-normal-13-framestats.txt",
+      "frame_components": [
+        {
+          "intended_vsync_to_input_ms": 0.881766,
+          "input_to_sync_queued_ms": 0.4226,
+          "sync_start_to_swap_ms": 1.1218,
+          "swap_to_complete_ms": 4.0778
+        },
+        {
+          "intended_vsync_to_input_ms": 2.1444,
+          "input_to_sync_queued_ms": 0.5772,
+          "sync_start_to_swap_ms": 5.1262,
+          "swap_to_complete_ms": 16.1917
+        },
+        {
+          "intended_vsync_to_input_ms": 4.691034,
+          "input_to_sync_queued_ms": 3.8296,
+          "sync_start_to_swap_ms": 2.0902,
+          "swap_to_complete_ms": 25.5078
+        },
+        {
+          "intended_vsync_to_input_ms": 2.247768,
+          "input_to_sync_queued_ms": 0.7146,
+          "sync_start_to_swap_ms": 1.4843,
+          "swap_to_complete_ms": 21.7
+        },
+        {
+          "intended_vsync_to_input_ms": 21.520602,
+          "input_to_sync_queued_ms": 3.0531,
+          "sync_start_to_swap_ms": 0.8857,
+          "swap_to_complete_ms": 23.0243
+        },
+        {
+          "intended_vsync_to_input_ms": 4.75047,
+          "input_to_sync_queued_ms": 1.4677,
+          "sync_start_to_swap_ms": 3.0325,
+          "swap_to_complete_ms": 11.5295
+        },
+        {
+          "intended_vsync_to_input_ms": 9.180904,
+          "input_to_sync_queued_ms": 2.0405,
+          "sync_start_to_swap_ms": 7.5695,
+          "swap_to_complete_ms": 26.4631
+        },
+        {
+          "intended_vsync_to_input_ms": 17.441438,
+          "input_to_sync_queued_ms": 2.3417,
+          "sync_start_to_swap_ms": 10.3894,
+          "swap_to_complete_ms": 5.1545
+        },
+        {
+          "intended_vsync_to_input_ms": 8.311206,
+          "input_to_sync_queued_ms": 6.6677,
+          "sync_start_to_swap_ms": 5.2283,
+          "swap_to_complete_ms": 22.3704
+        },
+        {
+          "intended_vsync_to_input_ms": 10.33244,
+          "input_to_sync_queued_ms": 0.5111,
+          "sync_start_to_swap_ms": 7.2418,
+          "swap_to_complete_ms": 13.8311
+        },
+        {
+          "intended_vsync_to_input_ms": 28.999274,
+          "input_to_sync_queued_ms": 0.9197,
+          "sync_start_to_swap_ms": 2.428,
+          "swap_to_complete_ms": 30.3712
+        },
+        {
+          "intended_vsync_to_input_ms": 8.450242,
+          "input_to_sync_queued_ms": 0.4782,
+          "sync_start_to_swap_ms": 8.5032,
+          "swap_to_complete_ms": 3.9971
+        },
+        {
+          "intended_vsync_to_input_ms": 28.165576,
+          "input_to_sync_queued_ms": 1.2051,
+          "sync_start_to_swap_ms": 1.4534,
+          "swap_to_complete_ms": 30.9098
+        },
+        {
+          "intended_vsync_to_input_ms": 9.217644,
+          "input_to_sync_queued_ms": 0.4694,
+          "sync_start_to_swap_ms": 1.3516,
+          "swap_to_complete_ms": 20.6906
+        },
+        {
+          "intended_vsync_to_input_ms": 4.65776,
+          "input_to_sync_queued_ms": 5.384,
+          "sync_start_to_swap_ms": 5.1143,
+          "swap_to_complete_ms": 5.9179
+        },
+        {
+          "intended_vsync_to_input_ms": 26.249894,
+          "input_to_sync_queued_ms": 14.4868,
+          "sync_start_to_swap_ms": 28.0773,
+          "swap_to_complete_ms": 15.9173
+        },
+        {
+          "intended_vsync_to_input_ms": 10.634662,
+          "input_to_sync_queued_ms": 0.9739,
+          "sync_start_to_swap_ms": 4.4285,
+          "swap_to_complete_ms": 21.8136
+        },
+        {
+          "intended_vsync_to_input_ms": 33.914896,
+          "input_to_sync_queued_ms": 13.9913,
+          "sync_start_to_swap_ms": 6.219,
+          "swap_to_complete_ms": 29.36
+        },
+        {
+          "intended_vsync_to_input_ms": 9.371298,
+          "input_to_sync_queued_ms": 1.4707,
+          "sync_start_to_swap_ms": 7.0793,
+          "swap_to_complete_ms": 34.7776
+        },
+        {
+          "intended_vsync_to_input_ms": 30.456332,
+          "input_to_sync_queued_ms": 2.6417,
+          "sync_start_to_swap_ms": 6.2076,
+          "swap_to_complete_ms": 28.5519
+        },
+        {
+          "intended_vsync_to_input_ms": 25.6797,
+          "input_to_sync_queued_ms": 2.2171,
+          "sync_start_to_swap_ms": 1.7162,
+          "swap_to_complete_ms": 24.4777
+        }
+      ],
+      "target": "More",
+      "start_seconds": 27.463,
+      "end_seconds": 29.324,
+      "frame_ms": [
+        6.568066,
+        24.1364,
+        36.190434,
+        43.127268,
+        50.533902,
+        39.97107,
+        57.568104,
+        56.762838,
+        51.263606,
+        57.00054,
+        73.545474,
+        52.943542,
+        68.866076,
+        57.818644,
+        21.15786,
+        85.934094,
+        74.750262,
+        93.895296,
+        86.038498,
+        92.168332,
+        85.3173
+      ]
+    },
+    {
+      "raw_framestats": "workflow-normal-14-framestats.txt",
+      "frame_components": [
+        {
+          "intended_vsync_to_input_ms": 1.152324,
+          "input_to_sync_queued_ms": 2.274,
+          "sync_start_to_swap_ms": 2.5977,
+          "swap_to_complete_ms": 9.5918
+        },
+        {
+          "intended_vsync_to_input_ms": 89.668058,
+          "input_to_sync_queued_ms": 1.4709,
+          "sync_start_to_swap_ms": 20.0657,
+          "swap_to_complete_ms": 8.7434
+        },
+        {
+          "intended_vsync_to_input_ms": 148.930262,
+          "input_to_sync_queued_ms": 1.853,
+          "sync_start_to_swap_ms": 4.1605,
+          "swap_to_complete_ms": 20.8056
+        },
+        {
+          "intended_vsync_to_input_ms": 66.426672,
+          "input_to_sync_queued_ms": 3.008,
+          "sync_start_to_swap_ms": 25.7951,
+          "swap_to_complete_ms": 30.3197
+        },
+        {
+          "intended_vsync_to_input_ms": 123.521708,
+          "input_to_sync_queued_ms": 64.3366,
+          "sync_start_to_swap_ms": 12.5377,
+          "swap_to_complete_ms": 30.2562
+        },
+        {
+          "intended_vsync_to_input_ms": 1.823726,
+          "input_to_sync_queued_ms": 3.1308,
+          "sync_start_to_swap_ms": 7.8623,
+          "swap_to_complete_ms": 32.6809
+        },
+        {
+          "intended_vsync_to_input_ms": 3.11476,
+          "input_to_sync_queued_ms": 0.3242,
+          "sync_start_to_swap_ms": 17.6751,
+          "swap_to_complete_ms": 20.1347
+        },
+        {
+          "intended_vsync_to_input_ms": 148.930262,
+          "input_to_sync_queued_ms": 59.7376,
+          "sync_start_to_swap_ms": 1.4443,
+          "swap_to_complete_ms": 32.5796
+        },
+        {
+          "intended_vsync_to_input_ms": 87.795368,
+          "input_to_sync_queued_ms": 37.6425,
+          "sync_start_to_swap_ms": 11.4923,
+          "swap_to_complete_ms": 24.5614
+        },
+        {
+          "intended_vsync_to_input_ms": 66.426672,
+          "input_to_sync_queued_ms": 56.9789,
+          "sync_start_to_swap_ms": 3.5558,
+          "swap_to_complete_ms": 35.5462
+        },
+        {
+          "intended_vsync_to_input_ms": 123.521708,
+          "input_to_sync_queued_ms": 1.3798,
+          "sync_start_to_swap_ms": 10.7227,
+          "swap_to_complete_ms": 13.8588
+        },
+        {
+          "intended_vsync_to_input_ms": 121.64378,
+          "input_to_sync_queued_ms": 2.0501,
+          "sync_start_to_swap_ms": 10.3102,
+          "swap_to_complete_ms": 16.5991
+        }
+      ],
+      "target": "Maintenance",
+      "start_seconds": 29.393,
+      "end_seconds": 31.702,
+      "frame_ms": [
+        15.666324,
+        138.254258,
+        208.073562,
+        172.723472,
+        235.837608,
+        46.782126,
+        68.34466,
+        246.291762,
+        163.528768,
+        227.774472,
+        190.776908,
+        177.87578
+      ]
+    },
+    {
+      "raw_framestats": "workflow-normal-15-framestats.txt",
+      "frame_components": [
+        {
+          "intended_vsync_to_input_ms": 2.235398,
+          "input_to_sync_queued_ms": 0.3365,
+          "sync_start_to_swap_ms": 1.6789,
+          "swap_to_complete_ms": 16.017
+        },
+        {
+          "intended_vsync_to_input_ms": 1.801268,
+          "input_to_sync_queued_ms": 5.7306,
+          "sync_start_to_swap_ms": 5.5192,
+          "swap_to_complete_ms": 9.2513
+        },
+        {
+          "intended_vsync_to_input_ms": 10.450602,
+          "input_to_sync_queued_ms": 3.0531,
+          "sync_start_to_swap_ms": 2.8826,
+          "swap_to_complete_ms": 21.8433
+        },
+        {
+          "intended_vsync_to_input_ms": 18.012136,
+          "input_to_sync_queued_ms": 3.7924,
+          "sync_start_to_swap_ms": 20.1544,
+          "swap_to_complete_ms": 18.9654
+        },
+        {
+          "intended_vsync_to_input_ms": 3.643104,
+          "input_to_sync_queued_ms": 2.3431,
+          "sync_start_to_swap_ms": 1.5359,
+          "swap_to_complete_ms": 42.0206
+        },
+        {
+          "intended_vsync_to_input_ms": 17.493238,
+          "input_to_sync_queued_ms": 1.6114,
+          "sync_start_to_swap_ms": 4.8658,
+          "swap_to_complete_ms": 5.333
+        }
+      ],
+      "target": "Close",
+      "start_seconds": 31.933,
+      "end_seconds": 33.604,
+      "frame_ms": [
+        36.106898,
+        23.088968,
+        43.890902,
+        66.642036,
+        77.046104,
+        73.237838
+      ]
+    },
+    {
+      "raw_framestats": "workflow-normal-16-framestats.txt",
+      "frame_components": [
+        {
+          "intended_vsync_to_input_ms": 7.260996,
+          "input_to_sync_queued_ms": 4.4201,
+          "sync_start_to_swap_ms": 2.5097,
+          "swap_to_complete_ms": 5.2193
+        },
+        {
+          "intended_vsync_to_input_ms": 51.03403,
+          "input_to_sync_queued_ms": 28.0928,
+          "sync_start_to_swap_ms": 19.0725,
+          "swap_to_complete_ms": 17.2509
+        },
+        {
+          "intended_vsync_to_input_ms": 23.736866,
+          "input_to_sync_queued_ms": 11.0768,
+          "sync_start_to_swap_ms": 10.8013,
+          "swap_to_complete_ms": 28.4082
+        },
+        {
+          "intended_vsync_to_input_ms": 7.652934,
+          "input_to_sync_queued_ms": 2.472,
+          "sync_start_to_swap_ms": 21.5748,
+          "swap_to_complete_ms": 5.8697
+        },
+        {
+          "intended_vsync_to_input_ms": 36.767068,
+          "input_to_sync_queued_ms": 12.1329,
+          "sync_start_to_swap_ms": 12.1983,
+          "swap_to_complete_ms": 27.3411
+        },
+        {
+          "intended_vsync_to_input_ms": 11.25037,
+          "input_to_sync_queued_ms": 3.608,
+          "sync_start_to_swap_ms": 8.6628,
+          "swap_to_complete_ms": 11.7932
+        },
+        {
+          "intended_vsync_to_input_ms": 39.533004,
+          "input_to_sync_queued_ms": 3.1259,
+          "sync_start_to_swap_ms": 3.8871,
+          "swap_to_complete_ms": 20.9943
+        }
+      ],
+      "target": "Home",
+      "start_seconds": 33.67,
+      "end_seconds": 35.233,
+      "frame_ms": [
+        19.490896,
+        118.25453,
+        79.314566,
+        73.683534,
+        96.810268,
+        67.44807,
+        74.296904
+      ]
+    }
+  ],
+  "renderer_frame_count": 170,
+  "renderer_p95_ms": 226.992268,
+  "renderer_over_33ms": 152,
+  "rapid_navigation_final_state_correct": true,
+  "measurement_scope": "Activity renderer on emulator; WindowManager transitions assessed from actual recording",
+  "frame_latency_definition": "FrameCompleted minus IntendedVsync; latency is not FPS. Label-guided inspection can perturb the emulator.",
+  "physical_printer_commands": 0
+}

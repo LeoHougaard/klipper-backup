@@ -1,0 +1,8 @@
+{
+  "passed": true,
+  "selection_inputs": 2,
+  "selection_does_not_heat": true,
+  "restart_preserves_selection": true,
+  "home_load_uses_visible_target": true,
+  "physical_printer_commands": 0
+}

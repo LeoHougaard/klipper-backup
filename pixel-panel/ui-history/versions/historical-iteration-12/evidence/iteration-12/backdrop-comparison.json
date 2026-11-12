@@ -1,0 +1,30 @@
+{
+  "idle-home": {
+    "outside_preview_changed_pixels": 0,
+    "max_model_rgb_delta": 0,
+    "model_changed_pixels": 0,
+    "model_pixels": 138414,
+    "changed_pixels": 9164
+  },
+  "heating-home": {
+    "outside_preview_changed_pixels": 0,
+    "max_model_rgb_delta": 0,
+    "model_changed_pixels": 0,
+    "model_pixels": 138414,
+    "changed_pixels": 9164
+  },
+  "printing-home": {
+    "outside_preview_changed_pixels": 0,
+    "max_model_rgb_delta": 1,
+    "model_changed_pixels": 8,
+    "model_pixels": 232678,
+    "changed_pixels": 75360
+  },
+  "paused-home": {
+    "outside_preview_changed_pixels": 0,
+    "max_model_rgb_delta": 1,
+    "model_changed_pixels": 8,
+    "model_pixels": 232678,
+    "changed_pixels": 75360
+  }
+}

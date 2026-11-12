@@ -1,0 +1,117 @@
+{
+  "id": "historical-final-workflows",
+  "label": "final-workflows",
+  "decision": "historical evidence; see saved assessment and evaluation ledger",
+  "recorded_utc": "2026-11-12T15:14:25.780326+00:00",
+  "recording_commit": "c7f4a690faffc95e564d0abb48482621955af761",
+  "historical_import": true,
+  "files": {
+    "evidence/final-workflows/01-idle.png": {
+      "sha256": "a6bc052f6d4ec0ba5635aef60e7d231cc923047ced5cacb05a96fce94baba821",
+      "bytes": 146151
+    },
+    "evidence/final-workflows/01-idle.xml": {
+      "sha256": "fb64129ed467a5c30373f6397507f9471cfb6f80289ab8cbe114aebcd0563a1b",
+      "bytes": 29547
+    },
+    "evidence/final-workflows/02-temperature-keypad.png": {
+      "sha256": "c6845e7194da1c238a1fa03c2c00a7ee69d27779b2e0607a3d6365cd7aa64ace",
+      "bytes": 117061
+    },
+    "evidence/final-workflows/02-temperature-keypad.xml": {
+      "sha256": "d22227e9d75f582c69a8fd9d8fe15df7c88a22974079c6b9aa342f352c4285d0",
+      "bytes": 13209
+    },
+    "evidence/final-workflows/03-printing.png": {
+      "sha256": "90e7e7cd8b7f423d7f07e7141682c5eab0ebcfc93a7efbc13b35675c85b7e6d2",
+      "bytes": 127589
+    },
+    "evidence/final-workflows/03-printing.xml": {
+      "sha256": "f136d86e4d72f137e509e77ca145b8a61edd59003f8e63e99b66703db0f16e7d",
+      "bytes": 21284
+    },
+    "evidence/final-workflows/04-tuning.png": {
+      "sha256": "e0811baecc3b7e532c73f909ac37c44d3395b911d0b14b5a7a67c8f3bcf54a38",
+      "bytes": 124708
+    },
+    "evidence/final-workflows/04-tuning.xml": {
+      "sha256": "643cf79eff46e43364ed29bf48a5efc7b40cb78beb2dc380a5ae48c8a42fab35",
+      "bytes": 13405
+    },
+    "evidence/final-workflows/05-paused.png": {
+      "sha256": "3c0273bb9023c53b6235d5e9861809764ce7081b284af0e127e8541ea093be80",
+      "bytes": 140180
+    },
+    "evidence/final-workflows/05-paused.xml": {
+      "sha256": "2d737fa28301abc991ebaf1f24fec58c10f3731545d2626fb849adfc177982c9",
+      "bytes": 22647
+    },
+    "evidence/final-workflows/06-paused-filament.png": {
+      "sha256": "4f6f403b4e372f2cf8fed56e5fcc2eb563732149f1fcc83847cf1d79637067c7",
+      "bytes": 136978
+    },
+    "evidence/final-workflows/06-paused-filament.xml": {
+      "sha256": "daf63521f01f4299f967fd1701e8c274b00990f9f05b515177b33868c1585d20",
+      "bytes": 24265
+    },
+    "evidence/final-workflows/07-move.png": {
+      "sha256": "26b80d5ca07d1ada6aff33a01e2c5a502aadb361d47da04d23cf5824e221425b",
+      "bytes": 150865
+    },
+    "evidence/final-workflows/07-move.xml": {
+      "sha256": "a4cd407c0cd6855c3cb513db4717eb9992f615ef315b91b47e50f655e115161e",
+      "bytes": 27153
+    },
+    "evidence/final-workflows/08-bed-setup.png": {
+      "sha256": "33fcb7ac3e4bd08fcdfb1a546ad08c2e92b56e1998acfac39f5c28cfa60b0f07",
+      "bytes": 163742
+    },
+    "evidence/final-workflows/08-bed-setup.xml": {
+      "sha256": "5333f1e1642343df8e95234c2855b87b8cd2cc2df68b0d4529e5eea03be3714a",
+      "bytes": 21401
+    },
+    "evidence/final-workflows/09-front-contact.png": {
+      "sha256": "78a8b41b978249bd4fdd43d44f61766a285bc7b071223e968524e7f7100aede9",
+      "bytes": 165593
+    },
+    "evidence/final-workflows/09-front-contact.xml": {
+      "sha256": "f62ac50d01ef62dce6d52401553322bd89c47615d1864e313831f81fec2b301f",
+      "bytes": 23417
+    },
+    "evidence/final-workflows/10-rear-contact.png": {
+      "sha256": "ec3866ff755bf04fa9956fd4115e86b56eda7e5ee84f4fe245a15a68a589a17f",
+      "bytes": 138497
+    },
+    "evidence/final-workflows/10-rear-contact.xml": {
+      "sha256": "344092745fa5b650145ae00f4b7d282690984898f13401b33c3a2851a3f585d1",
+      "bytes": 23409
+    },
+    "evidence/final-workflows/11-print-details.png": {
+      "sha256": "a40461dcae794b8e9713e5aa5dce7d727ea3dcb928422c7cecfbe20c42a511a2",
+      "bytes": 166547
+    },
+    "evidence/final-workflows/11-print-details.xml": {
+      "sha256": "e51a0951ae837faa138e185b4a14a05fd3f544bc384f55ddca7381dd702a208a",
+      "bytes": 8002
+    },
+    "evidence/final-workflows/results.json": {
+      "sha256": "28280100169009b4faec2daa8ade8a9fb8b7c62dc3eff87346b53f689c5a439c",
+      "bytes": 87
+    }
+  },
+  "screenshots": [
+    "evidence/final-workflows/01-idle.png",
+    "evidence/final-workflows/02-temperature-keypad.png",
+    "evidence/final-workflows/03-printing.png",
+    "evidence/final-workflows/04-tuning.png",
+    "evidence/final-workflows/05-paused.png",
+    "evidence/final-workflows/06-paused-filament.png",
+    "evidence/final-workflows/07-move.png",
+    "evidence/final-workflows/08-bed-setup.png",
+    "evidence/final-workflows/09-front-contact.png",
+    "evidence/final-workflows/10-rear-contact.png",
+    "evidence/final-workflows/11-print-details.png"
+  ],
+  "apks": [],
+  "restoration": "No original APK was preserved. Saved captures can be ranked; exact executable restoration is unavailable."
+}

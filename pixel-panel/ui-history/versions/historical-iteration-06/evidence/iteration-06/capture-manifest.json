@@ -1,0 +1,24 @@
+{
+  "idle-more": {
+    "state": "idle",
+    "screen": "more",
+    "sha256": "a83426e5f25a5161a7991d6a69ef89d63b183398cfe48e07666fafea99e74718"
+  },
+  "idle-home": {
+    "state": "idle",
+    "screen": "home",
+    "sha256": "a6bc052f6d4ec0ba5635aef60e7d231cc923047ced5cacb05a96fce94baba821"
+  },
+  "idle-filament": {
+    "state": "idle",
+    "screen": "filament",
+    "sha256": "91e134d770560314ec6dbc6c384f289054488971972eef9cd31295a453290d46"
+  },
+  "idle-connection": {
+    "state": "idle",
+    "screen": "connection",
+    "sha256": "23c9d29101b3f7b511adb27bde08dff7df4e0e7b80d538e8586c02e3eaa675d2"
+  },
+  "_source_commit": "9b906b256def2e5783484ba1eb7f1b11351238ae",
+  "_apk_sha256": "7b3ca444de1a68664c1bbe41070e8d86c45bb2d87faa8a59d5704258a32f5cfb"
+}

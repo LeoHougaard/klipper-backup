@@ -118,6 +118,16 @@ def wait_for_requests(fixture, count):
 
 
 def verify_fixture(port):
+    # A prior review may leave a numeric editor or its parent sheet open.
+    # Discard those edits before inspecting the connection page.
+    for _ in range(3):
+        root = snapshot()
+        close = next((label for label in ('Cancel', 'Close') if any(
+            n.get('clickable') == 'true' and n.get('text') == label
+            for n in root.iter('node'))), None)
+        if close is None:
+            break
+        tap(close, root)
     tap("Connection details")
     expected = f"http://127.0.0.1:{port}"
     assert any(n.get("content-desc") == "Moonraker address" and n.get("text") == expected

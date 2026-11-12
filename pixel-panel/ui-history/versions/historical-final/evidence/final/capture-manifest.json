@@ -1,0 +1,135 @@
+{
+  "_device": {
+    "serial": "emulator-5554",
+    "density": "Physical density: 420",
+    "font_scale": "1.0"
+  },
+  "idle-home": {
+    "state": "idle",
+    "screen": "home",
+    "sha256": "a6bc052f6d4ec0ba5635aef60e7d231cc923047ced5cacb05a96fce94baba821"
+  },
+  "heating-home": {
+    "state": "heating",
+    "screen": "home",
+    "sha256": "dc009e0e783c5999fefb2f79dfaa3a7bff22bdde8b6b509d794d5faee3dfe738"
+  },
+  "printing-home": {
+    "state": "printing",
+    "screen": "home",
+    "sha256": "b2f27cc4c84b21a404b6200683bbb1d1b6d33131c551a5e3108dcf4d440c3dca"
+  },
+  "paused-home": {
+    "state": "paused",
+    "screen": "home",
+    "sha256": "c0a716fcbda474b0057451f09658aadc41f74b160095b755e069525431978a0f"
+  },
+  "idle-move": {
+    "state": "idle",
+    "screen": "move",
+    "sha256": "695d223c2c66f19178221807069b57ea148981c6c91b79744e3ae6d1aba72dd0"
+  },
+  "idle-filament": {
+    "state": "idle",
+    "screen": "filament",
+    "sha256": "91e134d770560314ec6dbc6c384f289054488971972eef9cd31295a453290d46"
+  },
+  "idle-files": {
+    "state": "idle",
+    "screen": "files",
+    "sha256": "f543d4de3298e3474781ded2b2456d3ac245ea396c272187ed351156a2892e4e"
+  },
+  "idle-more": {
+    "state": "idle",
+    "screen": "more",
+    "sha256": "a83426e5f25a5161a7991d6a69ef89d63b183398cfe48e07666fafea99e74718"
+  },
+  "idle-connection": {
+    "state": "idle",
+    "screen": "connection",
+    "sha256": "23c9d29101b3f7b511adb27bde08dff7df4e0e7b80d538e8586c02e3eaa675d2"
+  },
+  "idle-temperature-keypad": {
+    "state": "idle",
+    "screen": "temperature-keypad",
+    "sha256": "f4798dd9640ec95e2a1eda622ef176b995bc9e8a98ed1232be9178f756f4d67c"
+  },
+  "printing-tuning": {
+    "state": "printing",
+    "screen": "tuning",
+    "sha256": "cd074c058eafb558625dd102ad1c543a868757586ec11c8168a055df865ceb67"
+  },
+  "idle-maintenance": {
+    "state": "idle",
+    "screen": "maintenance",
+    "sha256": "679b8c89ac1fb414df2a74e76d949eb25c2baa4b8c0ddfde8b8658716feb2f2c"
+  },
+  "idle-calibration": {
+    "state": "idle",
+    "screen": "calibration",
+    "sha256": "1d4bf999aa69282e00695b27ebd09201c3b6cc10f7f53732bc3acc0a42b0e861"
+  },
+  "front-calibration": {
+    "state": "front",
+    "screen": "calibration",
+    "sha256": "71d4b52a877e8c9a52b1c0fe7f4867358481e3607c9fb8c9234e862d2632bcd8"
+  },
+  "idle-heightmap": {
+    "state": "idle",
+    "screen": "heightmap",
+    "sha256": "0b28c00da36da598c6aea091315a5af8254d17aadd87c5e7e081c61d25ff2674"
+  },
+  "idle-presets": {
+    "state": "idle",
+    "screen": "presets",
+    "sha256": "2208ec08697180bd99ee2ca5f789fc4781cf2272b97d97676c02b7ef569a1586"
+  },
+  "paused-filament": {
+    "state": "paused",
+    "screen": "filament",
+    "sha256": "19d73bc09c9bd11af04a0f46f914113aff27c9b403063d4416930eedbf0786c7"
+  },
+  "_source_commit": "9b906b256def2e5783484ba1eb7f1b11351238ae",
+  "_source_sha256": {
+    "pixel-panel\\app\\AndroidManifest.xml": "7a070aeb9517964e267e477f42652e34c17590499a99e5d01bb87c8fbc11234f",
+    "pixel-panel\\app\\assets\\device.html": "50ed6cd73b906549d8b167c83be89d71413382a5c8f5f959889af6804da1533b",
+    "pixel-panel\\app\\res\\drawable\\icon.xml": "6239d6305b3ba47b5af9e5e6cb0ce5647e0ebea40b931d47db51b9464eb921b0",
+    "pixel-panel\\app\\res\\drawable\\panel_arrow.xml": "e06a0e39637d9d303e3d20075dcd5d835261487f89c178ee675756baea6ab36c",
+    "pixel-panel\\app\\res\\drawable\\panel_back.xml": "d84bb9e60a0adc1dfbf276d04710c31cb995f4a46eea2ce99a904ff357da81d0",
+    "pixel-panel\\app\\res\\drawable\\panel_bed.xml": "ee935b74a2f5d32634bc915a646d6da50f32fe341ba0f5979c3a34860b5c8ad4",
+    "pixel-panel\\app\\res\\drawable\\panel_calibrate.xml": "33a53d85e74cca9ab2db7926b07d218d297d98b6aeb13b523da496c22c4f1ae6",
+    "pixel-panel\\app\\res\\drawable\\panel_camera.xml": "ec3e27e70c20ac80c6c843832c2587e480755903be73341036af29eff3c9d833",
+    "pixel-panel\\app\\res\\drawable\\panel_check.xml": "2dfb3b0261d55a1ed09f0c4e8221c077935c815a4bfab9aee4e88dfc833bc191",
+    "pixel-panel\\app\\res\\drawable\\panel_cool.xml": "0c9e1f108d43bad35df0e7cbb910edc95401908eaccb8cc4e6c94eed9e725c91",
+    "pixel-panel\\app\\res\\drawable\\panel_down.xml": "1b8efc89947aa9580f1a4bdd0f72a24d50119adc242a6cf8aeb1f29bfc860dba",
+    "pixel-panel\\app\\res\\drawable\\panel_edit.xml": "2b8a881292c964a6beb33875befb6c7669dfeb8f01884896f1c0ac43d7c9fb50",
+    "pixel-panel\\app\\res\\drawable\\panel_filament.xml": "ae0ebc17492ce58cae870822fd853d540d8eec91ef3db97e1510763866a4dd01",
+    "pixel-panel\\app\\res\\drawable\\panel_files.xml": "2cc9fdff6905a56632f979f16e646506132e157fd92d57e34551fb17412e6d8f",
+    "pixel-panel\\app\\res\\drawable\\panel_heat.xml": "c3ccb1c24657258b3a40ae721a22b301bf9316314c248391c76b3cac54b1505e",
+    "pixel-panel\\app\\res\\drawable\\panel_home.xml": "282718bf0b7a9cf90c49d7ce6dac7876e971bfa87b243410a5bd76d360afd03d",
+    "pixel-panel\\app\\res\\drawable\\panel_left.xml": "4617a26cd9f2065fa857d62ccacd07a25e4f60a29707c46506ab35e43eae1240",
+    "pixel-panel\\app\\res\\drawable\\panel_light.xml": "ff972fbbf0ce3676ce2d15d0476970153af00ac6825bddb18dfa30a7413d80ef",
+    "pixel-panel\\app\\res\\drawable\\panel_load.xml": "b5fcd4819207428e2466bcf5d49baf2197a88bc22a6003e145c16457034a6895",
+    "pixel-panel\\app\\res\\drawable\\panel_more.xml": "d44af77d639326fcade6075f4af35134afedb73f92556dea8037efdfd354b06b",
+    "pixel-panel\\app\\res\\drawable\\panel_move.xml": "4ecba3aeb3cfaa6c62b67925e9c22b9858aa5977f3b841684f171a05d2506f3b",
+    "pixel-panel\\app\\res\\drawable\\panel_pause.xml": "729683570c4f6787bcd03222fb97d160d69804c4653dd9c88da4f6e2b979346f",
+    "pixel-panel\\app\\res\\drawable\\panel_play.xml": "d3aa0343ae790ac7d5187659eea97dc289ec75c7bc41d06a5cf47b87626c60dc",
+    "pixel-panel\\app\\res\\drawable\\panel_refresh.xml": "3030f1695acb75499c3944c0f73af1a8ea91f2e9fc69c0d1f08e90f4fd31a1d4",
+    "pixel-panel\\app\\res\\drawable\\panel_right.xml": "e06a0e39637d9d303e3d20075dcd5d835261487f89c178ee675756baea6ab36c",
+    "pixel-panel\\app\\res\\drawable\\panel_speed.xml": "b71096ae98b665c3a6874ccaff6461c2e141e56ca56889cbd1a9d54632ce3536",
+    "pixel-panel\\app\\res\\drawable\\panel_stop.xml": "f2b50ac9ecbe192ece85aaa7e4368cbe5a3d863945522c4c73e60bd1abd5ec4a",
+    "pixel-panel\\app\\res\\drawable\\panel_unload.xml": "7c632d578be4234f7879d73033522441238ab2449cffe6bb829639796446f335",
+    "pixel-panel\\app\\res\\drawable\\panel_up.xml": "9f0302b8c771ca38741a49c62ab4ab8bafd5c8562e818556ac934c225115db32",
+    "pixel-panel\\app\\res\\drawable\\panel_wifi.xml": "e2f146aeab468c2bbf4f3131598274f67ba86f34597ebc69f982cc2665955420",
+    "pixel-panel\\app\\res\\values\\styles.xml": "91cbdcb7e5bb62119bf6e55a8b5044d8af12c57a30115fbe40a6eaa9eb8fdc99",
+    "pixel-panel\\app\\src\\BedMeshView.java": "83cc2505cbb3fc5b417361aa08d4e765dd3ba29a284dfda28a5ea8f77a0057cf",
+    "pixel-panel\\app\\src\\ConnectionService.java": "cdf7bed4ef3e5cba98de1e0174dddd33f644fc87f14108703be676e92ef19338",
+    "pixel-panel\\app\\src\\IconMetrics.java": "9aa13f7dd4d14e53f9cab1cd4c2294fe11a3a37848571f20d257de17656d8181",
+    "pixel-panel\\app\\src\\MainActivity.java": "53db15db12275b62206933256c1151cf1ac79550da6dd123d80b5526177d8176",
+    "pixel-panel\\app\\src\\MonitorService.java": "74d80b9417000bc35367150894a5a7be4184dc7994ba82442ee04b08b1b21e98",
+    "pixel-panel\\app\\src\\PanelUi.java": "de62057b5bfbfe4244b75ba3ee187aa823c48af21c634a6336e8a3b196d8108e",
+    "pixel-panel\\app\\src\\PrinterClient.java": "ac44f87336a09394c3ff89e965144ddd151b349715bc10c4c287affcd547cca8",
+    "pixel-panel\\app\\src\\PrinterGateway.java": "fa853e18bc3bc987e5ff38566733eb5d26ffbf8bf53c19431b771b8c10aab083"
+  },
+  "_apk_sha256": "bdb3a56e7adae238f9fedf69fa5dd5d3a2007abbdfda44e5328a4b35b77ba7be"
+}

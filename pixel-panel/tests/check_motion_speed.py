@@ -4,7 +4,7 @@ import math
 import re
 from pathlib import Path
 from urllib.request import Request, urlopen
-from check_controls import SERIAL, adb, snapshot, tap, verify_fixture
+from check_controls import SERIAL, AGENT_DEVICE_COMMAND, adb, device, snapshot, tap, verify_fixture
 from check_workflows import click, wait_text, wait_until
 
 
@@ -53,7 +53,7 @@ def main():
         click('Z +')
         wait_until(lambda: len(scripts()) == before+2, 'Home Z jog')
         assert 'G0 Z0.1 F120' in scripts()[-1]
-        click('E +')
+        click('Feed')
         wait_until(lambda: len(scripts()) == before+3, 'Home E jog')
         assert 'G1 E5 F240' in scripts()[-1]
         root = snapshot()
@@ -62,10 +62,12 @@ def main():
         radius = (cy-uy)/.64
         angle = math.radians(-110)
         x,y = int(cx+math.cos(angle)*radius*.85), int(cy+math.sin(angle)*radius*.85)
-        adb('shell','input','tap',str(x),str(y))
+        if AGENT_DEVICE_COMMAND: device('press', str(x), str(y))
+        else: adb('shell','input','tap',str(x),str(y))
         wait_until(lambda: len(scripts()) == before+4, 'whole wheel sector responds outside label')
         assert 'G0 Y10 F2400' in scripts()[-1]
-        adb('shell','input','swipe',str(ux),str(uy),str(cx),str(cy+radius*.8),'600')
+        if AGENT_DEVICE_COMMAND: device('gesture', 'pan', str(ux), str(uy), str(cx-ux), str(int(cy+radius*.8)-uy), '600')
+        else: adb('shell','input','swipe',str(ux),str(uy),str(cx),str(cy+radius*.8),'600')
         # Fresh snapshot waits for the native frame; a drag must not jog.
         snapshot()
         assert len(scripts()) == before+4
@@ -75,7 +77,7 @@ def main():
         click('X −')
         wait_until(lambda: len(scripts()) == before+1, 'dedicated Move XY jog')
         assert 'G0 X-10 F2400' in scripts()[-1]
-        click('E −')
+        click('Retract')
         wait_until(lambda: len(scripts()) == before+2, 'dedicated Move E retraction')
         assert 'G1 E-5 F240' in scripts()[-1]
         state(print_stats={'state':'paused','filename':'test-plate.gcode'})
@@ -87,7 +89,7 @@ def main():
         state(print_stats={'state':'printing','filename':'test-plate.gcode'})
         wait_text('Printing')
         root = snapshot()
-        assert not any(n.get('enabled') == 'true' and n.get('text') in ('X +','Y +','Z +','E +') for n in root.iter('node'))
+        assert not any(n.get('enabled') == 'true' and n.get('text') in ('X +','Y +','Z +','Feed') for n in root.iter('node'))
         click('Home')
         click('Speed 100%'); number(115)
         wait_until(lambda: scripts()[-1] == 'M220 S115', 'direct print speed')
@@ -98,7 +100,8 @@ def main():
         (output/'speed-results.json').write_text(json.dumps({'passed':True,'physical_printer_commands':0},indent=2))
     finally:
         try:
-            adb('shell','input','keyevent','4')
+            if AGENT_DEVICE_COMMAND: device('back')
+            else: adb('shell','input','keyevent','4')
             state(**original)
             click('Prepare')
             for axis, speed in [('XY',20),('Z',5),('E',3)]:

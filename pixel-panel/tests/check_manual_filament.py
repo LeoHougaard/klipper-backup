@@ -70,14 +70,14 @@ def main():
         click('Move')
         wait_until(lambda: len(scripts())==before+2,'leaving filament cancels pending extrusion')
         assert scripts()[-1]=='SET_HEATER_TEMPERATURE HEATER=extruder TARGET=0'
-        click('E +'); wait_text('Heat the nozzle first')
+        click('Feed'); wait_text('Heat the nozzle first')
         assert len(scripts())==before+2
         hot(190)  # Manual E obeys Klipper readiness, independently of the 240° macro preset.
         wait_text('190°')
         click('Extrusion distance'); digits('7.5')
-        click('E +')
+        click('Feed')
         wait_until(lambda: 'G1 E7.5 F180' in scripts()[-1],'manual extrusion distance')
-        click('E −')
+        click('Retract')
         wait_until(lambda: 'G1 E-7.5 F180' in scripts()[-1],'manual retraction distance')
         click('Set X position'); digits('80')
         wait_until(lambda: 'G0 X20 F1200' in scripts()[-1],'absolute physical X through relative safe move')

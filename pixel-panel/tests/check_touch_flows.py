@@ -50,7 +50,7 @@ def main():
 
         tap("Set target")
         tap("Custom target")
-        wait_text("Temperature target")
+        wait_text("Nozzle target (°C)")
         wait_until(lambda: not any("inputmethod" in n.get("package", "")
                                   for n in snapshot().iter("node")), "system keyboard stays hidden for touch keypad")
         root = snapshot()
@@ -75,7 +75,7 @@ def main():
         tap("Custom target")
         adb("shell", "input", "keyevent", "4")
         wait_text("Nozzle temperature")
-        assert not any(n.get("text") == "Temperature target" for n in snapshot().iter("node"))
+        assert not any(n.get("text") == "Nozzle target (°C)" for n in snapshot().iter("node"))
         tap("Close")
         tap("Files")
         adb("shell", "input", "keyevent", "4")

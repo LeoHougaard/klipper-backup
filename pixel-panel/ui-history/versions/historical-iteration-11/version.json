@@ -1,0 +1,336 @@
+{
+  "id": "historical-iteration-11",
+  "label": "iteration-11",
+  "decision": "historical evidence; see saved assessment and evaluation ledger",
+  "recorded_utc": "2026-11-12T15:14:28.434915+00:00",
+  "recording_commit": "c7f4a690faffc95e564d0abb48482621955af761",
+  "historical_import": true,
+  "files": {
+    "evidence/iteration-11/captures/capture-manifest.json": {
+      "sha256": "3c6011d5e04f4973b571e24ae8b9205d2290a7ce6d6b3c275ff982eed7c2a3a9",
+      "bytes": 8347
+    },
+    "evidence/iteration-11/captures/front-calibration.png": {
+      "sha256": "b41a467d4168489c60c61572ddbe4e9d377f39174aac86a5b16323dc607af196",
+      "bytes": 140658
+    },
+    "evidence/iteration-11/captures/front-calibration.xml": {
+      "sha256": "7a393325235d523b8c7c1d6791869ec0222274f561dc4d4eb1bf8e74692e59fd",
+      "bytes": 12245
+    },
+    "evidence/iteration-11/captures/heating-home.png": {
+      "sha256": "a984ed1626d3cc5d859640e10ded7636286ee96656e8f3df0c4e6486e252c204",
+      "bytes": 134134
+    },
+    "evidence/iteration-11/captures/heating-home.xml": {
+      "sha256": "4996e9547a95cb6d2ca958919c9244cb6daa0ebe33d99a1b1bfc007af84310f4",
+      "bytes": 15769
+    },
+    "evidence/iteration-11/captures/idle-calibration.png": {
+      "sha256": "84b01631ea119f66d4571a7e4372172014e98762989f360b0e5ca274a606825f",
+      "bytes": 160969
+    },
+    "evidence/iteration-11/captures/idle-calibration.xml": {
+      "sha256": "edc40e784214b9a8e2b1f96821e5b7e03955e8cc032e4783932dea57885c575b",
+      "bytes": 11592
+    },
+    "evidence/iteration-11/captures/idle-connection.png": {
+      "sha256": "4f60d9b40154555c8a9b57d38890fd79a0b1da19e28b8606bd0c5be743606163",
+      "bytes": 138249
+    },
+    "evidence/iteration-11/captures/idle-connection.xml": {
+      "sha256": "eae5d87193f792dd0bdb987476d9ce3d33d4b4fc197d00b89dc0e46af8ae940e",
+      "bytes": 12739
+    },
+    "evidence/iteration-11/captures/idle-filament-keypad.png": {
+      "sha256": "0fd04e929b9622afef30a31a2a4a27b60f90169d0363b873b99b90350d52f234",
+      "bytes": 122635
+    },
+    "evidence/iteration-11/captures/idle-filament-keypad.xml": {
+      "sha256": "b9f00740a320f2d167ccea72eb0327471f877ca1489b5239700653cc59a622db",
+      "bytes": 7073
+    },
+    "evidence/iteration-11/captures/idle-filament.png": {
+      "sha256": "ada98de547cfe67957aff9ad3df0cdbb25a30005ab0108c5dd85a62983d5df54",
+      "bytes": 132663
+    },
+    "evidence/iteration-11/captures/idle-filament.xml": {
+      "sha256": "2e2fd274e8b92bdfe9604436c801d2a7664eec1507e76daf334f71076d9607c8",
+      "bytes": 12474
+    },
+    "evidence/iteration-11/captures/idle-files.png": {
+      "sha256": "982a3fbda65b228cc12a518d85c008479237ac5d2c65f6f7c7124fda8a0e0270",
+      "bytes": 145332
+    },
+    "evidence/iteration-11/captures/idle-files.xml": {
+      "sha256": "3081a36313badba90b9f959793833309710a9e2d0e043be366d029282ed49448",
+      "bytes": 14243
+    },
+    "evidence/iteration-11/captures/idle-heightmap.png": {
+      "sha256": "30f125163a320ceeca6088cb51c38a27cd548a9f7f4faa1c86b8ad10cc05702b",
+      "bytes": 132979
+    },
+    "evidence/iteration-11/captures/idle-heightmap.xml": {
+      "sha256": "e13e525b4e2df3f809e0e13d998185ce88f1d4adb2d4a7ec7b8570691dd1d9cd",
+      "bytes": 3446
+    },
+    "evidence/iteration-11/captures/idle-home.png": {
+      "sha256": "56d38b2e8f656043378f4bd2f564fe4ae717d95059130a94ce7a6d293a26481c",
+      "bytes": 132953
+    },
+    "evidence/iteration-11/captures/idle-home.xml": {
+      "sha256": "7ba0929a9a3d72fe118cc8671350e573fe5af855a7bac1960026ca50b873b48b",
+      "bytes": 15759
+    },
+    "evidence/iteration-11/captures/idle-maintenance.png": {
+      "sha256": "2852c933adb498ca1943a26cbd8088a696e279f6ebaf49294f8b10bddda54dce",
+      "bytes": 150958
+    },
+    "evidence/iteration-11/captures/idle-maintenance.xml": {
+      "sha256": "2d4379deadda6e601ece61b1e4e52fa4afbd01cfcac3974223b4a3d0dc2afa9d",
+      "bytes": 4163
+    },
+    "evidence/iteration-11/captures/idle-more.png": {
+      "sha256": "2feac06e2c99f4cbf6963df108c8948a1a8b02a23bde8533151bb403b77f72e1",
+      "bytes": 154436
+    },
+    "evidence/iteration-11/captures/idle-more.xml": {
+      "sha256": "514e6e4d646c74907c075186d670a186b0e2f7a37c85d43bda35e6b40cbe67e9",
+      "bytes": 14963
+    },
+    "evidence/iteration-11/captures/idle-move.png": {
+      "sha256": "c6c576a28b034aee4aadf6f4c79b7fdb93d3d8d789011ff354e57583425ca28e",
+      "bytes": 133222
+    },
+    "evidence/iteration-11/captures/idle-move.xml": {
+      "sha256": "6bfb4b63ef1a9efdfb164136e18d158557a28892a25c6ac30dd7e45e212ebb62",
+      "bytes": 14039
+    },
+    "evidence/iteration-11/captures/idle-presets.png": {
+      "sha256": "7116d83bcf9f44d5301cf0835e77d986d32854015dc5eeb1c20aaa65377e9f25",
+      "bytes": 129746
+    },
+    "evidence/iteration-11/captures/idle-presets.xml": {
+      "sha256": "5724c697058010d1206ced8382741b4d595d1c8d68e8f30a0fd6e7112e005daa",
+      "bytes": 3441
+    },
+    "evidence/iteration-11/captures/idle-temperature-keypad.png": {
+      "sha256": "cd9fb9df63f58a27212e62c5ab855b5d3ff21a79379d3d722a76807dfd0c47ed",
+      "bytes": 104703
+    },
+    "evidence/iteration-11/captures/idle-temperature-keypad.xml": {
+      "sha256": "a67f83bbe1324c7abbc8d218f87fab1332a950ad59ff54cf5433f41af4a94f75",
+      "bytes": 7061
+    },
+    "evidence/iteration-11/captures/paused-filament.png": {
+      "sha256": "4c5feaa22ffe89f620a7c13b8724b17e18c8f300b7c759b126b5a29774331d02",
+      "bytes": 129954
+    },
+    "evidence/iteration-11/captures/paused-filament.xml": {
+      "sha256": "04e2d0c55bab44fb3796a41bb51e9f13cbaba346ef87d761338a93c4109d08de",
+      "bytes": 12650
+    },
+    "evidence/iteration-11/captures/paused-home.png": {
+      "sha256": "65851adb8636664db247e166e7cd496b34610e1a5b657fb74e2be88ee8cd8605",
+      "bytes": 140110
+    },
+    "evidence/iteration-11/captures/paused-home.xml": {
+      "sha256": "5f748ee9d674861b0ef8661bc4a8279810f4758624afc4b540ac7156eec22e87",
+      "bytes": 12248
+    },
+    "evidence/iteration-11/captures/printing-home.png": {
+      "sha256": "48ae7ec47b5ef1631908028f31d9dfbe0f624649de268e8ada3d8d744589815f",
+      "bytes": 133281
+    },
+    "evidence/iteration-11/captures/printing-home.xml": {
+      "sha256": "ed13b38b1953f44b98709f6c73076042a019ddd7373acda2b08477d428ef198d",
+      "bytes": 11595
+    },
+    "evidence/iteration-11/captures/printing-tuning.png": {
+      "sha256": "960e95e64dc5505e95f37290982fd9faa7401b8bad62c2e319009b4275046a21",
+      "bytes": 113403
+    },
+    "evidence/iteration-11/captures/printing-tuning.xml": {
+      "sha256": "7cfb60da26493bc088887dcf52b7080cc4c4fc307189405bf155bf6b7c06be98",
+      "bytes": 7270
+    },
+    "evidence/iteration-11/filament-workflows/01-custom-cold.png": {
+      "sha256": "289cb79ad6925b1e54880557de972a0b0bd435a95fd5e43f1377b8c439dadda8",
+      "bytes": 131990
+    },
+    "evidence/iteration-11/filament-workflows/01-custom-cold.xml": {
+      "sha256": "23b93ca5da53316a296518f63e7317b3be6d1fa1468f986b8960ae1461333db4",
+      "bytes": 12475
+    },
+    "evidence/iteration-11/filament-workflows/02-heating.png": {
+      "sha256": "87f718553adb9304f59ecedce9eedee439c5aa7684af48e8a6866b86d7e5fd59",
+      "bytes": 114325
+    },
+    "evidence/iteration-11/filament-workflows/02-heating.xml": {
+      "sha256": "3da673fcb2a667e7d16fc7f4ab46170de9fb743e8332f1a3e04331aedd566e6b",
+      "bytes": 12890
+    },
+    "evidence/iteration-11/filament-workflows/03-custom-feed.png": {
+      "sha256": "d32320d8e81a4ae4604ecf6dd633c564064586234b3ce7534c4c46fa55de2c0a",
+      "bytes": 119149
+    },
+    "evidence/iteration-11/filament-workflows/03-custom-feed.xml": {
+      "sha256": "a24557d0987f958a8a1a89d211ef732a299262a3d8779b90b94017d044f19dee",
+      "bytes": 12669
+    },
+    "evidence/iteration-11/filament-workflows/04-paused-heating.png": {
+      "sha256": "cee0d1d71e7d79b333877a30813cbf8d8eca4aa795e430cd12f50fac57656e5b",
+      "bytes": 119146
+    },
+    "evidence/iteration-11/filament-workflows/04-paused-heating.xml": {
+      "sha256": "ae270bbd0960b505a036a6cf65e839165e1adb9eee89efea2dbb42e8b9fcf4e4",
+      "bytes": 12921
+    },
+    "evidence/iteration-11/filament-workflows/05-paused.png": {
+      "sha256": "66a108d7ff0dcf9ae6a96b018f75ed7a9d44d2948bb04e175501638c13bd155a",
+      "bytes": 130160
+    },
+    "evidence/iteration-11/filament-workflows/05-paused.xml": {
+      "sha256": "41b29b44922bf3d8219bd7855d7e4ed4c98411cda258fc7b4ab1f35c83ef3539",
+      "bytes": 13033
+    },
+    "evidence/iteration-11/filament-workflows/results.json": {
+      "sha256": "ab050e2120633a819b29e474f958aa01728612e2cf83bfdf6472b98ec816e2b3",
+      "bytes": 57
+    },
+    "evidence/iteration-11/workflows/01-idle.png": {
+      "sha256": "a6bc052f6d4ec0ba5635aef60e7d231cc923047ced5cacb05a96fce94baba821",
+      "bytes": 146151
+    },
+    "evidence/iteration-11/workflows/01-idle.xml": {
+      "sha256": "7ba0929a9a3d72fe118cc8671350e573fe5af855a7bac1960026ca50b873b48b",
+      "bytes": 15759
+    },
+    "evidence/iteration-11/workflows/02-temperature-keypad.png": {
+      "sha256": "96b7447280fabc1a95d41c66fd5ae325ddf4aea7ad0e0b86c3c1689e6463fa14",
+      "bytes": 124105
+    },
+    "evidence/iteration-11/workflows/02-temperature-keypad.xml": {
+      "sha256": "3ab2cdf244cd8bec618e06ea6a6e619676c6aa1b2ae533a77ac2ec586e17b08a",
+      "bytes": 7062
+    },
+    "evidence/iteration-11/workflows/03-printing.png": {
+      "sha256": "a06613eaaf523303d85ea5d882203d23e3900a1570619e37752938fcf1f0fc26",
+      "bytes": 128863
+    },
+    "evidence/iteration-11/workflows/03-printing.xml": {
+      "sha256": "ee251711e2de850b949228096f4f73fbdd5d23143675f7083de046865d0ce2b0",
+      "bytes": 11513
+    },
+    "evidence/iteration-11/workflows/04-tuning.png": {
+      "sha256": "9bceede870115a1ce58322ee3ec27f4cc45357323cb5275c436f3c08cfbf870d",
+      "bytes": 124439
+    },
+    "evidence/iteration-11/workflows/04-tuning.xml": {
+      "sha256": "7cfb60da26493bc088887dcf52b7080cc4c4fc307189405bf155bf6b7c06be98",
+      "bytes": 7270
+    },
+    "evidence/iteration-11/workflows/05-paused.png": {
+      "sha256": "0b3876131bab144776811743b91b57ad0fca568566a646fdef1c39daf3716925",
+      "bytes": 141652
+    },
+    "evidence/iteration-11/workflows/05-paused.xml": {
+      "sha256": "f67d2d62ac16d2d2b5f7fca8c87a876ffdbdf53c280fb41cc357430e19194ac5",
+      "bytes": 12412
+    },
+    "evidence/iteration-11/workflows/06-paused-filament.png": {
+      "sha256": "29ce42a789dd4dbe6d8db763f5f3574d88bd7264de403015fc031add4b600046",
+      "bytes": 135843
+    },
+    "evidence/iteration-11/workflows/06-paused-filament.xml": {
+      "sha256": "eebf5d654f8664e437f169d27848b822fffb56a2687c8ecd0e64391500f5ab91",
+      "bytes": 12906
+    },
+    "evidence/iteration-11/workflows/07-move.png": {
+      "sha256": "3cde46c1c621601f73af7c0437809a0c4c173c600ffe8371aa73c036d6b8309a",
+      "bytes": 151049
+    },
+    "evidence/iteration-11/workflows/07-move.xml": {
+      "sha256": "a6f565193077400bd7d57e5cbff2d4d2b8d35ff053e947b3ede0cc56fe343522",
+      "bytes": 14295
+    },
+    "evidence/iteration-11/workflows/08-bed-setup.png": {
+      "sha256": "e4a05eeb1c8c08c08eb905244d7b38a80eaaabbcfefff84a34bccafdc2bc8489",
+      "bytes": 161626
+    },
+    "evidence/iteration-11/workflows/08-bed-setup.xml": {
+      "sha256": "4c5e8a461d2df04e54e9eba87f98b56f74a6ea0f6658382b3fff035a024e2185",
+      "bytes": 11298
+    },
+    "evidence/iteration-11/workflows/09-front-contact.png": {
+      "sha256": "dca06d016a396dc2dd4ca7f14a81bedaa96fdaaf304c59f3cfd84c3683778d9d",
+      "bytes": 164578
+    },
+    "evidence/iteration-11/workflows/09-front-contact.xml": {
+      "sha256": "f3f99fafdc942706003f7ffa47eec06d7fa26888ab043d671121a51c6bc34299",
+      "bytes": 12537
+    },
+    "evidence/iteration-11/workflows/10-rear-contact.png": {
+      "sha256": "e7543461e52a7d58cec696f270732411c62148edc8ae94ab73057fcbc5a03727",
+      "bytes": 137870
+    },
+    "evidence/iteration-11/workflows/10-rear-contact.xml": {
+      "sha256": "dd12195d58c0a1cf01b1f8143976ee00cd8dc87e175fadd872e28c5ef43d3fc4",
+      "bytes": 12521
+    },
+    "evidence/iteration-11/workflows/11-print-details.png": {
+      "sha256": "722b267ccb4ac03a13d1d59982d062dc6e1d5d49966b3a6d1c8bd9dc078b611f",
+      "bytes": 166337
+    },
+    "evidence/iteration-11/workflows/11-print-details.xml": {
+      "sha256": "14d2c44eba24c907cf9f36d4958ed3c8bb00dacdcf45dc38cc26e334d28a996f",
+      "bytes": 3615
+    },
+    "evidence/iteration-11/workflows/geometry-report.json": {
+      "sha256": "e338a8eef3535bb07ab2b1502e1a667a701ad090456941b935b1b62b9c2f5c83",
+      "bytes": 42770
+    },
+    "evidence/iteration-11/workflows/results.json": {
+      "sha256": "28280100169009b4faec2daa8ade8a9fb8b7c62dc3eff87346b53f689c5a439c",
+      "bytes": 87
+    }
+  },
+  "screenshots": [
+    "evidence/iteration-11/captures/front-calibration.png",
+    "evidence/iteration-11/captures/heating-home.png",
+    "evidence/iteration-11/captures/idle-calibration.png",
+    "evidence/iteration-11/captures/idle-connection.png",
+    "evidence/iteration-11/captures/idle-filament-keypad.png",
+    "evidence/iteration-11/captures/idle-filament.png",
+    "evidence/iteration-11/captures/idle-files.png",
+    "evidence/iteration-11/captures/idle-heightmap.png",
+    "evidence/iteration-11/captures/idle-home.png",
+    "evidence/iteration-11/captures/idle-maintenance.png",
+    "evidence/iteration-11/captures/idle-more.png",
+    "evidence/iteration-11/captures/idle-move.png",
+    "evidence/iteration-11/captures/idle-presets.png",
+    "evidence/iteration-11/captures/idle-temperature-keypad.png",
+    "evidence/iteration-11/captures/paused-filament.png",
+    "evidence/iteration-11/captures/paused-home.png",
+    "evidence/iteration-11/captures/printing-home.png",
+    "evidence/iteration-11/captures/printing-tuning.png",
+    "evidence/iteration-11/filament-workflows/01-custom-cold.png",
+    "evidence/iteration-11/filament-workflows/02-heating.png",
+    "evidence/iteration-11/filament-workflows/03-custom-feed.png",
+    "evidence/iteration-11/filament-workflows/04-paused-heating.png",
+    "evidence/iteration-11/filament-workflows/05-paused.png",
+    "evidence/iteration-11/workflows/01-idle.png",
+    "evidence/iteration-11/workflows/02-temperature-keypad.png",
+    "evidence/iteration-11/workflows/03-printing.png",
+    "evidence/iteration-11/workflows/04-tuning.png",
+    "evidence/iteration-11/workflows/05-paused.png",
+    "evidence/iteration-11/workflows/06-paused-filament.png",
+    "evidence/iteration-11/workflows/07-move.png",
+    "evidence/iteration-11/workflows/08-bed-setup.png",
+    "evidence/iteration-11/workflows/09-front-contact.png",
+    "evidence/iteration-11/workflows/10-rear-contact.png",
+    "evidence/iteration-11/workflows/11-print-details.png"
+  ],
+  "apks": [],
+  "restoration": "No original APK was preserved. Saved captures can be ranked; exact executable restoration is unavailable."
+}

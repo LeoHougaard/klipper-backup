@@ -1,0 +1,9 @@
+{
+  "initial_test": "Device quick swipe/fling",
+  "observed_last_target_c": 45,
+  "expected_precise_pan_target_c": 40,
+  "resolution": "Use documented structured pan with explicit 168 px delta and 450 ms duration. The unchanged 40 C assertion passes.",
+  "app_gesture_handler_changed": false,
+  "failed_capture_folder": "layout",
+  "corrected_run_folder": "layout-precise-pan"
+}

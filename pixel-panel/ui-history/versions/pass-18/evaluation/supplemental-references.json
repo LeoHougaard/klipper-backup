@@ -1,0 +1,195 @@
+{
+  "purpose": "Additional primary-source UI examples and inferred design lessons. These do not replace or rescore the frozen Bambu reference.",
+  "references": [
+    {
+      "id": "bm-camera",
+      "title": "Blackmagic Camera HUD",
+      "source": "https://www.blackmagicdesign.com/products/blackmagiccamera",
+      "image": "https://images.blackmagicdesign.com/images/products/blackmagiccamera/landing/interactive/camera-en.jpg?_v=1790916158",
+      "lesson": "Keep live readings editable where they are read.",
+      "scored": false,
+      "available": true,
+      "sha256": "bddb3d59c9b3a79c74502dd6b9a61f0d931f732158fa80534b28bea0f5064c5b",
+      "file": "bm-camera.jpg",
+      "dimensions": [
+        495,
+        249
+      ]
+    },
+    {
+      "id": "bm-iso",
+      "title": "Blackmagic Camera ISO",
+      "source": "https://www.blackmagicdesign.com/products/blackmagiccamera",
+      "image": "https://images.blackmagicdesign.com/images/products/blackmagiccamera/landing/hud/adjustments/iso-en.jpg?_v=1771453114",
+      "lesson": "A focused parameter palette can offer common values without a separate settings page.",
+      "scored": false,
+      "available": true,
+      "sha256": "09112826d152e2efbcbddbb9045b9b6660cf63e1b2d414186af1639d70efd27f",
+      "file": "bm-iso.jpg",
+      "dimensions": [
+        485,
+        264
+      ]
+    },
+    {
+      "id": "bm-shutter",
+      "title": "Blackmagic Camera shutter",
+      "source": "https://www.blackmagicdesign.com/products/blackmagiccamera",
+      "image": "https://images.blackmagicdesign.com/images/products/blackmagiccamera/landing/hud/adjustments/shutter-speed-en.jpg?_v=1771466196",
+      "lesson": "Keep the parameter name and its unit attached to the adjustment.",
+      "scored": false,
+      "available": true,
+      "sha256": "8aa80372e164fdea1e0d8c0b29892d337caeb7153a39392c7b0a07f054c17441",
+      "file": "bm-shutter.jpg",
+      "dimensions": [
+        485,
+        264
+      ]
+    },
+    {
+      "id": "bm-white-balance",
+      "title": "Blackmagic Camera white balance",
+      "source": "https://www.blackmagicdesign.com/products/blackmagiccamera",
+      "image": "https://images.blackmagicdesign.com/images/products/blackmagiccamera/landing/hud/adjustments/white-balance-tint-en.jpg?_v=1771453154",
+      "lesson": "Combine useful presets with precise control.",
+      "scored": false,
+      "available": true,
+      "sha256": "9e53bc035ad16bb705cb7c7e82bb9a34711658f23974d7327c50dd0bfe9aa5f2",
+      "file": "bm-white-balance.jpg",
+      "dimensions": [
+        485,
+        264
+      ]
+    },
+    {
+      "id": "bm-presets",
+      "title": "Blackmagic Camera presets",
+      "source": "https://www.blackmagicdesign.com/products/blackmagiccamera",
+      "image": "https://images.blackmagicdesign.com/images/products/blackmagiccamera/landing/hud-additional-controls/adjustments/presets-en.jpg?_v=1771459219",
+      "lesson": "Secondary presets belong in a focused palette.",
+      "scored": false,
+      "available": true,
+      "sha256": "923bc3d5c4087967eb5295648cd7d6f06aa5b0c66211e6cdc8a782ac9309bb82",
+      "file": "bm-presets.jpg",
+      "dimensions": [
+        485,
+        264
+      ]
+    },
+    {
+      "id": "bm-media",
+      "title": "Blackmagic Camera media",
+      "source": "https://www.blackmagicdesign.com/products/blackmagiccamera",
+      "image": "https://images.blackmagicdesign.com/images/products/blackmagiccamera/landing/interactive/media-en.jpg?_v=1791154373",
+      "lesson": "Keep preview, identity and actions related in a media task.",
+      "scored": false,
+      "available": true,
+      "sha256": "94a54cd4e77e5e3fdc8915c5bb5da727350fd528f142319f91e9aa998b984921",
+      "file": "bm-media.jpg",
+      "dimensions": [
+        358,
+        180
+      ]
+    },
+    {
+      "id": "bm-os-gain",
+      "title": "Blackmagic OS gain",
+      "source": "https://www.blackmagicdesign.com/products/blackmagicstudiocamera/blackmagicos",
+      "image": "https://images.blackmagicdesign.com/images/products/blackmagicstudiocamera/blackmagicos/screen-controls/gain/gain.jpg?_v=1693265556",
+      "lesson": "Show a small set of discrete common values with clear selection.",
+      "scored": false,
+      "available": true,
+      "sha256": "5c0c41b8aa11e3de6d0f1c34052e15c510918ab0483793a3cf22d739f535174c",
+      "file": "bm-os-gain.jpg",
+      "dimensions": [
+        970,
+        606
+      ]
+    },
+    {
+      "id": "bm-os-white-balance",
+      "title": "Blackmagic OS white balance",
+      "source": "https://www.blackmagicdesign.com/products/blackmagicstudiocamera/blackmagicos",
+      "image": "https://images.blackmagicdesign.com/images/products/blackmagicstudiocamera/blackmagicos/screen-controls/white-balance/white-balance.jpg?_v=1693265567",
+      "lesson": "Preserve the viewing context while editing one value.",
+      "scored": false,
+      "available": true,
+      "sha256": "63551d9e5294161c695284ccc6361f06cdc2e2d9aacef9cc0bed31d4d05dec77",
+      "file": "bm-os-white-balance.jpg",
+      "dimensions": [
+        970,
+        606
+      ]
+    },
+    {
+      "id": "ha-climate",
+      "title": "Home Assistant climate dialog",
+      "source": "https://www.home-assistant.io/blog/2023/09/06/release-20239/",
+      "image": "https://www.home-assistant.io/images/blog/2023-09/climate-card.png",
+      "lesson": "Separate current reading, target, operating state and adjustment.",
+      "scored": false,
+      "available": true,
+      "sha256": "666c4f7a5507d2831266da5d5bb21bbe9cc58fb6113947424ae9b6e3e5724af5",
+      "file": "ha-climate.png",
+      "dimensions": [
+        677,
+        761
+      ]
+    },
+    {
+      "id": "ha-tiles",
+      "title": "Home Assistant tile affordance",
+      "source": "https://www.home-assistant.io/dashboards/tile/",
+      "image": "https://www.home-assistant.io/images/dashboards/tile_card_tap_action.webp",
+      "lesson": "Make the tap affordance recognizable alongside a status reading.",
+      "scored": false,
+      "available": true,
+      "sha256": "0d27c066d043936288bdda1808cf3ee04b5fe001dab3b723722a627672731376",
+      "file": "ha-tiles.webp",
+      "dimensions": [
+        917,
+        240
+      ]
+    },
+    {
+      "id": "ha-features",
+      "title": "Home Assistant related controls",
+      "source": "https://www.home-assistant.io/blog/2023/09/06/release-20239/",
+      "image": "https://www.home-assistant.io/images/blog/2023-09/tile-features.png",
+      "lesson": "Place a frequently used feature next to the thing it controls.",
+      "scored": false,
+      "available": true,
+      "sha256": "077aa75384a69ca25733607b6f4cee149d6cb73addd9388cd23fe73a8bc925ab",
+      "file": "ha-features.png",
+      "dimensions": [
+        605,
+        581
+      ]
+    },
+    {
+      "id": "tesla-climate",
+      "title": "Tesla climate controls",
+      "source": "https://www.tesla.com/ownersmanual/model3/en_us/GUID-4F3599A1-20D9-4A49-B4A0-5261F957C096.html",
+      "image": "https://www.tesla.com/ownersmanual/images/GUID-35C4CCE3-62C5-4BE3-9D06-56F564FF3520-online-en-US.png",
+      "lesson": "Keep common adjustments close to the persistent reading and group related functions.",
+      "scored": false,
+      "available": false,
+      "reason": "Image host returned HTTP 403; not used for visual comparison"
+    },
+    {
+      "id": "prusa-home",
+      "title": "Prusa CORE One main screen",
+      "source": "https://help.prusa3d.com/article/lcd-menu-core-one_829752",
+      "image": "https://help.prusa3d.com/wp-content/uploads/2025/01/de7ca9c1a6495eb62f322c855396bff5.jpg",
+      "lesson": "Use a stable status footer and recognizable task entry points.",
+      "scored": false,
+      "available": true,
+      "sha256": "f32a6670a452af5aa55487b8b06ac1a2df6bd37c90e8b9ed946ea67f2053aed7",
+      "file": "prusa-home.jpg",
+      "dimensions": [
+        1600,
+        1199
+      ]
+    }
+  ]
+}

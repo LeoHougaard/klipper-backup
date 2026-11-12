@@ -1,0 +1,24 @@
+{
+  "idle-home": {
+    "state": "idle",
+    "screen": "home",
+    "sha256": "53bbe76242f9caf8914f2e9f30949d5bc294f9f4718d062cdc31ef9bc6b3d43f"
+  },
+  "idle-filament": {
+    "state": "idle",
+    "screen": "filament",
+    "sha256": "1a7f6dd18779ca2592705247b6f0b14f180478fe485b4a668df1289876d51a7f"
+  },
+  "printing-tuning": {
+    "state": "printing",
+    "screen": "tuning",
+    "sha256": "d1d2595bbc80a8fe026e0f1eb404f6d465fa645974e38a6a0fe738d7bc0d7a40"
+  },
+  "idle-temperature-keypad": {
+    "state": "idle",
+    "screen": "temperature-keypad",
+    "sha256": "2dd86e939ea4defc22a85ee70f52139095886b5fab4c7f4b2ea2b7dd9a5627bb"
+  },
+  "_source_commit": "9b906b256def2e5783484ba1eb7f1b11351238ae",
+  "_apk_sha256": "49d48b1bd12e641be86e58335864464e0beb2f1f8d7cee7530b58183b2d8902f"
+}

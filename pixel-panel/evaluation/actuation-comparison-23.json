@@ -1,0 +1,50 @@
+{
+  "baseline_apk_sha256": "618302441b132709424e581beb0c097eac806296c7df524613b2b6fb9ba75537",
+  "candidate_apk_sha256": "8581c56f0e1ea0e3f5b7af32ee77e6656c5b9685b240c4cf90e395ec2a461541",
+  "baseline": {
+    "intent_fidelity": 9.090909090909092,
+    "input_efficiency": 9.09047619047619,
+    "context_and_editing": 2.0,
+    "interruption_and_recovery": 10.0,
+    "total_inputs": 45,
+    "critical_known_defects": [
+      "Selected multi-digit input is overwritten unless Clear is used"
+    ],
+    "inputs_by_task": {
+      "XY common jog": 4,
+      "Z common jog": 4,
+      "Exact E distance and speed": 10,
+      "Nozzle exact target": 7,
+      "Bed exact target": 6,
+      "Cancel nozzle custom target": 4,
+      "Cold Unload and cancel": 2,
+      "Cold Load and cancel": 2,
+      "Paused filament change and resume": 5,
+      "E-stop from numeric editor": 1
+    }
+  },
+  "candidate": {
+    "intent_fidelity": 10.0,
+    "input_efficiency": 10.0,
+    "context_and_editing": 10.0,
+    "interruption_and_recovery": 10.0,
+    "total_inputs": 40,
+    "critical_known_defects": [],
+    "inputs_by_task": {
+      "XY common jog": 3,
+      "Z common jog": 3,
+      "Exact E distance and speed": 9,
+      "Nozzle exact target": 6,
+      "Bed exact target": 5,
+      "Cancel nozzle custom target": 4,
+      "Cold Unload and cancel": 2,
+      "Cold Load and cancel": 2,
+      "Paused filament change and resume": 5,
+      "E-stop from numeric editor": 1
+    }
+  },
+  "visual_scores_changed_by_this_script": false,
+  "scope": "Frozen label-guided tasks on isolated emulator; not human discovery or physical-printer performance",
+  "baseline_note": "All ten measured tasks completed; post-run Ready wait assumed a reset print state. Raw trace is preserved.",
+  "selection_defect_evidence": "ui-history/versions/actuation-baseline-038/evidence/baseline/selected-input-overwrite.png"
+}

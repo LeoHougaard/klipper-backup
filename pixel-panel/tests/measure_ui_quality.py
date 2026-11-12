@@ -43,10 +43,12 @@ def measure(path, density):
                 ((xx.min()+xx.max()+1)/2+inset-(r-x)/2)/density,
                 ((yy.min()+yy.max()+1)/2+inset-(b-y)/2)/density]
         controls.append(control)
+    vertical = [abs(c['ink_center_error_dp'][1]) for c in controls if 'ink_center_error_dp' in c]
     errors = [abs(c['ink_center_error_dp'][0]) for c in controls if 'ink_center_error_dp' in c]
     return {'controls':controls,'horizontal_center_error_dp':{
         'median':float(np.median(errors)) if errors else None,
         'max':max(errors) if errors else None},
+        'vertical_center_error_dp':{'median':float(np.median(vertical)) if vertical else None, 'max':max(vertical) if vertical else None},
         'targets_under_48dp':[c['label'] for c in controls if min(c['size_dp']) < 47.8]}
 
 

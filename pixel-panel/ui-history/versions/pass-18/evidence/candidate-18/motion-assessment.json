@@ -1,0 +1,13 @@
+{
+  "normal_video": "normal.mp4",
+  "reduced_video": "reduced-motion.mp4",
+  "native_remove_animations_tested": true,
+  "emulator_motion_restored": true,
+  "normal_duration_scale_after_restore": 1,
+  "rapid_navigation_correct_both": true,
+  "performance": "unresolved: software emulator rendering/recording is too slow to claim physical phone smoothness",
+  "normal_p95_ms": 408.86698,
+  "reduced_p95_ms": 137.76065,
+  "physical_device_tested": false,
+  "bambu_motion_score": null
+}

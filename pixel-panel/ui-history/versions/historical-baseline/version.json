@@ -1,0 +1,113 @@
+{
+  "id": "historical-baseline",
+  "label": "baseline",
+  "decision": "historical evidence; see saved assessment and evaluation ledger",
+  "recorded_utc": "2026-11-12T15:14:25.125865+00:00",
+  "recording_commit": "c7f4a690faffc95e564d0abb48482621955af761",
+  "historical_import": true,
+  "files": {
+    "evidence/baseline/capture-manifest.json": {
+      "sha256": "7d7a7fb580f80d1375fcdf0e0f49a4b203ee3a1c98287d9a9fd7c0e9255d39fc",
+      "bytes": 929
+    },
+    "evidence/baseline/front-calibration.png": {
+      "sha256": "29dc9b6e089bd1e772ddd2822a77fe1793a07523fa8c153a921ea3bff323772d",
+      "bytes": 133187
+    },
+    "evidence/baseline/geometry-report.json": {
+      "sha256": "ee44d7265f625812385ab806da4ff1a601469a3afebfe5ac8c2d3c6ec895c5a0",
+      "bytes": 25937
+    },
+    "evidence/baseline/idle-connection.png": {
+      "sha256": "7316171b6e3044b163a2bae32d80f44d26af4d0d547965bdb142138b3b98903c",
+      "bytes": 148932
+    },
+    "evidence/baseline/idle-connection.xml": {
+      "sha256": "66165c7e18890e82d61c71812bcd32b54e7a8a785c9eb40f6e74f3e90ff43ef1",
+      "bytes": 23688
+    },
+    "evidence/baseline/idle-filament.png": {
+      "sha256": "4d4972d56d5f030614de688263fc8123fbeb6324403460dce213eb75f0928397",
+      "bytes": 122815
+    },
+    "evidence/baseline/idle-filament.xml": {
+      "sha256": "42d0b901ed0cf3e13e2f94f9d4a825250ddf3286aa24dcbebc4921963228d2f1",
+      "bytes": 22902
+    },
+    "evidence/baseline/idle-files.png": {
+      "sha256": "7f37173c8fc5efaa2ba9452883c39cb4d21820a2bc4434842490ae0e11c47e9f",
+      "bytes": 140829
+    },
+    "evidence/baseline/idle-heightmap.png": {
+      "sha256": "f4da4fbca2b0a4379456070fd04003d0cb7ece4e6489cf9e1fd1cdb96c3d8568",
+      "bytes": 139097
+    },
+    "evidence/baseline/idle-home.png": {
+      "sha256": "46bb7fd665293265aa4b3d65b6697777edb5c9c98dad266e8423f8432aa1b66c",
+      "bytes": 140775
+    },
+    "evidence/baseline/idle-home.xml": {
+      "sha256": "67d86e2eacea89c04561736f66693ffe7a4c827e9006c6e36a238c3261025acd",
+      "bytes": 29591
+    },
+    "evidence/baseline/idle-more.png": {
+      "sha256": "344f9a78a6fe9ff7c0dcde6779fb5ec42499ae1852a730d037a19a54f9915d1c",
+      "bytes": 148029
+    },
+    "evidence/baseline/idle-more.xml": {
+      "sha256": "8d87b0230303171bd538d0e81689c78b6044b71716fd582f3300cc734ec26a78",
+      "bytes": 27660
+    },
+    "evidence/baseline/idle-move.png": {
+      "sha256": "e900dd48209fdbe331d5c22f31dadc2e7d531add6b3ab01f725080940f0baa89",
+      "bytes": 126557
+    },
+    "evidence/baseline/idle-move.xml": {
+      "sha256": "3edc8d74af9b3e3cea4c4eae0476acc6b06244b453de118a3ead6d72c0315091",
+      "bytes": 25870
+    },
+    "evidence/baseline/idle-temperature-keypad.png": {
+      "sha256": "2a6fcc572df96403db8906809502df126e69480d458e65ab08f5ec4fa0929023",
+      "bytes": 128181
+    },
+    "evidence/baseline/paused-home.png": {
+      "sha256": "b7c5300f835bfeb2752230e9e460f4c05334d6f7ddc00f085181de4c8e13b18e",
+      "bytes": 136246
+    },
+    "evidence/baseline/printing-home.png": {
+      "sha256": "932013364848e61d93dd88f13e2a6222a191c0662d12706f99271074bb6a1eac",
+      "bytes": 131003
+    },
+    "evidence/baseline/printing-tuning.png": {
+      "sha256": "3cc6ae2ff20091abef8c4ed0851279d4c99bd3099e33cff41d632a02aec7a4ca",
+      "bytes": 129867
+    },
+    "evidence/baseline/rear-calibration.png": {
+      "sha256": "dd53ac20655c269dc8d827fe2b4b56b8927d2da153ff46ef9cd5934edbf1b2a0",
+      "bytes": 134231
+    },
+    "evidence/baseline/Voron.apk": {
+      "sha256": "29e60029ebcd86108ef7fff099b16ff40a5115f2908f091307a0dd788c6d4183",
+      "bytes": 270864
+    }
+  },
+  "screenshots": [
+    "evidence/baseline/front-calibration.png",
+    "evidence/baseline/idle-connection.png",
+    "evidence/baseline/idle-filament.png",
+    "evidence/baseline/idle-files.png",
+    "evidence/baseline/idle-heightmap.png",
+    "evidence/baseline/idle-home.png",
+    "evidence/baseline/idle-more.png",
+    "evidence/baseline/idle-move.png",
+    "evidence/baseline/idle-temperature-keypad.png",
+    "evidence/baseline/paused-home.png",
+    "evidence/baseline/printing-home.png",
+    "evidence/baseline/printing-tuning.png",
+    "evidence/baseline/rear-calibration.png"
+  ],
+  "apks": [
+    "evidence/baseline/Voron.apk"
+  ],
+  "restoration": "Install the preserved APK for exact executable behavior; inspect saved source/capture manifests for provenance."
+}

@@ -1,0 +1,19 @@
+{
+  "decision": "promote joined menu surfaces; final interaction gate pending",
+  "bambu_anchor": 8,
+  "scores": {
+    "alignment": 9.5,
+    "spacing": 9,
+    "icons": 8.5,
+    "borders": 9,
+    "type": 8.5,
+    "legibility": 8.5,
+    "grouping": 9,
+    "density": 9,
+    "touch": 8.5,
+    "clarity": 9,
+    "states": 8.5,
+    "cross_screen": 9
+  },
+  "gate": "not met"
+}

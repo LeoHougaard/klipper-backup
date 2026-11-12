@@ -1,0 +1,21 @@
+{
+  "decision": "promote adaptive Move layout; affected command checks passed",
+  "bambu_anchor": 8,
+  "evidence": "Larger XY wheel, adjacent Z/E columns; Home and paused Filament pixel-identical to prior candidate; all sampled targets at least 48 dp",
+  "scores": {
+    "alignment": 9.5,
+    "spacing": 9,
+    "icons": 8.5,
+    "borders": 9,
+    "type": 8.5,
+    "legibility": 9,
+    "grouping": 9.5,
+    "density": 9,
+    "touch": 9.5,
+    "clarity": 9,
+    "states": 9,
+    "cross_screen": 9
+  },
+  "gate": "not met",
+  "apk_sha256": "3cf116e4368a1358c45acd51162a1992aaf39d93dca5bf25f89f86d027b287e6"
+}

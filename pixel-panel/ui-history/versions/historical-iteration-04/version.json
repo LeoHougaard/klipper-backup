@@ -1,0 +1,89 @@
+{
+  "id": "historical-iteration-04",
+  "label": "iteration-04",
+  "decision": "historical evidence; see saved assessment and evaluation ledger",
+  "recorded_utc": "2026-11-12T15:14:26.661434+00:00",
+  "recording_commit": "c7f4a690faffc95e564d0abb48482621955af761",
+  "historical_import": true,
+  "files": {
+    "evidence/iteration-04/assessment.json": {
+      "sha256": "fa0795d744277121e0e47b676ef2de7f3404c3db717f4a76de045bd8c4003dc4",
+      "bytes": 500
+    },
+    "evidence/iteration-04/capture-manifest.json": {
+      "sha256": "29681f99f083dfa334672a133959a8df853a93a864998582cbb695f7ecbed391",
+      "bytes": 927
+    },
+    "evidence/iteration-04/geometry-report.json": {
+      "sha256": "24760f5a1663e05ac033249916829925c7108637bf1087a8c8c8a6b4336b3ad0",
+      "bytes": 32241
+    },
+    "evidence/iteration-04/heating-home.png": {
+      "sha256": "a1979f17381e234bb2d782cca7b722d6c6e46e85bf39f7dcc439de23288a69df",
+      "bytes": 164857
+    },
+    "evidence/iteration-04/heating-home.xml": {
+      "sha256": "96622c43f256913b8d28ff5d3e2395418f3f75606bd25ed8ff72209fc8fa2f65",
+      "bytes": 29920
+    },
+    "evidence/iteration-04/IconMetrics.java": {
+      "sha256": "9aa13f7dd4d14e53f9cab1cd4c2294fe11a3a37848571f20d257de17656d8181",
+      "bytes": 2526
+    },
+    "evidence/iteration-04/idle-filament.png": {
+      "sha256": "91e134d770560314ec6dbc6c384f289054488971972eef9cd31295a453290d46",
+      "bytes": 135395
+    },
+    "evidence/iteration-04/idle-filament.xml": {
+      "sha256": "9b53785ba9428f073609e220547c3d1751d8927eb5020d2435c0880306677a54",
+      "bytes": 23231
+    },
+    "evidence/iteration-04/idle-home.png": {
+      "sha256": "3a18165f39c5adb87d7bfaa3cc48792b612dc1392476d9b1541a90cc34ff7321",
+      "bytes": 163747
+    },
+    "evidence/iteration-04/idle-home.xml": {
+      "sha256": "6da7e019befc4c091422bb2c3149e068e6edc52b8b9a9681aeb2b4a38836a644",
+      "bytes": 29914
+    },
+    "evidence/iteration-04/idle-move.png": {
+      "sha256": "695d223c2c66f19178221807069b57ea148981c6c91b79744e3ae6d1aba72dd0",
+      "bytes": 143738
+    },
+    "evidence/iteration-04/idle-move.xml": {
+      "sha256": "2004198084376ff4982e9932e6ae703bd0df4fca87b40f1d74ff97ef87e2d905",
+      "bytes": 26193
+    },
+    "evidence/iteration-04/MainActivity.java": {
+      "sha256": "6dcd6fa88f69682642614dc0507cbdcc89dd8e07bbe238383e2aaf9e4d1789d0",
+      "bytes": 154996
+    },
+    "evidence/iteration-04/PanelUi.java": {
+      "sha256": "de62057b5bfbfe4244b75ba3ee187aa823c48af21c634a6336e8a3b196d8108e",
+      "bytes": 16569
+    },
+    "evidence/iteration-04/paused-home.png": {
+      "sha256": "c0a716fcbda474b0057451f09658aadc41f74b160095b755e069525431978a0f",
+      "bytes": 151783
+    },
+    "evidence/iteration-04/paused-home.xml": {
+      "sha256": "bbcf8e1c96fa5c17f2004df3dfd8d006af5196ff36c9f7bef09604777ae36d69",
+      "bytes": 22341
+    },
+    "evidence/iteration-04/Voron.apk": {
+      "sha256": "de73397549e6abe61fec2354b9f26bd51d4a8f29598001dbb04e708288a3741a",
+      "bytes": 289239
+    }
+  },
+  "screenshots": [
+    "evidence/iteration-04/heating-home.png",
+    "evidence/iteration-04/idle-filament.png",
+    "evidence/iteration-04/idle-home.png",
+    "evidence/iteration-04/idle-move.png",
+    "evidence/iteration-04/paused-home.png"
+  ],
+  "apks": [
+    "evidence/iteration-04/Voron.apk"
+  ],
+  "restoration": "Install the preserved APK for exact executable behavior; inspect saved source/capture manifests for provenance."
+}

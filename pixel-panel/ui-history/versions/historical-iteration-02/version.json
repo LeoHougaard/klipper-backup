@@ -1,0 +1,72 @@
+{
+  "id": "historical-iteration-02",
+  "label": "iteration-02",
+  "decision": "rejected gutter geometry",
+  "recorded_utc": "2026-11-12T15:14:26.118825+00:00",
+  "recording_commit": "c7f4a690faffc95e564d0abb48482621955af761",
+  "historical_import": true,
+  "files": {
+    "evidence/iteration-02/assessment.json": {
+      "sha256": "aadef364561b861d61b6a86c2df5612fe86d43ab78894465d91cad090ecd14cc",
+      "bytes": 357
+    },
+    "evidence/iteration-02/capture-manifest.json": {
+      "sha256": "ae488aeeaab50aa887a7569e4b712e98313fc472dcaacf97dbf1c74bfb8d2bb3",
+      "bytes": 806
+    },
+    "evidence/iteration-02/idle-filament.png": {
+      "sha256": "1a7f6dd18779ca2592705247b6f0b14f180478fe485b4a668df1289876d51a7f",
+      "bytes": 134039
+    },
+    "evidence/iteration-02/idle-filament.xml": {
+      "sha256": "42d0b901ed0cf3e13e2f94f9d4a825250ddf3286aa24dcbebc4921963228d2f1",
+      "bytes": 22902
+    },
+    "evidence/iteration-02/idle-home.png": {
+      "sha256": "53bbe76242f9caf8914f2e9f30949d5bc294f9f4718d062cdc31ef9bc6b3d43f",
+      "bytes": 168480
+    },
+    "evidence/iteration-02/idle-home.xml": {
+      "sha256": "0ce6793283bbdbf2421e79a41dcf95dd61368799b06b06619fb2f87fb6a9f98c",
+      "bytes": 29591
+    },
+    "evidence/iteration-02/idle-temperature-keypad.png": {
+      "sha256": "2dd86e939ea4defc22a85ee70f52139095886b5fab4c7f4b2ea2b7dd9a5627bb",
+      "bytes": 130877
+    },
+    "evidence/iteration-02/idle-temperature-keypad.xml": {
+      "sha256": "1977e78913fb708047c925c8aecc8ce98ef0f40ff0f1810c3edc8211362a07f1",
+      "bytes": 13208
+    },
+    "evidence/iteration-02/MainActivity.java": {
+      "sha256": "7f62c8aed626c8166dcb1902c2ae2a9862e6dc313ea9a407a40a63a625a2c1ab",
+      "bytes": 155100
+    },
+    "evidence/iteration-02/PanelUi.java": {
+      "sha256": "dd6b46763ad60d0b0ba3ba96e789fb85c32d2e3929a5b5f75a57f1867db56810",
+      "bytes": 15731
+    },
+    "evidence/iteration-02/printing-tuning.png": {
+      "sha256": "d1d2595bbc80a8fe026e0f1eb404f6d465fa645974e38a6a0fe738d7bc0d7a40",
+      "bytes": 123075
+    },
+    "evidence/iteration-02/printing-tuning.xml": {
+      "sha256": "643cf79eff46e43364ed29bf48a5efc7b40cb78beb2dc380a5ae48c8a42fab35",
+      "bytes": 13405
+    },
+    "evidence/iteration-02/Voron.apk": {
+      "sha256": "49d48b1bd12e641be86e58335864464e0beb2f1f8d7cee7530b58183b2d8902f",
+      "bytes": 289239
+    }
+  },
+  "screenshots": [
+    "evidence/iteration-02/idle-filament.png",
+    "evidence/iteration-02/idle-home.png",
+    "evidence/iteration-02/idle-temperature-keypad.png",
+    "evidence/iteration-02/printing-tuning.png"
+  ],
+  "apks": [
+    "evidence/iteration-02/Voron.apk"
+  ],
+  "restoration": "Install the preserved APK for exact executable behavior; inspect saved source/capture manifests for provenance."
+}

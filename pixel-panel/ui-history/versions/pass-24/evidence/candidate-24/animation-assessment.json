@@ -1,0 +1,12 @@
+{
+  "normal": "workflow-normal.mp4",
+  "reduced": "workflow-reduced.mp4",
+  "rapid_navigation_correct_both": true,
+  "native_remove_animations_verified": true,
+  "emulator_normal_motion_restored": true,
+  "restored_scale": 1,
+  "physical_phone_tested": false,
+  "bambu_motion_score": null,
+  "smoothness_gate": "unverified; emulated latency remains above ideal; do not turn latency into FPS",
+  "profile_comparison": "navigation-comparison.json"
+}

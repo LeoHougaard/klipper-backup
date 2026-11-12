@@ -1,0 +1,20 @@
+{
+  "decision": "promote visual surface correction; final interaction gate pending",
+  "bambu_anchor": 8,
+  "scores": {
+    "alignment": 7.5,
+    "spacing": 7,
+    "icons": 8,
+    "borders": 8,
+    "type": 6,
+    "legibility": 7,
+    "grouping": 6,
+    "density": 5,
+    "touch": 8,
+    "clarity": 7,
+    "states": 7,
+    "cross_screen": 7.5
+  },
+  "gate": "not met",
+  "apk_sha256": "48a5847d11e47929d6ed977158a26385cbd8dce348b608f6afe2216697e54150"
+}

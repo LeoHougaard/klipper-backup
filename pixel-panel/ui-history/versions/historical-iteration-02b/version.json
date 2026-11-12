@@ -1,0 +1,54 @@
+{
+  "id": "historical-iteration-02b",
+  "label": "iteration-02b",
+  "decision": "historical evidence; see saved assessment and evaluation ledger",
+  "recorded_utc": "2026-11-12T15:14:26.250950+00:00",
+  "recording_commit": "c7f4a690faffc95e564d0abb48482621955af761",
+  "historical_import": true,
+  "files": {
+    "evidence/iteration-02b/assessment.json": {
+      "sha256": "b447f3aef47c1bc943cf55f4f059705bc0e4acd71e0a020a4a6f492d2549a27e",
+      "bytes": 471
+    },
+    "evidence/iteration-02b/capture-manifest.json": {
+      "sha256": "0a1e7fe9360c7eebcce7d6058bbecf08e9e46e8f8e2754784f7aae753091eb3a",
+      "bytes": 468
+    },
+    "evidence/iteration-02b/idle-home.png": {
+      "sha256": "a71bf36982199c7a21463b3ea9c98447708d7b9004ce55c3334bc828af285ebb",
+      "bytes": 168457
+    },
+    "evidence/iteration-02b/idle-home.xml": {
+      "sha256": "5824e91adf832d9337708c5197d0e6cf2c997e277f0a0116790c2f2c6f7423d7",
+      "bytes": 29921
+    },
+    "evidence/iteration-02b/MainActivity.java": {
+      "sha256": "e78914da09959d18461eb583a40def2ae10247a077130b57a5bc4d4594cfba2f",
+      "bytes": 155307
+    },
+    "evidence/iteration-02b/PanelUi.java": {
+      "sha256": "dd6b46763ad60d0b0ba3ba96e789fb85c32d2e3929a5b5f75a57f1867db56810",
+      "bytes": 15731
+    },
+    "evidence/iteration-02b/printing-tuning.png": {
+      "sha256": "bd2af1f31159b67300626bf41bdcf9a0a9899e2b6aa9a4178c59f4780f570136",
+      "bytes": 123120
+    },
+    "evidence/iteration-02b/printing-tuning.xml": {
+      "sha256": "643cf79eff46e43364ed29bf48a5efc7b40cb78beb2dc380a5ae48c8a42fab35",
+      "bytes": 13405
+    },
+    "evidence/iteration-02b/Voron.apk": {
+      "sha256": "48a5847d11e47929d6ed977158a26385cbd8dce348b608f6afe2216697e54150",
+      "bytes": 289239
+    }
+  },
+  "screenshots": [
+    "evidence/iteration-02b/idle-home.png",
+    "evidence/iteration-02b/printing-tuning.png"
+  ],
+  "apks": [
+    "evidence/iteration-02b/Voron.apk"
+  ],
+  "restoration": "Install the preserved APK for exact executable behavior; inspect saved source/capture manifests for provenance."
+}

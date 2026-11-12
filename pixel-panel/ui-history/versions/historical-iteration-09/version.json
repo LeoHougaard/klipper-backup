@@ -1,0 +1,96 @@
+{
+  "id": "historical-iteration-09",
+  "label": "iteration-09",
+  "decision": "historical evidence; see saved assessment and evaluation ledger",
+  "recorded_utc": "2026-11-12T15:14:27.608221+00:00",
+  "recording_commit": "c7f4a690faffc95e564d0abb48482621955af761",
+  "historical_import": true,
+  "files": {
+    "evidence/iteration-09/before-filament.png": {
+      "sha256": "ade0ef0d0615607fa968683e4dd578da778029fec3925b440e9709a7ece6823d",
+      "bytes": 122849
+    },
+    "evidence/iteration-09/before-MainActivity.java": {
+      "sha256": "36a23d374e4babde9db048b8a2bbdd6e51bdc45b676d2914de8c2dc9c22be44a",
+      "bytes": 156787
+    },
+    "evidence/iteration-09/before.apk": {
+      "sha256": "c75af0bb5082bf219aebaec6934c869d3d721d297625cb1b62eecc35aac49bd0",
+      "bytes": 293559
+    },
+    "evidence/iteration-09/filament.png": {
+      "sha256": "fa95d2036d515ff678b7d81e28e25fa37744341f575e3d2af2b7cf5d06b4353c",
+      "bytes": 137502
+    },
+    "evidence/iteration-09/MainActivity.java": {
+      "sha256": "4bee0099ef8e4008004816a13186c9d7e6ab9bc4a470166d042bdb0fb67c2faf",
+      "bytes": 155758
+    },
+    "evidence/iteration-09/Voron.apk": {
+      "sha256": "9bb03d3c4644a03894e91b96da3e6db2092e05f0a7dadb6f628c4e777c9e7a54",
+      "bytes": 293559
+    },
+    "evidence/iteration-09/workflows/01-custom-cold.png": {
+      "sha256": "a47a1a28437774ec73fe98d7fdad490b0f087effed82ee4ccd4f08ac015f67ca",
+      "bytes": 150877
+    },
+    "evidence/iteration-09/workflows/01-custom-cold.xml": {
+      "sha256": "c85030223b00e04cbfb27f27cb19bb2b9f64dc458c594dd7a8f4662a3183aba5",
+      "bytes": 12251
+    },
+    "evidence/iteration-09/workflows/02-heating.png": {
+      "sha256": "691f4a004962310aa1b94d570d2d2c748fb20b079162c5ed7220a263579af40b",
+      "bytes": 149994
+    },
+    "evidence/iteration-09/workflows/02-heating.xml": {
+      "sha256": "cce12fad2039fb5f43e100cff4201d87b887176316a2f7a0297ffaf34bf5fe76",
+      "bytes": 12695
+    },
+    "evidence/iteration-09/workflows/03-custom-feed.png": {
+      "sha256": "651032467d15e87b82883627123e609e7f56f6261f4d8d2b1e9da0b81d0b8276",
+      "bytes": 144866
+    },
+    "evidence/iteration-09/workflows/03-custom-feed.xml": {
+      "sha256": "4aaab649c68424cf8521ce69ed2fe4db54158242cb467f6de3212635106df213",
+      "bytes": 12494
+    },
+    "evidence/iteration-09/workflows/04-paused-heating.png": {
+      "sha256": "8b24c86f75c0608d7ae563fb25cb6ceb6060b13e9cccfd708a3ec3ff7324d614",
+      "bytes": 140484
+    },
+    "evidence/iteration-09/workflows/04-paused-heating.xml": {
+      "sha256": "83235e3bf489bf3a08c54023232391e65341b6839fc0e338c92da601876b4656",
+      "bytes": 12729
+    },
+    "evidence/iteration-09/workflows/05-paused.png": {
+      "sha256": "2967e48bd8baa5cee2a9d93c7825ae81189e290ff70a7d6daf905f7c6d5b9049",
+      "bytes": 147172
+    },
+    "evidence/iteration-09/workflows/05-paused.xml": {
+      "sha256": "42da0913cbaac7d4656d4876954599c83f6cd0a3630b358a450f05d9929256b2",
+      "bytes": 12749
+    },
+    "evidence/iteration-09/workflows/geometry-report.json": {
+      "sha256": "0b4f7d218cdec5cbfce9d991b3f0f5f9b2f9611650e5a47a1f9cc64aae6537c1",
+      "bytes": 16922
+    },
+    "evidence/iteration-09/workflows/results.json": {
+      "sha256": "ab050e2120633a819b29e474f958aa01728612e2cf83bfdf6472b98ec816e2b3",
+      "bytes": 57
+    }
+  },
+  "screenshots": [
+    "evidence/iteration-09/before-filament.png",
+    "evidence/iteration-09/filament.png",
+    "evidence/iteration-09/workflows/01-custom-cold.png",
+    "evidence/iteration-09/workflows/02-heating.png",
+    "evidence/iteration-09/workflows/03-custom-feed.png",
+    "evidence/iteration-09/workflows/04-paused-heating.png",
+    "evidence/iteration-09/workflows/05-paused.png"
+  ],
+  "apks": [
+    "evidence/iteration-09/before.apk",
+    "evidence/iteration-09/Voron.apk"
+  ],
+  "restoration": "Install the preserved APK for exact executable behavior; inspect saved source/capture manifests for provenance."
+}

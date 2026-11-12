@@ -1,0 +1,14 @@
+{
+  "idle-home": {
+    "state": "idle",
+    "screen": "home",
+    "sha256": "a71bf36982199c7a21463b3ea9c98447708d7b9004ce55c3334bc828af285ebb"
+  },
+  "printing-tuning": {
+    "state": "printing",
+    "screen": "tuning",
+    "sha256": "bd2af1f31159b67300626bf41bdcf9a0a9899e2b6aa9a4178c59f4780f570136"
+  },
+  "_source_commit": "9b906b256def2e5783484ba1eb7f1b11351238ae",
+  "_apk_sha256": "48a5847d11e47929d6ed977158a26385cbd8dce348b608f6afe2216697e54150"
+}

@@ -1,0 +1,29 @@
+{
+  "idle-home": {
+    "state": "idle",
+    "screen": "home",
+    "sha256": "3a18165f39c5adb87d7bfaa3cc48792b612dc1392476d9b1541a90cc34ff7321"
+  },
+  "idle-filament": {
+    "state": "idle",
+    "screen": "filament",
+    "sha256": "91e134d770560314ec6dbc6c384f289054488971972eef9cd31295a453290d46"
+  },
+  "heating-home": {
+    "state": "heating",
+    "screen": "home",
+    "sha256": "a1979f17381e234bb2d782cca7b722d6c6e46e85bf39f7dcc439de23288a69df"
+  },
+  "paused-home": {
+    "state": "paused",
+    "screen": "home",
+    "sha256": "c0a716fcbda474b0057451f09658aadc41f74b160095b755e069525431978a0f"
+  },
+  "idle-move": {
+    "state": "idle",
+    "screen": "move",
+    "sha256": "695d223c2c66f19178221807069b57ea148981c6c91b79744e3ae6d1aba72dd0"
+  },
+  "_source_commit": "9b906b256def2e5783484ba1eb7f1b11351238ae",
+  "_apk_sha256": "de73397549e6abe61fec2354b9f26bd51d4a8f29598001dbb04e708288a3741a"
+}

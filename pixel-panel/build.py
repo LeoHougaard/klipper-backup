@@ -1,5 +1,7 @@
 """Dependency-free Android SDK build. Signing material stays outside the checkout."""
 from pathlib import Path
+import hashlib
+import json
 import os
 import shutil
 import subprocess
@@ -17,6 +19,8 @@ def run(*args):
     subprocess.run([str(arg) for arg in args], check=True)
 
 def main():
+    source_hashes = {str(p.relative_to(ROOT)).replace('\\', '/'): hashlib.sha256(p.read_bytes()).hexdigest()
+                     for p in sorted((ROOT/'app').rglob('*')) if p.is_file()}
     BUILD.mkdir(parents=True, exist_ok=True)
     OUTPUT.mkdir(exist_ok=True)
     for name in ("classes", "dex"):
@@ -45,6 +49,14 @@ def main():
     run(*signer, "sign", "--ks", key, "--ks-pass", "pass:android", "--out", BUILD / "Voron.apk", BUILD / "aligned.apk")
     run(*signer, "verify", BUILD / "Voron.apk")
     shutil.copy2(BUILD / "Voron.apk", OUTPUT / "Voron.apk")
+    current_hashes = {str(p.relative_to(ROOT)).replace('\\', '/'): hashlib.sha256(p.read_bytes()).hexdigest()
+                      for p in sorted((ROOT/'app').rglob('*')) if p.is_file()}
+    assert current_hashes == source_hashes, 'App source changed during compilation'
+    (OUTPUT/'last-build.json').write_text(json.dumps({
+        'source_sha256': source_hashes,
+        'apk_sha256': hashlib.sha256((OUTPUT/'Voron.apk').read_bytes()).hexdigest(),
+        'target_sdk': 37, 'min_api': 31,
+    }, indent=2)+'\n', encoding='utf-8')
     print(OUTPUT / "Voron.apk")
 
 if __name__ == "__main__":

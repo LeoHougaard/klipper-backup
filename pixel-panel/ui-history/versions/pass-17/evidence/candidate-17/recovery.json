@@ -1,0 +1,15 @@
+{
+  "shutdown_observed": true,
+  "external_recovery_warning_cleared": true,
+  "requests": [
+    {
+      "method": "POST",
+      "path": "/printer/emergency_stop",
+      "body": "",
+      "content_type": "application/x-www-form-urlencoded",
+      "length": 0,
+      "time": 944801.0900996
+    }
+  ],
+  "physical_commands": 0
+}

@@ -3,8 +3,8 @@
 Starting point: commit `9b906b2`, APK 0.3.6. Leo assigns this build **1/10**
 and the fixed Bambu reference **8/10**. Required result: **at least 9.8 in
 at least ten of the twelve fixed categories below**, not an average. Report
-all twelve, including any that fall short. Work directly with sol; no other
-models or review agents. No iteration/time limit was supplied.
+all twelve, including any that fall short. Work directly with sol. Leo later explicitly requested Terra input; its read-only
+audit is recorded in `evaluation/terra-input.md`. Do not start automatic review loops. No iteration/time limit was supplied.
 
 ## Fixed comparison
 
@@ -158,3 +158,60 @@ source/APK hashes before capture, rejecting edits during collection. Pass 11's
 interim captures were superseded because its source metadata was recorded after
 the preview-backdrop edit; they are visual working notes, not final provenance.
 The frozen reference images, synthetic state and Bambu anchor have not changed.
+
+
+## 0.3.9: stronger evidence and motion
+
+The Bambu images and all twelve scores remain fixed at 8. The new
+`evaluation/rubric-v2.json` keeps the original 9.8-in-ten gate, with explicit
+failure evidence and separate actuation and animation criteria. Earlier design
+estimates are approximate judgments, not ground truth or tenth-point precision.
+The visual gate remains unverified.
+
+| Pass | Shared change | Evidence and decision |
+| --- | --- | --- |
+| 14 | Contextual numeric titles/units, returning Cancel, common values, selection/cursor fix | Ten frozen actuation tasks take 40 inputs rather than 45. Multi-digit replacement previously overwrote digits. Promote. |
+| 15 | Visible, remembered filament temperature beside Home Load/Unload | Choosing a target emits no heater command; restart preserves it; Load uses it and cancellation restores the owned target. Promote. |
+| 16 | Compact print title, related speed/progress and completed manual controls | Pause and Resume retain the same bottom coordinates. Promote. |
+| 17 | Observed shutdown/recovery feedback and faithful mock lifecycle | External fresh Ready clears an observed shutdown warning; Ready is not claimed while stop remains unconfirmed. Promote. |
+| 18 | Restrained page/sheet opacity and reduced motion | Actual normal/reduced MP4s and rapid interruption checks retained. Smoothness remained unresolved. |
+| 19 | Related progress group, explicit Feed and redundant-navigation suppression | All ten actuation tasks pass; primary action stays stable. Promote. |
+| 20 | Explicit Retract, corrected status glyph and conditional cooldown | 25 native views retain 48 dp targets. Promote. |
+| 21 | Center visible glyph bounds with icon artwork | Both axes below 0.8 dp in affected native views. Promote. |
+| 22 | Temporary rendering layer | No measured improvement; reject that layer. Keep truthful initial job progress separately. |
+| 23 | Remove experimental layer; retain truthful initial progress | Full representative workflow and all ten actuations pass. Preserve layout-stall baseline. |
+| 24 | Disable unused baseline measurement in centered weighted rows | Median slowest Home UI frame: 325 to 14 ms across six entries; overall frame-latency p95: 385 to 105 ms. Same software emulator, no recording or inspection during the comparison. Promote. |
+| 25 | Cancelled-state wording and final edge-state review | Clear the plate replaces finished-plate wording. Other handlers and geometry are unchanged. |
+
+Android's weighted rows were doing an unused speculative measurement pass.
+The [framework implementation](https://android.googlesource.com/platform/frameworks/base/+/refs/heads/main/core/java/android/widget/LinearLayout.java)
+and [layout guidance](https://developer.android.com/develop/ui/views/layout/improving-layouts/optimizing-layouts)
+explain the extra work. The improvement is measured on the review emulator;
+frame latency is not FPS or a physical-phone benchmark. An earlier hardware
+renderer experiment is also preserved and was rejected after worse timings.
+
+`tests/profile_navigation_motion.py` registers navigation coordinates once,
+then keeps accessibility inspection outside each transition. The full workflow
+recorder separately retains actual page/dialog clips, action telemetry and raw
+frame data. Reduced motion is tested through the emulator's native setting and
+normal motion is restored afterwards. No actuator waits for an animation.
+
+Twelve additional primary-source pictures from Blackmagic, Home Assistant and
+Prusa are cached with pinned hashes. They inform parameter editing, grouping and
+readings; they do not replace or rescore Bambu. Terra's requested read-only audit
+is recorded in `evaluation/terra-input.md`, including findings that were checked
+against actual captures rather than adopted blindly.
+
+Every available candidate is retained under `ui-history/`, including rejected
+versions. New records preserve APKs, exact source, screenshots, evaluation,
+traces and available videos with hashes. Legacy scorecard snapshots are not new
+ratings of each archived candidate. Installing a preserved APK restores code,
+not its old runtime state; the saved images preserve exact historical appearance.
+
+The review chooser separates printer state from native screen, and now waits
+for Disconnected rather than capturing the still-fresh previous state. New
+capture runs reset transient context and pin filament temperature, distances and
+feed rates through native controls. The complete workflow passed on pass23;
+all ten actuations and 25-view geometry were rerun on pass24. Pass25 changes only
+the cancelled-state sentence and adds the remaining edge/editor captures.
+No physical printer command or Pixel installation was performed.

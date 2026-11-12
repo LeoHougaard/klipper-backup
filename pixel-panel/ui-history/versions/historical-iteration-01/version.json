@@ -1,0 +1,76 @@
+{
+  "id": "historical-iteration-01",
+  "label": "iteration-01",
+  "decision": "historical evidence; see saved assessment and evaluation ledger",
+  "recorded_utc": "2026-11-12T15:14:25.947489+00:00",
+  "recording_commit": "c7f4a690faffc95e564d0abb48482621955af761",
+  "historical_import": true,
+  "files": {
+    "evidence/iteration-01/assessment.json": {
+      "sha256": "5260256f7fbd7674e57bf7d57ab02d3d0bafa227275db6c9056ba8b9e00bdfff",
+      "bytes": 534
+    },
+    "evidence/iteration-01/capture-manifest.json": {
+      "sha256": "4982fc97935fcb82702a6ad9dd5b386415327d1ef738271d182332bd72237715",
+      "bytes": 786
+    },
+    "evidence/iteration-01/geometry-report.json": {
+      "sha256": "ed7adfa57f868f31e59851dd6200b5d5fda141ffe95b1c83e0ae3dfbe68af4fd",
+      "bytes": 19334
+    },
+    "evidence/iteration-01/idle-filament.png": {
+      "sha256": "e2d7f82eeaaf2b55be48301b82ce993a6df9bfcc32a7bf6e418611e07c1f0cbc",
+      "bytes": 143181
+    },
+    "evidence/iteration-01/idle-filament.xml": {
+      "sha256": "42d0b901ed0cf3e13e2f94f9d4a825250ddf3286aa24dcbebc4921963228d2f1",
+      "bytes": 22902
+    },
+    "evidence/iteration-01/idle-home.png": {
+      "sha256": "e2be675f1846093550d1062e25274be481375d42df96470c0b0a4edf33308abf",
+      "bytes": 175523
+    },
+    "evidence/iteration-01/idle-home.xml": {
+      "sha256": "67d86e2eacea89c04561736f66693ffe7a4c827e9006c6e36a238c3261025acd",
+      "bytes": 29591
+    },
+    "evidence/iteration-01/MainActivity.java": {
+      "sha256": "dee59711e2a07122f73bfd0f0fdb5b51ac2c80bb11a383648b3beb666dc508c8",
+      "bytes": 154977
+    },
+    "evidence/iteration-01/PanelUi.java": {
+      "sha256": "06f90a0f14a4700f11baf288949ec66959c3b0469745f6f1d944ea6947711581",
+      "bytes": 15751
+    },
+    "evidence/iteration-01/printing-home.png": {
+      "sha256": "a9687a00c1aa4c6693d94776647a0dbdbeab7b262b080ca1199c292d3d670d7b",
+      "bytes": 148912
+    },
+    "evidence/iteration-01/printing-home.xml": {
+      "sha256": "034c302ea3d490c79a4616f471038eaebcaab6ad622ffed3cf88ba8d0778ecf1",
+      "bytes": 20995
+    },
+    "evidence/iteration-01/printing-tuning.png": {
+      "sha256": "6a5519df64a37cc39f096134343491e6c0dc59325bc9d24f82c844aabf70a1c4",
+      "bytes": 133406
+    },
+    "evidence/iteration-01/printing-tuning.xml": {
+      "sha256": "573281b84eee6a97f5bd707b06a148bc5dad93a39f8844b7fadb2fdec7b2d033",
+      "bytes": 13405
+    },
+    "evidence/iteration-01/Voron.apk": {
+      "sha256": "7ed0b8bc3cd6aac6adcff55e39eb734fcf5dcbbf5c2b64e884fd64622f114746",
+      "bytes": 289239
+    }
+  },
+  "screenshots": [
+    "evidence/iteration-01/idle-filament.png",
+    "evidence/iteration-01/idle-home.png",
+    "evidence/iteration-01/printing-home.png",
+    "evidence/iteration-01/printing-tuning.png"
+  ],
+  "apks": [
+    "evidence/iteration-01/Voron.apk"
+  ],
+  "restoration": "Install the preserved APK for exact executable behavior; inspect saved source/capture manifests for provenance."
+}

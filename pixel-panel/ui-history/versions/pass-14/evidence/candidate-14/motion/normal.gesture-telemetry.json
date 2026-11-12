@@ -1,0 +1,166 @@
+{
+  "version": 1,
+  "generatedAt": "2026-11-12T15:25:51.090Z",
+  "events": [
+    {
+      "kind": "tap",
+      "tMs": 1422,
+      "x": 100,
+      "y": 328,
+      "referenceWidth": 2424,
+      "referenceHeight": 1080
+    },
+    {
+      "kind": "tap",
+      "tMs": 3255,
+      "x": 504,
+      "y": 948,
+      "referenceWidth": 2424,
+      "referenceHeight": 1080
+    },
+    {
+      "kind": "tap",
+      "tMs": 5279,
+      "x": 786,
+      "y": 342,
+      "referenceWidth": 2025,
+      "referenceHeight": 768
+    },
+    {
+      "kind": "tap",
+      "tMs": 7787,
+      "x": 1931,
+      "y": 126,
+      "referenceWidth": 2424,
+      "referenceHeight": 1080
+    },
+    {
+      "kind": "tap",
+      "tMs": 9370,
+      "x": 1899,
+      "y": 84,
+      "referenceWidth": 2424,
+      "referenceHeight": 1080
+    },
+    {
+      "kind": "tap",
+      "tMs": 11221,
+      "x": 515,
+      "y": 801,
+      "referenceWidth": 2025,
+      "referenceHeight": 872
+    },
+    {
+      "kind": "tap",
+      "tMs": 14142,
+      "x": 1148,
+      "y": 515,
+      "referenceWidth": 2424,
+      "referenceHeight": 1080
+    },
+    {
+      "kind": "tap",
+      "tMs": 16148,
+      "x": 100,
+      "y": 116,
+      "referenceWidth": 2424,
+      "referenceHeight": 1080
+    },
+    {
+      "kind": "tap",
+      "tMs": 18586,
+      "x": 2246,
+      "y": 116,
+      "referenceWidth": 2025,
+      "referenceHeight": 742
+    },
+    {
+      "kind": "tap",
+      "tMs": 21346,
+      "x": 1256,
+      "y": 679,
+      "referenceWidth": 2025,
+      "referenceHeight": 768
+    },
+    {
+      "kind": "tap",
+      "tMs": 24212,
+      "x": 1931,
+      "y": 126,
+      "referenceWidth": 2025,
+      "referenceHeight": 742
+    },
+    {
+      "kind": "tap",
+      "tMs": 26733,
+      "x": 1931,
+      "y": 126,
+      "referenceWidth": 2424,
+      "referenceHeight": 1080
+    },
+    {
+      "kind": "tap",
+      "tMs": 28441,
+      "x": 100,
+      "y": 540,
+      "referenceWidth": 2424,
+      "referenceHeight": 1080
+    },
+    {
+      "kind": "tap",
+      "tMs": 30845,
+      "x": 100,
+      "y": 964,
+      "referenceWidth": 2424,
+      "referenceHeight": 1080
+    },
+    {
+      "kind": "tap",
+      "tMs": 32467,
+      "x": 750,
+      "y": 354,
+      "referenceWidth": 2025,
+      "referenceHeight": 799
+    },
+    {
+      "kind": "tap",
+      "tMs": 35325,
+      "x": 1931,
+      "y": 126,
+      "referenceWidth": 2424,
+      "referenceHeight": 1080
+    },
+    {
+      "kind": "tap",
+      "tMs": 37020,
+      "x": 100,
+      "y": 116,
+      "referenceWidth": 2424,
+      "referenceHeight": 1080
+    },
+    {
+      "kind": "tap",
+      "tMs": 39488,
+      "x": 100,
+      "y": 327,
+      "referenceWidth": 1080,
+      "referenceHeight": 2424
+    },
+    {
+      "kind": "tap",
+      "tMs": 39528,
+      "x": 100,
+      "y": 327,
+      "referenceWidth": 1080,
+      "referenceHeight": 2424
+    },
+    {
+      "kind": "tap",
+      "tMs": 39568,
+      "x": 100,
+      "y": 327,
+      "referenceWidth": 1080,
+      "referenceHeight": 2424
+    }
+  ]
+}

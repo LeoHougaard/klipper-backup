@@ -1,0 +1,36 @@
+{
+  "23": {
+    "all_frame_p95_ms": 385.084846,
+    "median_slowest_home_ui_frame_ms": 325.0228,
+    "home_entries": 6,
+    "home_slowest_ui_frame_ms": [
+      299.9671,
+      381.2055,
+      338.5924,
+      262.0864,
+      335.1401,
+      314.9055
+    ],
+    "inspection_during_animation": false,
+    "recording_active": false,
+    "renderer": "GLES: Google (Google Inc.), Android Emulator OpenGL ES Translator (Google SwiftShader), OpenGL ES 3.0 (OpenGL ES 3.0 SwiftShader 4.0.0.1)",
+    "scale": "1.0"
+  },
+  "24": {
+    "all_frame_p95_ms": 104.884396,
+    "median_slowest_home_ui_frame_ms": 13.56595,
+    "home_entries": 6,
+    "home_slowest_ui_frame_ms": [
+      15.6773,
+      23.518,
+      25.1315,
+      10.333,
+      11.4546,
+      7.2681
+    ],
+    "inspection_during_animation": false,
+    "recording_active": false,
+    "renderer": "GLES: Google (Google Inc.), Android Emulator OpenGL ES Translator (Google SwiftShader), OpenGL ES 3.0 (OpenGL ES 3.0 SwiftShader 4.0.0.1)",
+    "scale": "1.0"
+  }
+}

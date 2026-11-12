@@ -1,0 +1,15 @@
+{
+  "label": "normal",
+  "animator_duration_scale": "null",
+  "recording_active": true,
+  "renderer": "GLES: Google (Google Inc.), Android Emulator OpenGL ES Translator (Google SwiftShader), OpenGL ES 3.0 (OpenGL ES 3.0 SwiftShader 4.0.0.1)",
+  "cpu_online": "0-1",
+  "focus": "filament-home",
+  "markers": [],
+  "renderer_frame_count": 0,
+  "renderer_p95_ms": null,
+  "renderer_over_33ms": 0,
+  "rapid_navigation_final_state_correct": false,
+  "measurement_scope": "Activity renderer on emulator; WindowManager transitions assessed from actual recording",
+  "physical_printer_commands": 0
+}

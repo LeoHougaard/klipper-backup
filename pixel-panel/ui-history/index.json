@@ -1,0 +1,252 @@
+{
+  "versions": [
+    {
+      "id": "historical-baseline",
+      "label": "baseline",
+      "decision": "historical evidence; see saved assessment and evaluation ledger",
+      "recorded_utc": "2026-11-12T15:14:25.125865+00:00",
+      "historical_import": true,
+      "restoration": "Install the preserved APK for exact executable behavior; inspect saved source/capture manifests for provenance."
+    },
+    {
+      "id": "historical-final",
+      "label": "final",
+      "decision": "historical evidence; see saved assessment and evaluation ledger",
+      "recorded_utc": "2026-11-12T15:14:25.520925+00:00",
+      "historical_import": true,
+      "restoration": "Install the preserved APK for exact executable behavior; inspect saved source/capture manifests for provenance."
+    },
+    {
+      "id": "historical-final-workflows",
+      "label": "final-workflows",
+      "decision": "historical evidence; see saved assessment and evaluation ledger",
+      "recorded_utc": "2026-11-12T15:14:25.780326+00:00",
+      "historical_import": true,
+      "restoration": "No original APK was preserved. Saved captures can be ranked; exact executable restoration is unavailable."
+    },
+    {
+      "id": "historical-iteration-01",
+      "label": "iteration-01",
+      "decision": "historical evidence; see saved assessment and evaluation ledger",
+      "recorded_utc": "2026-11-12T15:14:25.947489+00:00",
+      "historical_import": true,
+      "restoration": "Install the preserved APK for exact executable behavior; inspect saved source/capture manifests for provenance."
+    },
+    {
+      "id": "historical-iteration-02",
+      "label": "iteration-02",
+      "decision": "rejected gutter geometry",
+      "recorded_utc": "2026-11-12T15:14:26.118825+00:00",
+      "historical_import": true,
+      "restoration": "Install the preserved APK for exact executable behavior; inspect saved source/capture manifests for provenance."
+    },
+    {
+      "id": "historical-iteration-02b",
+      "label": "iteration-02b",
+      "decision": "historical evidence; see saved assessment and evaluation ledger",
+      "recorded_utc": "2026-11-12T15:14:26.250950+00:00",
+      "historical_import": true,
+      "restoration": "Install the preserved APK for exact executable behavior; inspect saved source/capture manifests for provenance."
+    },
+    {
+      "id": "historical-iteration-03",
+      "label": "iteration-03",
+      "decision": "historical evidence; see saved assessment and evaluation ledger",
+      "recorded_utc": "2026-11-12T15:14:26.440798+00:00",
+      "historical_import": true,
+      "restoration": "Install the preserved APK for exact executable behavior; inspect saved source/capture manifests for provenance."
+    },
+    {
+      "id": "historical-iteration-04",
+      "label": "iteration-04",
+      "decision": "historical evidence; see saved assessment and evaluation ledger",
+      "recorded_utc": "2026-11-12T15:14:26.661434+00:00",
+      "historical_import": true,
+      "restoration": "Install the preserved APK for exact executable behavior; inspect saved source/capture manifests for provenance."
+    },
+    {
+      "id": "historical-iteration-05",
+      "label": "iteration-05",
+      "decision": "historical evidence; see saved assessment and evaluation ledger",
+      "recorded_utc": "2026-11-12T15:14:26.873316+00:00",
+      "historical_import": true,
+      "restoration": "Install the preserved APK for exact executable behavior; inspect saved source/capture manifests for provenance."
+    },
+    {
+      "id": "historical-iteration-06",
+      "label": "iteration-06",
+      "decision": "historical evidence; see saved assessment and evaluation ledger",
+      "recorded_utc": "2026-11-12T15:14:27.053770+00:00",
+      "historical_import": true,
+      "restoration": "No original APK was preserved. Saved captures can be ranked; exact executable restoration is unavailable."
+    },
+    {
+      "id": "historical-iteration-07",
+      "label": "iteration-07",
+      "decision": "historical evidence; see saved assessment and evaluation ledger",
+      "recorded_utc": "2026-11-12T15:14:27.205975+00:00",
+      "historical_import": true,
+      "restoration": "Install the preserved APK for exact executable behavior; inspect saved source/capture manifests for provenance."
+    },
+    {
+      "id": "historical-iteration-08",
+      "label": "iteration-08",
+      "decision": "historical evidence; see saved assessment and evaluation ledger",
+      "recorded_utc": "2026-11-12T15:14:27.382809+00:00",
+      "historical_import": true,
+      "restoration": "Install the preserved APK for exact executable behavior; inspect saved source/capture manifests for provenance."
+    },
+    {
+      "id": "historical-iteration-09",
+      "label": "iteration-09",
+      "decision": "historical evidence; see saved assessment and evaluation ledger",
+      "recorded_utc": "2026-11-12T15:14:27.608221+00:00",
+      "historical_import": true,
+      "restoration": "Install the preserved APK for exact executable behavior; inspect saved source/capture manifests for provenance."
+    },
+    {
+      "id": "historical-iteration-10",
+      "label": "iteration-10",
+      "decision": "historical evidence; see saved assessment and evaluation ledger",
+      "recorded_utc": "2026-11-12T15:14:27.826255+00:00",
+      "historical_import": true,
+      "restoration": "No original APK was preserved. Saved captures can be ranked; exact executable restoration is unavailable."
+    },
+    {
+      "id": "historical-iteration-11",
+      "label": "iteration-11",
+      "decision": "historical evidence; see saved assessment and evaluation ledger",
+      "recorded_utc": "2026-11-12T15:14:28.434915+00:00",
+      "historical_import": true,
+      "restoration": "No original APK was preserved. Saved captures can be ranked; exact executable restoration is unavailable."
+    },
+    {
+      "id": "historical-iteration-12",
+      "label": "iteration-12",
+      "decision": "historical evidence; see saved assessment and evaluation ledger",
+      "recorded_utc": "2026-11-12T15:14:29.095969+00:00",
+      "historical_import": true,
+      "restoration": "Install the preserved APK for exact executable behavior; inspect saved source/capture manifests for provenance."
+    },
+    {
+      "id": "historical-iteration-13",
+      "label": "iteration-13",
+      "decision": "historical evidence; see saved assessment and evaluation ledger",
+      "recorded_utc": "2026-11-12T15:14:29.499907+00:00",
+      "historical_import": true,
+      "restoration": "Install the preserved APK for exact executable behavior; inspect saved source/capture manifests for provenance."
+    },
+    {
+      "id": "actuation-baseline-038",
+      "label": "0.3.8 actuation baseline",
+      "decision": "Measured before the input fixes",
+      "recorded_utc": "2026-11-12T15:14:29.695943+00:00",
+      "historical_import": true,
+      "restoration": "Install the preserved APK for exact executable behavior; inspect saved source/capture manifests for provenance."
+    },
+    {
+      "id": "pass-14",
+      "label": "Contextual numeric controls and direct selection replacement",
+      "decision": "Promote: all ten actuation tasks pass; animation baseline uses software renderer",
+      "recorded_utc": "2026-11-12T15:31:39.433011+00:00",
+      "historical_import": false,
+      "restoration": "Install the preserved APK for exact executable behavior; inspect saved source/capture manifests for provenance."
+    },
+    {
+      "id": "pass-14-hardware",
+      "label": "Same UI, hardware-renderer motion experiment",
+      "decision": "Environment experiment; no UI improvement credit from renderer switch",
+      "recorded_utc": "2026-11-12T15:42:26.105138+00:00",
+      "historical_import": false,
+      "restoration": "Install the preserved APK for exact executable behavior; inspect saved source/capture manifests for provenance."
+    },
+    {
+      "id": "pass-15",
+      "label": "Visible, remembered filament target on Home",
+      "decision": "Promote: two-input selection, restart persistence, correct cancellable heating",
+      "recorded_utc": "2026-11-12T15:52:42.624184+00:00",
+      "historical_import": false,
+      "restoration": "Install the preserved APK for exact executable behavior; inspect saved source/capture manifests for provenance."
+    },
+    {
+      "id": "pass-16",
+      "label": "Compact print hierarchy and completed controls",
+      "decision": "Candidate; primary action stable across printing and pause",
+      "recorded_utc": "2026-11-12T16:02:55.608536+00:00",
+      "historical_import": false,
+      "restoration": "Install the preserved APK for exact executable behavior; inspect saved source/capture manifests for provenance."
+    },
+    {
+      "id": "pass-17",
+      "label": "Observed shutdown and recovery feedback",
+      "decision": "Promote; external Ready clears only an observed shutdown warning",
+      "recorded_utc": "2026-11-12T16:04:30.890643+00:00",
+      "historical_import": false,
+      "restoration": "Install the preserved APK for exact executable behavior; inspect saved source/capture manifests for provenance."
+    },
+    {
+      "id": "pass-18",
+      "label": "Restrained motion and reduced-motion support",
+      "decision": "Behavior verified; smoothness unresolved on software emulator",
+      "recorded_utc": "2026-11-12T16:10:01.174620+00:00",
+      "historical_import": false,
+      "restoration": "Install the preserved APK for exact executable behavior; inspect saved source/capture manifests for provenance."
+    },
+    {
+      "id": "pass-19",
+      "label": "Related print progress and explicit Feed",
+      "decision": "Promote command checks; follow-up labels pending",
+      "recorded_utc": "2026-11-12T16:15:00.947165+00:00",
+      "historical_import": false,
+      "restoration": "Install the preserved APK for exact executable behavior; inspect saved source/capture manifests for provenance."
+    },
+    {
+      "id": "pass-20",
+      "label": "Explicit manual labels and truthful completion controls",
+      "decision": "25 views captured; no small targets; motion profile retained",
+      "recorded_utc": "2026-11-12T16:21:59.553007+00:00",
+      "historical_import": false,
+      "restoration": "Install the preserved APK for exact executable behavior; inspect saved source/capture manifests for provenance."
+    },
+    {
+      "id": "pass-21",
+      "label": "Visible glyph and icon centering",
+      "decision": "Promote; both axes below 0.8 dp in six affected views",
+      "recorded_utc": "2026-11-12T16:25:01.537305+00:00",
+      "historical_import": false,
+      "restoration": "Install the preserved APK for exact executable behavior; inspect saved source/capture manifests for provenance."
+    },
+    {
+      "id": "pass-22",
+      "label": "Temporary-layer motion experiment and immediate initial progress",
+      "decision": "Reject temporary layer: no measured frame-pacing improvement; preserve truthful initial progress separately",
+      "recorded_utc": "2026-11-12T16:29:15.932597+00:00",
+      "historical_import": false,
+      "restoration": "Install the preserved APK for exact executable behavior; inspect saved source/capture manifests for provenance."
+    },
+    {
+      "id": "pass-23",
+      "label": "Centered glyphs and truthful progress; complete workflow baseline",
+      "decision": "Promote correctness; 25 views and ten actuation tasks pass; preserve navigation layout stalls for next comparison",
+      "recorded_utc": "2026-11-12T16:53:15.372663+00:00",
+      "historical_import": false,
+      "restoration": "Install the preserved APK for exact executable behavior; inspect saved source/capture manifests for provenance."
+    },
+    {
+      "id": "pass-24",
+      "label": "Remove redundant weighted-row measurement",
+      "decision": "Promote: Home UI-frame work 325ms to 14ms; all ten actuations pass; cancelled copy follows",
+      "recorded_utc": "2026-11-12T17:18:43.634144+00:00",
+      "historical_import": false,
+      "restoration": "Install the preserved APK for exact executable behavior; inspect saved source/capture manifests for provenance."
+    },
+    {
+      "id": "pass-25",
+      "label": "Final cancelled-state copy and edge/editor coverage",
+      "decision": "Promote text correction; 35-view union; visual 9.8 gate remains unverified",
+      "recorded_utc": "2026-11-12T17:24:13.557718+00:00",
+      "historical_import": false,
+      "restoration": "Install the preserved APK for exact executable behavior; inspect saved source/capture manifests for provenance."
+    }
+  ]
+}

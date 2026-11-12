@@ -15,7 +15,7 @@ def main():
     cases = [
         ('printing','home','Pause'), ('paused','home','Resume'),
         ('printing','tuning','Tune this print'),
-        ('idle','temperature-keypad','Temperature target'),
+        ('idle','temperature-keypad','Nozzle target (°C)'),
         ('idle','heightmap','Active heightmap'),
         ('front','calibration','Front paper contact'),
         ('rear','calibration','Rear paper contact'),

@@ -1,0 +1,21 @@
+{
+  "decision": "promote visual component; final interaction gate pending",
+  "change": "Pinned Material Symbols and centered icon/label rendering",
+  "bambu_anchor": 8,
+  "scores": {
+    "alignment": 7.5,
+    "spacing": 5,
+    "icons": 8,
+    "borders": 3,
+    "type": 6,
+    "legibility": 7,
+    "grouping": 6,
+    "density": 5,
+    "touch": 8,
+    "clarity": 7,
+    "states": 7,
+    "cross_screen": 7
+  },
+  "gate": "not met",
+  "apk_sha256": "7ed0b8bc3cd6aac6adcff55e39eb734fcf5dcbbf5c2b64e884fd64622f114746"
+}

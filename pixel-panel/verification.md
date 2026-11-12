@@ -1,5 +1,37 @@
 # Pixel panel verification
 
+## 0.3.9: actuation evidence, motion and version history
+
+The current loop uses `evaluation/rubric-v2.json`; Bambu stays fixed at 8.
+The original requirement of 9.8 in ten visual categories is still unverified.
+Four additional actuation scores pass their frozen tasks at 10/10, using 40
+inputs rather than the 0.3.8 baseline's 45. These do not substitute for visual
+scores. Animation quality has its own behavior and performance evidence.
+
+The multi-digit selection defect, numeric context/Cancel behavior, common
+motion values, remembered filament target, print grouping, completion controls
+and stale recovery warning are corrected. Both-axis sampled button ink offsets
+are below 0.8 dp; no sampled enabled button is below 48 dp. The weighted-row
+measurement fix reduces the median slowest Home UI frame from 325 to 14 ms in
+six matched emulator entries. Remaining emulator latency is reported separately
+from app layout work; physical-phone smoothness and first-use discovery are
+unmeasured.
+
+The full representative layout workflow passed on pass23. All ten actuation
+workflows and the 25-view capture/geometry set passed on pass24. Normal and
+reduced-motion clips preserve actual native behavior and rapid-navigation
+results. Pass25 changes only cancelled-state wording, with refreshed edge/editor
+captures; actuator handlers and geometry are unchanged. Build/signature, Python
+syntax, configuration sanity and 3 + 13 Klipper-extra tests pass.
+
+Immutable candidate artifacts live in `ui-history/`; use
+`python pixel-panel/scripts/record_ui.py verify`. Detailed decisions, additional
+primary references and the explicitly requested Terra input are recorded under
+`evaluation/` and `ui-evaluation.md`. No physical printer operation, phone
+installation, Pixel settings change or printer deployment occurred. The review
+emulator's normal motion setting is restored and its loopback review fixture
+remains running.
+
 ## 0.3.7: fixed-reference UI improvement loop
 
 Eight visual passes, plus a rejected/corrected navigation gutter experiment,
