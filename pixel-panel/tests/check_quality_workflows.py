@@ -56,7 +56,8 @@ def main():
         fixture.status["virtual_sdcard"]["progress"] = .25
         click("Pause")
         wait_text("Print paused")
-        click("Change filament")
+        click("Prepare")
+        click("Filament")
         wait_text("At temperature")
         capture("02-paused-filament")
         click("240° target")

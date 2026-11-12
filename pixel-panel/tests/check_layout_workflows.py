@@ -18,7 +18,7 @@ from check_workflows import click, wait_text, wait_until
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--port', type=int, default=18725)
-    parser.add_argument('--output', type=Path, default=Path('pixel-panel/.build/layout-review'))
+    parser.add_argument('--output', type=Path, default=Path('pixel-panel/.build/compact-review'))
     args = parser.parse_args()
     assert SERIAL and SERIAL.startswith('emulator-'), 'Select an emulator with ANDROID_SERIAL'
     args.output.mkdir(parents=True, exist_ok=True)
@@ -69,14 +69,38 @@ def main():
         nav = [bounds(find(root, 'Open ' + tab)) for tab in ['Home','Prepare','Files','Camera','More']]
         assert max(y[3]-y[1] for y in nav)-min(y[3]-y[1] for y in nav) <= 1, nav
         assert max(nav[i+1][1]-nav[i][3] for i in range(4))-min(nav[i+1][1]-nav[i][3] for i in range(4)) <= 1
-        assert not any(n.get('text') in ('PREHEAT','Stored prints','Voron 0.2') for n in root.iter('node'))
+        assert not any(n.get('text') in ('PREHEAT','Stored prints','Voron 0.2','Bed setup','RECENT PLATE') for n in root.iter('node'))
         home = bounds(find(root,'Home axes'))
         nozzle = bounds(find(root,'Set nozzle temperature'))
         stop = bounds(find(root,'Emergency stop'))
         assert nozzle[0] > home[2] and abs(nozzle[1]-nav[0][1]) <= 1
         rail_x = nozzle[0]
         assert abs(stop[3]-nav[-1][3]) <= 1
+        rail = [bounds(find(root, label)) for label in
+                ['Set nozzle temperature','Set bed temperature','Filament controls','Connection details','Emergency stop']]
+        assert max(b[3]-b[1] for b in rail)-min(b[3]-b[1] for b in rail) <= 1
+        assert all(abs((rail[i+1][1]-rail[i][3])-(nav[1][1]-nav[0][3])) <= 1 for i in range(4))
+        assert home[3]-home[1] == 126, home
+        image = bounds(find(root,'Model preview'))
+        assert abs((image[2]-image[0])-(image[3]-image[1])) <= 1, image
         print('PASS: even navigation, right-side status, no duplicate header/library/preheat labels', flush=True)
+
+        before = len(scripts())
+        tap('Load filament')
+        wait_text('Heating to 200°')
+        assert scripts()[before:] == ['SET_HEATER_TEMPERATURE HEATER=extruder TARGET=200']
+        tap('Cancel heating')
+        wait_until(lambda: len(scripts()) == before+2, 'cancel restored heater target')
+        assert scripts()[-1] == 'SET_HEATER_TEMPERATURE HEATER=extruder TARGET=0'
+        before = len(scripts())
+        tap('Home')
+        tap('Level')
+        wait_text('Refresh the heightmap?')
+        tap('Home & probe')
+        wait_until(lambda: len(scripts()) == before+1, 'Level mesh command')
+        assert scripts()[-1] == 'CALIBRATE_COMPENSATED_BED_MESH PROBE_COUNT=5'
+        assert get('/printer/objects/query?manual_probe')['status']['manual_probe']['is_active'] is False
+        print('PASS: cold Load heats without extruding, cancellation restores target, and Level refreshes only the compensated mesh', flush=True)
 
         # Vertical gestures on the side rail still commit only once on release.
         x,y,r,b = nozzle
@@ -128,9 +152,16 @@ def main():
 
         tap('Pause')
         wait_text('Print paused')
-        capture('05-paused')
-        tap('Change filament')
+        root = capture('05-paused')
+        assert not any(n.get('text') == 'Ready to resume' for n in root.iter('node'))
+        before = len(scripts())
+        tap('Load filament')
         wait_text('Change filament')
+        wait_until(lambda: len(scripts()) == before+1, 'hot Load shortcut')
+        assert 'LOAD_FILAMENT\n' in scripts()[-1]
+        tap('Unload filament')
+        wait_until(lambda: len(scripts()) == before+2, 'hot Unload shortcut')
+        assert 'UNLOAD_FILAMENT\n' in scripts()[-1]
         capture('06-paused-filament')
         tap('Home')
         tap('Resume')
@@ -146,7 +177,10 @@ def main():
         tap('Prepare')
         tap('Move')
         capture('07-move')
-        tap('Bed setup')
+        assert not any(n.get('text') == 'Bed setup' for n in snapshot().iter('node'))
+        tap('More')
+        tap('Maintenance')
+        tap('Bed calibration')
         wait_text('Front / rear bed calibration')
         capture('08-bed-setup')
         tap('Start paper calibration')

@@ -82,7 +82,9 @@ def main():
         adb("shell", "am", "start", "-n", PACKAGE + "/.MainActivity", "--es",
             "test_endpoint", f"http://127.0.0.1:{port}")
         click("Prepare")
-        click("Bed setup")
+        click("More")
+        click("Maintenance")
+        click("Bed calibration")
         outcomes = {
             "success": "Calibration saved",
             "reject": "Correction exceeded the safety limit. Previous offsets kept",

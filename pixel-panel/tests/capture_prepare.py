@@ -48,7 +48,9 @@ def main():
         tap("Filament")
         capture("04-filament-paused")
         f.status["print_stats"]["state"] = "standby"
-        tap("Bed setup")
+        tap("More")
+        tap("Maintenance")
+        tap("Bed calibration")
         capture("05-bed-setup")
         f.status["manual_probe"].update(is_active=True, z_position=.125)
         f.status["y_axis_z_offset"]["calibration_point"] = 0

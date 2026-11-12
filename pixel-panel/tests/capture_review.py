@@ -104,7 +104,9 @@ def main():
             tap("Filament")
             wait_for(lambda root: any(n.get("text") == "Change filament" for n in root.iter("node")), "filament")
             capture("09-filament-cold")
-            tap("Bed setup")
+            tap("More")
+            tap("Maintenance")
+            tap("Bed calibration")
             wait_for(lambda root: any(n.get("text") == "Front / rear bed calibration" for n in root.iter("node")), "bed setup")
             capture("10-bed-setup")
             tap("View heightmap")
@@ -149,7 +151,8 @@ def main():
                 tap("Turn camera off")
             navigate("Home")
             if args.quality:
-                tap("Change filament")
+                tap("Prepare")
+                tap("Filament")
                 capture("25-paused-filament")
                 navigate("Home")
             fixture.status["print_stats"]["state"] = "complete"

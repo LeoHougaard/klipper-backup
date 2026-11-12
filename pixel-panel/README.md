@@ -8,21 +8,28 @@ is the base Pixel 10 on Android 17. Klipper stays on the existing BTT Pi.
 
 - Landscape in either direction, muted dark colors, 48 dp minimum controls, and
   hardware-reported safe margins for both the camera cutout and rounded corners.
-- Home: direct homing, PLA/ABS preheat, cooldown and the recent plate while idle.
+- Home: compact Load/Unload, homing, movement, Level, PLA/ABS preheat and cooldown
+  controls beside a small plate preview. Level refreshes the compensated heightmap.
+  Load/Unload heat to the selected filament temperature, wait for thermal readiness,
+  then run the macro once. Cancel heating stops the pending operation and restores
+  its previous heater target when that target still belongs to the operation.
   Printing keeps model identity, progress, remaining time and pause/resume together.
   **Tune print** opens live Z, speed, flow and fan controls only when needed.
   Nozzle/bed readings, printer status and E-stop stay in a right-side rail across
   every screen. Tap a temperature to edit it, or drag down/up to raise/lower its
   target in 5-degree steps. Editors open beside the rail and preserve job context.
-  Navigation is evenly spaced on the left; Files and Camera remain the single
+  Both rails use evenly spaced, visibly framed controls. Files and Camera remain the single
   routes to their screens. Home's print-details button opens the relevant plate.
 - Paused filament changes start from the current heater target and offer local
   Resume back to the active job. Finished, failed and unavailable states show
   relevant next actions and separate Pixel/Moonraker/Klipper connection status.
-- Prepare: spatial XY/Z movement, homing/travel checks, motor release, complete
-  hot-nozzle load/unload and bounded feed/retract, plus native front/rear paper
-  calibration and corrected-heightmap refresh. Calibration results distinguish
+- Prepare: direct XYZE movement, exact XYZ positions, selectable jog distances,
+  custom extrusion distance, homing/travel checks, motor release, complete
+  hot-nozzle load/unload and bounded feed/retract. More → Maintenance → Bed calibration
+  holds the front/rear paper setup and mesh density. Calibration results distinguish
   saved/rebuilt, rejected measurements, and unconfirmed completion.
+  Manual motion is available idle or paused. Manual E uses Klipper's cold-extrusion
+  readiness rather than automatically heating; Load/Unload own the automatic workflow.
 - Files: searchable stored G-code, newest first, metadata, model thumbnails and
   explicit print start. Refreshed size/timestamp changes invalidate old previews.
 - Camera: rear camera, silent 1280×720 maximum JPEG frames at approximately 1 fps,
@@ -146,6 +153,9 @@ This APK is debuggable for testing; disable that flag for a release build.
 
 ```powershell
 # Already-open review emulator connected to a loopback fixture on port 18725:
+# automatic heat/cancel/load/unload and manual XYZE workflows.
+python -X utf8 -u pixel-panel/tests/check_manual_filament.py
+
 # layout, tuning/keypad, pause/resume, paper calibration, Files and E-stop.
 python -X utf8 -u pixel-panel/tests/check_layout_workflows.py --port 18725
 

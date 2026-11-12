@@ -26,12 +26,11 @@ final class PanelUi {
       AMBER = 0xffffe7b3, // Amber 12
       DISABLED = 0xff63706b; // Sage 9
   static final int RIPPLE = 0x23c4f5e1;
-  // Concentric corners: card 20 = inset 12 + control 8; sheet 24 = inset 16 + 8.
-  static final int CONTROL_RADIUS = 8,
+  static final int CONTROL_RADIUS = 6,
       CARD_INSET = 12,
-      CARD_RADIUS = CONTROL_RADIUS + CARD_INSET,
+      CARD_RADIUS = 0,
       SHEET_INSET = 16,
-      SHEET_RADIUS = CONTROL_RADIUS + SHEET_INSET;
+      SHEET_RADIUS = 8;
   final Context context;
 
   PanelUi(Context c) {
@@ -151,11 +150,9 @@ final class PanelUi {
 
   Drawable buttonBackground(int style) {
     int fill =
-        style == 4
-            ? Color.TRANSPARENT
-            : style == 1 ? ACCENT : style == 2 ? DANGER_BG : style == 3 ? ACCENT_BG : RAISED;
+        style == 1 ? ACCENT : style == 2 ? DANGER_BG : style == 3 ? ACCENT_BG : RAISED;
     int border =
-        style == 4 || style == 1 ? 0 : style == 2 ? DANGER_LINE : style == 3 ? ACCENT_LINE : LINE;
+        style == 1 ? 0 : style == 2 ? DANGER_LINE : style == 3 ? ACCENT_LINE : LINE;
     StateListDrawable content = new StateListDrawable();
     content.addState(new int[] {-android.R.attr.state_enabled}, controlShape(SURFACE, LINE));
     content.addState(new int[] {android.R.attr.state_focused}, controlShape(fill, ACCENT));
@@ -173,7 +170,6 @@ final class PanelUi {
 
   LinearLayout panel() {
     LinearLayout v = col();
-    v.setBackground(shape(SURFACE, CARD_RADIUS));
     pad(v, CARD_INSET, CARD_INSET);
     return v;
   }
@@ -191,7 +187,7 @@ final class PanelUi {
     item.setBackground(
         new RippleDrawable(
             ColorStateList.valueOf(RIPPLE),
-            selected ? selectedBackground : shape(BG, CONTROL_RADIUS),
+            selected ? selectedBackground : controlShape(RAISED, LINE),
             shape(Color.WHITE, CONTROL_RADIUS)));
     ImageView image = new ImageView(context);
     image.setDuplicateParentStateEnabled(true);

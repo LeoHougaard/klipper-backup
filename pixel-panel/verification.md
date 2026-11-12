@@ -1,5 +1,41 @@
 # Pixel panel verification
 
+## 0.3.5: compact controls and automatic filament handling
+
+The review emulator keeps both rails evenly spaced, with visible button borders
+for navigation and step selectors. Home actions use fixed 48 dp targets rather
+than stretching to fill cards. Decorative card backgrounds/rounding are removed,
+model previews have square bounds with no padded letterbox container, and the
+redundant paused “Ready to resume” message is gone.
+
+Home offers Load, Unload and Level. Level reuses the compensated mesh refresh;
+paper calibration is under More → Maintenance → Bed calibration. Prepare has
+Move and Filament tabs. Move includes exact XYZ position entry, bounded jogs,
+and E feed/retract with a custom distance, available idle or paused. The E entry
+uses the printer's max_extrude_only_distance, with no extra app-only 50 mm cap.
+
+Load/Unload heat to the selected filament temperature and wait before sending
+the macro once. Cancel or leaving the workflow prevents the pending extrusion
+and restores a heater target owned by that operation. Target changes, a changed
+print, shutdown or connection changes cancel the pending operation; E-stop never
+queues a subsequent heater restore or extrusion. Manual E remains independently
+subject to Klipper's cold-extrusion readiness. Operations preserve G-code state.
+
+`check_manual_filament.py` passed automatic heating, cancellation, hot Load/Unload,
+leaving the workflow, cold manual E refusal, a 7.5 mm E distance in both directions,
+exact X positioning, Y/Z jogging, paused movement and unhomed refusal. A separate
+fixture run verified E-stop during heating and no later extrusion after recovery.
+Native screenshots/results are in `.build/compact-review/`. These checks used
+only emulator-5554 and the loopback fixture, with zero physical printer commands.
+
+The updated layout regression also passed equal spacing on both rails, 48 dp
+Home actions, square previews, Level's mesh-only command, heating cancellation,
+tuning/keypad, pause/resume, Maintenance calibration, Files and E-stop through
+the keypad. Build/signature, Python syntax and printer config checks pass.
+A final smoke test confirmed that ABS preheat selects 240°C for Load and that
+manual E accepts a 100 mm move under the configured 1400 mm limit. Review state
+and the normal 5 mm E step were restored afterward.
+
 ## 0.3.4: annotated layout corrections
 
 Verified on the Android 15 review emulator at 2424 × 1080, with every command
