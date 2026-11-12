@@ -31,6 +31,7 @@ SCREENS = {
     'temperature-keypad': 'Temperature keypad', 'tuning': 'Print tuning',
     'xy-speed': 'XY speed', 'z-speed': 'Z speed', 'e-speed': 'Extrusion speed',
     'distance': 'Extrusion distance', 'position': 'Exact position', 'fan': 'Part fan',
+    'presets': 'Temperature presets',
 }
 
 
@@ -39,6 +40,8 @@ def main():
     parser.add_argument('--serial', required=True)
     parser.add_argument('--fixture-port', type=int, default=18725)
     parser.add_argument('--port', type=int, default=18726)
+    parser.add_argument('--fixture-snapshot',type=Path,
+                        help='Reuse fixed fixture status/files for matched visual evaluation')
     args = parser.parse_args()
     if not args.serial.startswith('emulator-'):
         parser.error('Review controls require an emulator serial, never a physical phone')
@@ -47,6 +50,10 @@ def main():
     from check_workflows import click
 
     fixture = Fixture()
+    if args.fixture_snapshot:
+        data = json.loads(args.fixture_snapshot.read_text(encoding='utf-8'))
+        fixture.status = data['status']
+        fixture.files = data['files']
     base = copy.deepcopy(fixture.status)
     captures = Path(__file__).resolve().parents[1] / '.build/review-captures'
     captures.mkdir(parents=True, exist_ok=True)
@@ -103,6 +110,7 @@ def main():
             'z-speed': ['Prepare', 'Z movement speed'], 'e-speed': ['Prepare', 'E movement speed'],
             'distance': ['Prepare', 'Extrusion distance'], 'position': ['Prepare', 'Set X position'],
             'fan': ['Prepare', 'Part fan'],
+            'presets': ['Temperature presets'],
         }
         for label in routes[name]: click(label)
 
@@ -129,6 +137,7 @@ def main():
                 with operation:
                     # Tuning belongs to a job; paper contacts belong to calibration.
                     if screen == 'tuning' and state not in ('printing', 'paused'): state = 'printing'
+                    if screen == 'presets' and state in ('printing', 'paused'): state = 'idle'
                     if state in ('front', 'rear'): screen = 'calibration'
                     if state in ('offline', 'shutdown') and screen not in ('home', 'connection', 'more', 'maintenance'):
                         screen = 'home'

@@ -70,8 +70,25 @@ def main():
         snapshot()
         assert len(scripts()) == before+4
         print('PASS: Home XYZE use edited speeds; the whole wheel sector works and a drag cancels',flush=True)
+        click('Prepare')
+        before = len(scripts())
+        click('X −')
+        wait_until(lambda: len(scripts()) == before+1, 'dedicated Move XY jog')
+        assert 'G0 X-10 F2400' in scripts()[-1]
+        click('E −')
+        wait_until(lambda: len(scripts()) == before+2, 'dedicated Move E retraction')
+        assert 'G1 E-5 F240' in scripts()[-1]
+        state(print_stats={'state':'paused','filename':'test-plate.gcode'})
+        wait_text('Print paused')
+        click('Z −')
+        wait_until(lambda: len(scripts()) == before+3, 'paused dedicated Move Z jog')
+        assert 'G0 Z-0.1 F120' in scripts()[-1]
+        print('PASS: adjacent Move XY/Z/E controls retain edited speeds and paused motion',flush=True)
         state(print_stats={'state':'printing','filename':'test-plate.gcode'})
         wait_text('Printing')
+        root = snapshot()
+        assert not any(n.get('enabled') == 'true' and n.get('text') in ('X +','Y +','Z +','E +') for n in root.iter('node'))
+        click('Home')
         click('Speed 100%'); number(115)
         wait_until(lambda: scripts()[-1] == 'M220 S115', 'direct print speed')
         wait_text('Speed 115%')
@@ -83,10 +100,11 @@ def main():
         try:
             adb('shell','input','keyevent','4')
             state(**original)
-            click('Home')
+            click('Prepare')
             for axis, speed in [('XY',20),('Z',5),('E',3)]:
                 click(axis+' movement speed'); number(speed)
             click('Extrusion distance'); number(5)
+            click('Home')
         finally:
             state(**original)
 

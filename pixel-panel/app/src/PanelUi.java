@@ -127,7 +127,7 @@ final class PanelUi {
     v.setTextColor(ink(ink));
     v.setBackground(buttonBackground(style));
     if (icon != null) {
-      Icon d = new Icon(icon, ink);
+      Icon d = new Icon(context, icon, ink);
       d.setBounds(0, 0, dp(24), dp(24));
       v.setCompoundDrawables(d, null, null, null);
       v.setCompoundDrawablePadding(dp(8));
@@ -150,11 +150,11 @@ final class PanelUi {
 
   Drawable buttonBackground(int style) {
     int fill =
-        style == 1 ? ACCENT : style == 2 ? DANGER_BG : style == 3 ? ACCENT_BG : RAISED;
+        style == 1 ? ACCENT : style == 2 ? DANGER_BG : style == 3 ? ACCENT_BG : style == 4 ? SURFACE : RAISED;
     int border =
-        style == 1 ? 0 : style == 2 ? DANGER_LINE : style == 3 ? ACCENT_LINE : LINE;
+        style == 2 ? DANGER_LINE : 0;
     StateListDrawable content = new StateListDrawable();
-    content.addState(new int[] {-android.R.attr.state_enabled}, controlShape(SURFACE, LINE));
+    content.addState(new int[] {-android.R.attr.state_enabled}, controlShape(SURFACE, 0));
     content.addState(new int[] {android.R.attr.state_focused}, controlShape(fill, ACCENT));
     content.addState(new int[] {}, controlShape(fill, border));
     return new RippleDrawable(
@@ -164,7 +164,7 @@ final class PanelUi {
   void weighted(LinearLayout parent, View v, int height) {
     LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, height < 0 ? height : dp(height), 1);
     // Internal gutters only: the outer edge must follow its card's 12 dp inset.
-    if (parent.getChildCount() > 0) lp.leftMargin = dp(6);
+    if (parent.getChildCount() > 0) lp.leftMargin = dp(8);
     parent.addView(v, lp);
   }
 
@@ -181,19 +181,19 @@ final class PanelUi {
     item.setMinimumWidth(dp(48));
     GradientDrawable cue = shape(ACCENT, 2);
     LayerDrawable selectedBackground =
-        new LayerDrawable(new Drawable[] {shape(ACCENT_BG, CONTROL_RADIUS), cue});
+        new LayerDrawable(new Drawable[] {shape(RAISED, CONTROL_RADIUS), cue});
     selectedBackground.setLayerSize(1, dp(3), dp(24));
     selectedBackground.setLayerGravity(1, Gravity.LEFT | Gravity.CENTER_VERTICAL);
     item.setBackground(
         new RippleDrawable(
             ColorStateList.valueOf(RIPPLE),
-            selected ? selectedBackground : shape(SURFACE, CONTROL_RADIUS),
+            selected ? selectedBackground : shape(Color.TRANSPARENT, CONTROL_RADIUS),
             shape(Color.WHITE, CONTROL_RADIUS)));
     ImageView image = new ImageView(context);
     image.setDuplicateParentStateEnabled(true);
-    image.setImageDrawable(new Icon(icon, selected ? ACCENT : TEXT));
+    image.setImageDrawable(new Icon(context, icon, selected ? ACCENT : TEXT));
     item.addView(image, new LinearLayout.LayoutParams(dp(28), dp(28)));
-    TextView label = text(title, 11, selected ? ACCENT : MUTED);
+    TextView label = text(title, 12, selected ? ACCENT : MUTED);
     label.setTextColor(ink(selected ? ACCENT : MUTED));
     label.setDuplicateParentStateEnabled(true);
     label.setTypeface(Typeface.create("sans-serif-medium", Typeface.NORMAL));
@@ -211,6 +211,18 @@ final class PanelUi {
     Button button = button(title, icon, 0, action);
     button.setBackground(new RippleDrawable(ColorStateList.valueOf(RIPPLE),
         shape(Color.TRANSPARENT, CONTROL_RADIUS), shape(Color.WHITE, CONTROL_RADIUS)));
+    return button;
+  }
+
+  Button parameterButton(String title, String icon, Runnable action) {
+    Button button = quietButton(title, icon, action);
+    if (icon != null) {
+      Icon mark = (Icon) button.getCompoundDrawables()[0];
+      mark.setBounds(0, 0, dp(16), dp(16));
+      mark.setInk(MUTED);
+      button.setCompoundDrawables(mark, null, null, null);
+    }
+    button.setTextSize(14);
     return button;
   }
 
@@ -301,6 +313,53 @@ final class PanelUi {
     public void setText(CharSequence text, BufferType type) {
       if (!TextUtils.equals(getText(), text)) super.setText(text, type);
     }
+
+    @Override protected void onDraw(Canvas canvas) {
+      Drawable[] icons = getCompoundDrawables();
+      Drawable icon = icons[0] != null ? icons[0] : icons[2] != null ? icons[2] : icons[1];
+      android.text.Layout layout = getLayout();
+      if (icon == null || layout == null) { super.onDraw(canvas); return; }
+      // Center visible artwork and the native text layout, not its padded SVG
+      // viewport or TextView's independently centered compound drawable slot.
+      RectF ink = icon instanceof Icon ? ((Icon) icon).inkBounds() : new RectF(icon.getBounds());
+      boolean text = TextUtils.getTrimmedLength(getText()) > 0;
+      float left = Float.MAX_VALUE, right = -Float.MAX_VALUE;
+      if (text) for (int i=0;i<layout.getLineCount();i++) {
+        left = Math.min(left, layout.getLineLeft(i));
+        right = Math.max(right, layout.getLineRight(i));
+      }
+      float tw = text ? right-left : 0, th = text ? layout.getHeight() : 0;
+      float gap = text ? getCompoundDrawablePadding() : 0;
+      float cx = (getPaddingLeft()+getWidth()-getPaddingRight())/2f;
+      float cy = (getPaddingTop()+getHeight()-getPaddingBottom())/2f;
+      float x, y, tx, ty;
+      if (icons[0] != null || icons[2] != null) {
+        float start = cx-(ink.width()+gap+tw)/2f;
+        x = icons[0] != null ? start : start+tw+gap;
+        y = cy-ink.height()/2f;
+        tx = icons[0] != null ? start+ink.width()+gap : start;
+        ty = cy-th/2f;
+      } else {
+        x = cx-ink.width()/2f;
+        y = cy-(ink.height()+gap+th)/2f;
+        tx = cx-tw/2f;
+        ty = y+ink.height()+gap;
+      }
+      canvas.save();
+      canvas.translate(x-ink.left, y-ink.top);
+      icon.draw(canvas);
+      canvas.restore();
+      if (text) {
+        int color = getPaint().getColor();
+        getPaint().setColor(getCurrentTextColor());
+        canvas.save();
+        canvas.translate(tx-left, ty);
+        layout.draw(canvas);
+        canvas.restore();
+        getPaint().setColor(color);
+      }
+    }
+
   }
 
   static void selection(Button button, boolean selected, PanelUi ui) {
@@ -315,207 +374,43 @@ final class PanelUi {
     }
   }
 
+  /** Pinned Material Symbols; Android owns path rendering and state tinting. */
   static final class Icon extends Drawable {
-    final String name;
+    final Drawable vector;
+    final int intrinsicSize;
+    final float[] artwork;
     int baseColor;
-    final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
-    Icon(String name, int color) {
-      this.name = name;
-      this.baseColor = color;
-      paint.setColor(color);
-      paint.setStyle(Paint.Style.STROKE);
-      paint.setStrokeWidth(1.8f);
-      paint.setStrokeCap(Paint.Cap.ROUND);
-      paint.setStrokeJoin(Paint.Join.ROUND);
-    }
-
-    @Override
-    public boolean isStateful() {
-      return true;
-    }
-
-    @Override
-    protected boolean onStateChange(int[] states) {
-      boolean enabled = false;
-      for (int state : states) if (state == android.R.attr.state_enabled) enabled = true;
-      int color = enabled ? baseColor : DISABLED;
-      if (paint.getColor() == color) return false;
-      paint.setColor(color);
-      invalidateSelf();
-      return true;
-    }
-
-    void setInk(int color) {
+    Icon(Context context, String name, int color) {
+      int resource = context.getResources().getIdentifier("panel_" + name, "drawable", context.getPackageName());
+      if (resource == 0) throw new IllegalArgumentException("Missing panel icon: " + name);
+      vector = context.getDrawable(resource).mutate();
+      artwork = IconMetrics.bounds(name);
+      intrinsicSize = Math.round(24 * context.getResources().getDisplayMetrics().density);
       baseColor = color;
-      onStateChange(getState());
+      vector.setTint(color);
     }
 
-    void path(Canvas c, float... points) {
-      Path p = new Path();
-      p.moveTo(points[0], points[1]);
-      for (int i = 2; i < points.length; i += 2) p.lineTo(points[i], points[i + 1]);
-      c.drawPath(p, paint);
+    RectF inkBounds() {
+      Rect b = getBounds();
+      return new RectF(b.left+artwork[0]*b.width(), b.top+artwork[1]*b.height(),
+          b.left+artwork[2]*b.width(), b.top+artwork[3]*b.height());
     }
-
-    @Override
-    public void draw(Canvas canvas) {
-      canvas.save();
-      Rect r = getBounds();
-      canvas.translate(r.left, r.top);
-      canvas.scale(r.width() / 24f, r.height() / 24f);
-      switch (name) {
-        case "home":
-          path(canvas, 3, 10, 12, 3, 21, 10, 21, 21, 15, 21, 15, 14, 9, 14, 9, 21, 3, 21, 3, 10);
-          break;
-        case "move":
-          path(canvas, 12, 2, 12, 22);
-          path(canvas, 2, 12, 22, 12);
-          path(canvas, 8, 6, 12, 2, 16, 6);
-          path(canvas, 8, 18, 12, 22, 16, 18);
-          path(canvas, 6, 8, 2, 12, 6, 16);
-          path(canvas, 18, 8, 22, 12, 18, 16);
-          break;
-        case "files":
-          path(canvas, 6, 3, 15, 3, 20, 8, 20, 21, 6, 21, 6, 3);
-          path(canvas, 14, 3, 14, 9, 20, 9);
-          path(canvas, 9, 13, 16, 13);
-          path(canvas, 9, 17, 15, 17);
-          break;
-        case "camera":
-          canvas.drawRoundRect(3, 6, 21, 20, 3, 3, paint);
-          canvas.drawCircle(12, 13, 4, paint);
-          path(canvas, 7, 6, 9, 3, 15, 3, 17, 6);
-          break;
-        case "more":
-          for (int x = 5; x <= 19; x += 7) canvas.drawCircle(x, 12, 1, paint);
-          break;
-        case "heat":
-          path(canvas, 9, 15, 9, 5);
-          canvas.drawArc(9, 2, 15, 8, 180, 180, false, paint);
-          path(canvas, 15, 5, 15, 15);
-          canvas.drawArc(6, 12, 18, 24, -35, 250, false, paint);
-          path(canvas, 12, 8, 12, 18);
-          break;
-        case "bed":
-          path(canvas, 3, 15, 21, 15, 19, 21, 5, 21, 3, 15);
-          for (int x = 7; x <= 17; x += 5) {
-            Path p = new Path();
-            p.moveTo(x, 11);
-            p.cubicTo(x - 3, 8, x + 3, 6, x, 3);
-            canvas.drawPath(p, paint);
-          }
-          break;
-        case "filament":
-          canvas.drawCircle(12, 12, 9, paint);
-          canvas.drawCircle(12, 12, 3, paint);
-          path(canvas, 6, 6, 9, 9);
-          path(canvas, 15, 15, 18, 18);
-          path(canvas, 18, 6, 15, 9);
-          path(canvas, 6, 18, 9, 15);
-          break;
-        case "load":
-        case "unload":
-          canvas.drawCircle(8, 8, 5, paint);
-          canvas.drawCircle(8, 8, 1.5f, paint);
-          path(canvas, 13, 8, 18, 8, 18, 21);
-          if (name.equals("load")) path(canvas, 14, 17, 18, 21, 22, 17);
-          else path(canvas, 14, 12, 18, 8, 22, 12);
-          break;
-        case "speed":
-          canvas.drawArc(3, 4, 21, 22, 180, 180, false, paint);
-          path(canvas, 4, 19, 20, 19);
-          path(canvas, 12, 16, 17, 8);
-          break;
-        case "cool":
-          path(canvas, 12, 2, 12, 22);
-          path(canvas, 3, 7, 21, 17);
-          path(canvas, 3, 17, 21, 7);
-          path(canvas, 9, 4, 12, 7, 15, 4);
-          path(canvas, 9, 20, 12, 17, 15, 20);
-          break;
-        case "calibrate":
-          path(canvas, 3, 18, 21, 18);
-          path(canvas, 6, 21, 18, 21);
-          path(canvas, 12, 3, 12, 13, 8, 9);
-          path(canvas, 12, 13, 16, 9);
-          break;
-        case "wifi":
-          canvas.drawArc(2, 4, 22, 22, 220, 100, false, paint);
-          canvas.drawArc(6, 9, 18, 21, 220, 100, false, paint);
-          canvas.drawCircle(12, 19, 1, paint);
-          break;
-        case "stop":
-          path(canvas, 8, 3, 16, 3, 21, 8, 21, 16, 16, 21, 8, 21, 3, 16, 3, 8, 8, 3);
-          path(canvas, 12, 7, 12, 13);
-          canvas.drawCircle(12, 17, .5f, paint);
-          break;
-        case "edit":
-          path(canvas, 5, 16, 16, 5, 20, 9, 9, 20, 4, 21, 5, 16);
-          path(canvas, 13, 8, 17, 12);
-          break;
-        case "play":
-          path(canvas, 8, 4, 20, 12, 8, 20, 8, 4);
-          break;
-        case "pause":
-          path(canvas, 8, 4, 8, 20);
-          path(canvas, 16, 4, 16, 20);
-          break;
-        case "check":
-          path(canvas, 4, 12, 10, 18, 20, 6);
-          break;
-        case "back":
-          path(canvas, 14, 5, 7, 12, 14, 19);
-          break;
-        case "arrow":
-          path(canvas, 9, 5, 16, 12, 9, 19);
-          break;
-        case "up":
-          path(canvas, 12, 21, 12, 3, 5, 10);
-          path(canvas, 12, 3, 19, 10);
-          break;
-        case "down":
-          path(canvas, 12, 3, 12, 21, 5, 14);
-          path(canvas, 12, 21, 19, 14);
-          break;
-        case "left":
-          path(canvas, 21, 12, 3, 12, 10, 5);
-          path(canvas, 3, 12, 10, 19);
-          break;
-        case "right":
-          path(canvas, 3, 12, 21, 12, 14, 5);
-          path(canvas, 21, 12, 14, 19);
-          break;
-        case "refresh":
-          canvas.drawArc(4, 4, 20, 20, 45, 290, false, paint);
-          path(canvas, 16, 3, 20, 8, 14, 8);
-          break;
-        case "light":
-          canvas.drawCircle(12, 9, 5, paint);
-          path(canvas, 9, 13, 9, 18, 15, 18, 15, 13);
-          path(canvas, 10, 21, 14, 21);
-          break;
-        default:
-          canvas.drawCircle(12, 12, 8, paint);
-      }
-      canvas.restore();
-    }
-
-    @Override
-    public void setAlpha(int a) {
-      paint.setAlpha(a);
+    @Override public boolean isStateful() { return true; }
+    @Override protected boolean onStateChange(int[] states) {
+      boolean enabled = states.length == 0;
+      for (int state : states) if (state == android.R.attr.state_enabled) enabled = true;
+      vector.setTint(enabled ? baseColor : DISABLED);
       invalidateSelf();
+      return true;
     }
-
-    @Override
-    public void setColorFilter(ColorFilter f) {
-      paint.setColorFilter(f);
-      invalidateSelf();
-    }
-
-    @Override
-    public int getOpacity() {
-      return PixelFormat.TRANSLUCENT;
-    }
+    void setInk(int color) { baseColor = color; onStateChange(getState()); }
+    @Override protected void onBoundsChange(Rect bounds) { vector.setBounds(bounds); }
+    @Override public void draw(Canvas canvas) { vector.draw(canvas); }
+    @Override public void setAlpha(int alpha) { vector.setAlpha(alpha); invalidateSelf(); }
+    @Override public void setColorFilter(ColorFilter filter) { vector.setColorFilter(filter); invalidateSelf(); }
+    @Override public int getOpacity() { return PixelFormat.TRANSLUCENT; }
+    @Override public int getIntrinsicWidth() { return intrinsicSize; }
+    @Override public int getIntrinsicHeight() { return intrinsicSize; }
   }
 }

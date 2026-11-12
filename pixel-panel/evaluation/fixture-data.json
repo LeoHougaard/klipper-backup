@@ -1,0 +1,157 @@
+{
+  "status": {
+    "webhooks": {
+      "state": "ready"
+    },
+    "print_stats": {
+      "state": "standby",
+      "filename": "",
+      "print_duration": 0
+    },
+    "virtual_sdcard": {
+      "progress": 0
+    },
+    "extruder": {
+      "temperature": 22,
+      "target": 0,
+      "can_extrude": false
+    },
+    "heater_bed": {
+      "temperature": 23,
+      "target": 0
+    },
+    "toolhead": {
+      "homed_axes": "xyz",
+      "position": [
+        60,
+        60,
+        5,
+        0
+      ],
+      "axis_minimum": [
+        0,
+        0,
+        -1.5
+      ],
+      "axis_maximum": [
+        120,
+        120,
+        120
+      ]
+    },
+    "configfile": {
+      "settings": {
+        "extruder": {
+          "max_temp": 400,
+          "min_extrude_temp": 170,
+          "max_extrude_only_distance": 1400,
+          "max_extrude_only_velocity": 75
+        },
+        "printer": {
+          "max_velocity": 300,
+          "max_z_velocity": 15
+        },
+        "heater_bed": {
+          "max_temp": 110
+        }
+      }
+    },
+    "fan": {
+      "speed": 0.35
+    },
+    "gcode_move": {
+      "homing_origin": [
+        0,
+        0,
+        -0.025,
+        0
+      ],
+      "speed_factor": 1,
+      "extrude_factor": 1
+    },
+    "manual_probe": {
+      "is_active": false,
+      "z_position": null
+    },
+    "y_axis_z_offset": {
+      "calibration_point": null,
+      "front_offset": 0.03,
+      "rear_offset": -0.03
+    },
+    "bed_mesh": {
+      "profile_name": "default",
+      "mesh_min": [
+        10,
+        10
+      ],
+      "mesh_max": [
+        110,
+        110
+      ],
+      "probed_matrix": [
+        [
+          -0.04,
+          -0.043,
+          -0.036,
+          -0.019,
+          0.008
+        ],
+        [
+          -0.022,
+          -0.025,
+          -0.018,
+          -0.001,
+          0.026
+        ],
+        [
+          -0.004,
+          -0.007,
+          0.0,
+          0.017,
+          0.044
+        ],
+        [
+          0.014,
+          0.011,
+          0.018,
+          0.035,
+          0.062
+        ],
+        [
+          0.032,
+          0.029,
+          0.036,
+          0.053,
+          0.08
+        ]
+      ]
+    }
+  },
+  "files": [
+    {
+      "path": "test-plate.gcode",
+      "size": 123456,
+      "modified": 1794460559.0166123
+    },
+    {
+      "path": "Voron_parts/HeatCore_4_toolhead_front_ABS_0.2mm.gcode",
+      "size": 5642732,
+      "modified": 1794456959.016614
+    },
+    {
+      "path": "First_layer_120x120_PLA.gcode",
+      "size": 175000,
+      "modified": 1794453359.016615
+    },
+    {
+      "path": "Cable_chain_mount_rev_3.gcode",
+      "size": 2100000,
+      "modified": 1794449759.0166152
+    },
+    {
+      "path": "Bracket_without_metadata.gcode",
+      "size": 12345,
+      "modified": 1794446159.0166156
+    }
+  ]
+}

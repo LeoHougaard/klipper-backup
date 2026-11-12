@@ -87,6 +87,21 @@ def main():
                    ['X +','X −','Y +','Y −','XY movement speed','Z movement speed','E movement speed'])
         print('PASS: even navigation, right-side status, no duplicate header/library/preheat labels', flush=True)
 
+        tap('Print details')
+        wait_text('Print details')
+        tap('Close')
+        before = len(scripts())
+        tap('Temperature presets')
+        tap('Heat ABS · 240° / 100°')
+        wait_until(lambda: len(scripts()) == before+1, 'Home heat preset')
+        assert scripts()[-1] == 'SET_HEATER_TEMPERATURE HEATER=extruder TARGET=240\nSET_HEATER_TEMPERATURE HEATER=heater_bed TARGET=100'
+        tap('Temperature presets')
+        tap('Turn heaters off')
+        wait_until(lambda: len(scripts()) == before+2, 'Home cooldown')
+        assert scripts()[-1] == 'TURN_OFF_HEATERS'
+        tap('Prepare'); tap('Filament'); tap('PLA 200°'); tap('Home')
+        print('PASS: preview opens its details; Heat contains working ABS and cooldown controls', flush=True)
+
         before = len(scripts())
         tap('Load filament')
         wait_text('Heating to 200°')
@@ -212,6 +227,10 @@ def main():
                               for r in get('/fixture/requests')[initial_requests:]), 'emergency stop through keypad')
         wait_text('Printer shutdown')
         print('PASS: emergency stop works with keypad open', flush=True)
+        tap('More'); tap('Maintenance'); tap('Restart Klipper'); tap('Restart Klipper')
+        wait_text('Ready')
+        tap('Home')
+        print('PASS: review fixture recovery clears the emergency banner', flush=True)
         (args.output/'results.json').write_text(json.dumps({'passed':True,'serial':SERIAL,'physical_printer_commands':0},indent=2))
     finally:
         # Back closes a sheet; Home then returns to the normal review state.

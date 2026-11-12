@@ -1,5 +1,49 @@
 # Pixel panel verification
 
+## 0.3.7: fixed-reference UI improvement loop
+
+Eight visual passes, plus a rejected/corrected navigation gutter experiment,
+are recorded in `ui-evaluation.md`. Bambu stays anchored at 8, the initial
+0.3.6 build at 1, and the requested target remains 9.8 in at least ten of
+twelve fixed categories. Reference images, baseline hashes, fixture data and
+category names are locked under `evaluation/`; `verify_ui_reference.py`
+checks the anchors before new evaluation captures. **The 9.8 gate remains
+unverified.** Coarse sol design estimates are not automatic test scores.
+
+The app uses 30 pinned Material Symbols Rounded vectors. Combined icon/text
+groups center using SVG artwork bounds and Android's native multiline text
+layout. Ordinary outlines are removed; inputs, focus and danger retain their
+meaningful edges. Parameter marks are quieter, temperature readings larger,
+menu rows share one surface, the plate opens its own details, and Heat holds
+presets/cooldown. Dedicated Move uses larger XY with adjacent Z/E columns.
+Automatic Load is the primary cold-filament action; manual heat is secondary.
+
+The broad native set covers seventeen views. Sampled enabled button ink has
+less than 0.8 dp horizontal center error; no sampled button target is below
+48 dp. Home's median error fell from 5.4 dp to 0.2 dp. After the adaptive Move
+change, Home and paused Filament captures were pixel-identical to the prior
+candidate. The final semantic-icon pass was recaptured on its four affected
+views and kept maximum sampled horizontal error below 0.6 dp.
+
+Passed against the loopback fixture on emulator-5554:
+
+- Automatic Load/Unload heating, cancellation, leaving the operation, cold E
+  refusal, precision XYZ/E, paused motion and unhomed refusal.
+- Edited Home and dedicated Move XY/Z/E feed rates, the whole wheel sector,
+  drag cancellation, paused Move, disabled motion while printing and direct
+  print-speed entry. Cleanup now handles an originally paused state.
+- Tappable plate details, Heat/ABS/cooldown, mesh-only Level, temperature
+  gestures and keypad, live tuning, pause/filament/resume, both paper contacts,
+  Files, E-stop through an open keypad, and simulated recovery clearing its
+  urgent banner.
+- Build/signature, Python syntax, configuration and Klipper-extra checks.
+
+The final icon-only pass preserves those command handlers and target bounds.
+Native screenshots, APKs, geometry reports and per-pass records remain in
+`.build/ui-hillclimb/`. No physical printer command, phone installation,
+firmware operation or global settings change was performed. Physical-device
+readability and subjective 9.8 quality remain unverified.
+
 ## 0.3.6: related controls and broader native review
 
 Home uses a circular XY control with center homing, a separate vertical Z

@@ -12,8 +12,9 @@ is the base Pixel 10 on Android 17. Klipper stays on the existing BTT Pi.
   separate vertical Z control, and a related extrusion/Load/Unload area. Exact
   positions, distances and XY/Z/E speeds are editable in place. Neutral dark
   surfaces use accent only for selection and primary actions. Level in the
-  right rail refreshes the compensated heightmap; PLA/ABS preheat and cooldown
-  stay beside the plate. Printing enlarges the model and exposes print speed.
+  right rail refreshes the compensated heightmap. Tap the plate for its details;
+  Heat contains PLA/ABS presets and cooldown. Printing enlarges the model and
+  exposes print speed.
   Load/Unload heat to the selected filament temperature, wait for thermal readiness,
   then run the macro once. Cancel heating stops the pending operation and restores
   its previous heater target when that target still belongs to the operation.
@@ -22,8 +23,9 @@ is the base Pixel 10 on Android 17. Klipper stays on the existing BTT Pi.
   Nozzle/bed readings, printer status and E-stop stay in a right-side rail across
   every screen. Tap a temperature to edit it, or drag down/up to raise/lower its
   target in 5-degree steps. Editors open beside the rail and preserve job context.
-  Both rails use evenly spaced, visibly framed controls. Files and Camera remain the single
-  routes to their screens. Home's print-details button opens the relevant plate.
+  Navigation uses one grouped rail; ordinary controls use neutral surfaces,
+  with outlines reserved for focus, editable inputs and danger. Files and
+  Camera remain the single routes to their screens.
 - Paused filament changes start from the current heater target and offer local
   Resume back to the active job. Finished, failed and unavailable states show
   relevant next actions and separate Pixel/Moonraker/Klipper connection status.
@@ -34,6 +36,7 @@ is the base Pixel 10 on Android 17. Klipper stays on the existing BTT Pi.
   saved/rebuilt, rejected measurements, and unconfirmed completion.
   Manual motion is available idle or paused. Manual E uses Klipper's cold-extrusion
   readiness rather than automatically heating; Load/Unload own the automatic workflow.
+  The dedicated Move page uses a larger XY wheel with adjacent Z and E columns.
 - Emulator review: `python pixel-panel/tests/review_server.py --serial emulator-5554`
   serves loopback controls on port 18726 and a simulated Moonraker on 18725.
   With the app already connected to that fixture, select printer state and
@@ -42,6 +45,12 @@ is the base Pixel 10 on Android 17. Klipper stays on the existing BTT Pi.
   **Capture current app** records manual Device interactions; **Annotate preview**
   in T3 marks the resulting immutable screenshot. Fit/full-resolution zoom is
   available. The server refuses physical-device serials and checks the endpoint.
+- UI evaluation: [contract and scorecard](ui-evaluation.md). The exact Bambu
+  references, baseline hashes, synthetic fixture data, twelve categories and
+  fixed score of 8 are locked in `evaluation/`. Captures check those anchors.
+  `tests/measure_ui_quality.py` measures geometry; it does not generate design
+  scores. Material Symbols Rounded vectors are pinned to a Google source
+  revision with their license under `third-party/material-symbols/`.
 - Files: searchable stored G-code, newest first, metadata, model thumbnails and
   explicit print start. Refreshed size/timestamp changes invalidate old previews.
 - Camera: rear camera, silent 1280×720 maximum JPEG frames at approximately 1 fps,
