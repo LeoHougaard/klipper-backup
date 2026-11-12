@@ -146,6 +146,12 @@ def main():
         wait_text('Printing')
         root = capture('03-printing')
         assert not any(n.get('text') in ('Live tuning','Speed','Flow','Z OFFSET') for n in root.iter('node'))
+        plate = bounds(find(root, 'Print details'))
+        preview_bounds = bounds(find(root, 'Model preview'))
+        assert plate[1] <= preview_bounds[1] and plate[3] >= preview_bounds[3]
+        tap('Print details')
+        wait_text('Print details')
+        tap('Close')
         tap('Tune print')
         wait_text('Tune this print')
         capture('04-tuning')

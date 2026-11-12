@@ -21,6 +21,8 @@ ICONS = {
     'down':'keyboard_arrow_down', 'left':'keyboard_arrow_left', 'right':'keyboard_arrow_right',
     'mesh':'grid_on', 'tools':'build', 'external':'open_in_new',
 }
+# Solid transport glyphs stay recognizable at the same optical size as text.
+FILLED = {'pause', 'play'}
 
 
 def main():
@@ -30,7 +32,8 @@ def main():
 
     def fetch(item):
         alias, name = item
-        path = f'symbols/web/{name}/materialsymbolsrounded/{name}_24px.svg'
+        variant = '_fill1' if alias in FILLED else ''
+        path = f'symbols/web/{name}/materialsymbolsrounded/{name}{variant}_24px.svg'
         with urlopen(BASE+path, timeout=20) as response: svg = response.read()
         source = ET.fromstring(svg)
         x,y,width,height = map(float,source.get('viewBox').split())

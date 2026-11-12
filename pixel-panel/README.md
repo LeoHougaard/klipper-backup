@@ -198,8 +198,11 @@ python -X utf8 -u pixel-panel/tests/check_fast_controls.py
 # Partial calibration certainty and E-stop cancellation during delayed preflight.
 python -X utf8 -u pixel-panel/tests/check_recovery_edges.py
 
-# Home, custom filament temperature/off/preset, paused Resume and tuning read-back.
-python -X utf8 -u pixel-panel/tests/check_quality_workflows.py --output pixel-panel/.build/design/quality-workflows
+# Current UI workflows on the already-open emulator and loopback review fixture.
+# Set AGENT_DEVICE_COMMAND to the bound command from T3 device_open first.
+python -X utf8 -u pixel-panel/tests/check_layout_workflows.py --output pixel-panel/.build/ui-workflows
+python -X utf8 -u pixel-panel/tests/check_filament_task.py --output pixel-panel/.build/filament-task
+python -X utf8 -u pixel-panel/tests/check_motion_speed.py
 
 # Eight matched Prepare states and native touch bounds; sends no commands.
 python -X utf8 -u pixel-panel/tests/capture_prepare.py --output pixel-panel/.build/design/prepare-review
@@ -233,14 +236,21 @@ See [verification](verification.md) for actual evidence and pending gates.
 
 ## Interface references
 
-The interaction language distinguishes roles: raised outlined controls perform
-actions or edit values; filled mint identifies the next main action; segmented
-mint marks a selection; the rail changes pages; plain text reports data. Home
-cards fit their content rather than promising another row of controls. Common
+The native interface uses neutral surfaces for related controls, mint for a
+primary action or selection, and outlines for focus, numeric entry and E-stop.
+The rail changes pages; pencils and speed symbols identify editable parameters.
+Both idle and active print previews open their details when tapped. Common
 homing and cold-filament prerequisites are checked when tapped, with transient
 errors and no dispatched command. They are not permanent instructions.
 
-Temperature buttons support sliding left/right in 5°C steps, with a live preview
+Filament keeps material temperature and automatic Load/Unload together. Selecting
+a temperature does not start heating. Load/Unload heats and waits automatically;
+Cancel heating prevents the pending extrusion. Manual feed is a separate vertical
+control and shares its distance and speed with Move. Manual nozzle heating remains
+available independently. Level refreshes the compensated heightmap; paper
+calibration stays under Maintenance.
+
+Status heater controls support sliding down/up in 5°C steps, with a live preview
 and one command on release. A cancelled gesture sends nothing. A tap opens the
 temperature presets. Custom numeric values use a built-in 48 dp keypad, range
 validation and explicit Apply; Android's IME stays hidden. Inline tuning values
@@ -249,12 +259,21 @@ Android's text keyboard, disable fullscreen extraction and support Done/Go. Back
 returns to the previous page; within custom temperature entry it returns to the
 temperature editor. Close dismisses the sheet.
 
-Native and Device interfaces share a restricted palette from
-[`@radix-ui/colors` 3.0.0](https://www.radix-ui.com/colors): Sage neutrals, Mint
-accent, and Red/Amber status. Color roles and corner sizes are defined in
-`PanelUi.java` and mirrored as CSS variables in `device.html`; Android theme
-and launcher icon use the same colors. Cards use a 20 dp radius around 12 dp
-insets and 8 dp controls; sheets use a 24 dp radius around 16 dp insets.
+Native color roles and geometry live in `PanelUi.java`: neutral backgrounds,
+muted mint accent, red E-stop and amber status. Cards have 12 dp insets, controls
+use a 6 dp radius and dialogs use 16 dp insets with an 8 dp radius. Page/dialog
+headings are 18 sp, ordinary actions 14 sp, and secondary captions 12 sp. Material
+Symbols Rounded are pinned native vector resources with their license under
+`third-party/material-symbols`. The browser Device interface has its own CSS.
+
+For a T3 Device panel session, use `device_open` and open the app with its returned
+bound `agent-device` command. Set `AGENT_DEVICE_COMMAND` to that command's path
+before running the review server or already-open emulator tests, with
+`ANDROID_SERIAL=emulator-5554`. The test adapter then uses the existing session's
+snapshots and presses instead of starting a competing UIAutomator inspector.
+`check_filament_task.py` covers custom selection without heating, cancellable
+automatic heating, exact manual feed and paused geometry. The review chooser
+includes the filament temperature editor as well as the motion editors.
 
 The interface uses the printer tasks common to Bambu's touchscreen workflow
 and KlipperScreen: status, temperatures, axes, filament, stored prints and

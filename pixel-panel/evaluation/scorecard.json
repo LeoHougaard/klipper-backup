@@ -1,5 +1,7 @@
 {
   "model": "sol",
+  "candidate_version": "0.3.8",
+  "iteration": 13,
   "starting_build_anchor": 1,
   "bambu_scores": {
     "Alignment": 8,
@@ -17,16 +19,16 @@
   },
   "candidate_estimates": {
     "Alignment": 9.5,
-    "Spacing": 9,
-    "Icon quality": 9,
+    "Spacing": 9.5,
+    "Icon quality": 9.5,
     "Borders and surfaces": 9,
-    "Type hierarchy": 8.5,
+    "Type hierarchy": 9,
     "Legibility": 9,
     "Functional grouping": 9.5,
-    "Density and restraint": 9,
+    "Density and restraint": 9.5,
     "Touch geometry": 9.5,
-    "Interaction clarity": 9,
-    "State consistency": 9,
+    "Interaction clarity": 9.5,
+    "State consistency": 9.5,
     "Cross-screen finish": 9
   },
   "uncertainty": "approximately half a point; subjective design judgment",

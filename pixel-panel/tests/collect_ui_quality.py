@@ -8,7 +8,7 @@ from pathlib import Path
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 import xml.etree.ElementTree as ET
-from check_controls import SERIAL, snapshot, adb
+from check_controls import PACKAGE, SERIAL, snapshot, adb
 from PIL import Image
 from io import BytesIO
 from verify_ui_reference import verify
@@ -24,7 +24,15 @@ CASES = {
     'idle-calibration': ('idle','calibration'), 'front-calibration': ('front','calibration'),
     'idle-heightmap': ('idle','heightmap'),
     'idle-presets': ('idle','presets'), 'paused-filament': ('paused','filament'),
+    'idle-filament-keypad': ('idle','filament-temperature'),
+    'idle-details': ('idle','details'), 'printing-camera': ('printing','camera'),
+    'complete-home': ('complete','home'),
 }
+
+
+def source_fingerprint():
+    return {str(p): hashlib.sha256(p.read_bytes()).hexdigest()
+            for p in sorted(Path('pixel-panel/app').rglob('*')) if p.is_file()}
 
 
 def main():
@@ -39,6 +47,14 @@ def main():
     font_scale = adb('shell','settings','get','system','font_scale').strip()
     assert density == 'Physical density: 420' and font_scale == '1.0', (density,font_scale)
     manifest = {'_device':{'serial':SERIAL,'density':density,'font_scale':font_scale}}
+    manifest['_source_commit'] = subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
+    manifest['_source_sha256'] = source_fingerprint()
+    apk = Path('pixel-panel/.build/Voron.apk')
+    manifest['_apk_sha256'] = hashlib.sha256(apk.read_bytes()).hexdigest()
+    installed_path = adb('shell', 'pm', 'path', PACKAGE).strip().removeprefix('package:')
+    installed_hash = adb('shell', 'sha256sum', installed_path).split()[0]
+    assert installed_hash == manifest['_apk_sha256'], 'Install the exact built APK before capturing'
+    manifest['_installed_apk_sha256'] = installed_hash
     for name in args.cases:
         state, screen = CASES[name]
         with urlopen(Request('http://127.0.0.1:18726/select',
@@ -53,12 +69,8 @@ def main():
         (args.output/(name+'.xml')).write_text(ET.tostring(root,encoding='unicode'),encoding='utf-8')
         manifest[name] = {'state':state,'screen':screen,'sha256':hashlib.sha256(png).hexdigest()}
         print('Captured',name,flush=True)
-    manifest['_source_commit'] = subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
-    manifest['_source_sha256'] = {
-        str(p):hashlib.sha256(p.read_bytes()).hexdigest()
-        for p in sorted(Path('pixel-panel/app').rglob('*')) if p.is_file()}
-    apk = Path('pixel-panel/.build/Voron.apk')
-    if apk.exists(): manifest['_apk_sha256'] = hashlib.sha256(apk.read_bytes()).hexdigest()
+    assert source_fingerprint() == manifest['_source_sha256'], 'App source changed during capture'
+    assert hashlib.sha256(apk.read_bytes()).hexdigest() == manifest['_apk_sha256'], 'APK changed during capture'
     (args.output/'capture-manifest.json').write_text(json.dumps(manifest,indent=2),encoding='utf-8')
 
 

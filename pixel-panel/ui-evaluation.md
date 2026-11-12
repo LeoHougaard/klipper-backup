@@ -70,6 +70,11 @@ For this exact fixture data, add
 `--fixture-snapshot pixel-panel/evaluation/fixture-data.json`.
 The app must already be opened on its isolated endpoint. Native captures
 come from POST `/select` on port 18726 with fixed `state` and `screen` values.
+With T3 Device open, set `AGENT_DEVICE_COMMAND` to the bound command returned by
+`device_open` before starting the server and tests. The adapter uses that same
+session for snapshots and presses; a second UIAutomator inspector conflicts
+with the device helper. Healthy snapshots may report scroll-hidden content as
+partial; that is different from a truncated or unhealthy capture.
 
 ## Initial failure ledger
 
@@ -96,6 +101,11 @@ anchor remains 1; working command workflows are regression requirements.
 | 6 | One connected system menu surface, with meaningful dividers. | Promote. Removes scalloped stacked tile edges. Seventeen native views captured and visually inspected. |
 | 7 | Adapt the dedicated Move page to larger XY plus adjacent Z/E columns. | Promote. Home and paused Filament are pixel-identical to pass 6; the affected Move commands and paused motion pass. |
 | 8 | Use wrench/grid/external-link symbols for those meanings; remove the unnecessary Filament glyph. | Final semantic icon polish, with the same vector family and control geometry. |
+| 9 | Remove Filament's full-width tabs and repeated temperature controls; group selected material with automatic Load/Unload and separate manual feed. | Reject the first arrangement: excessive separation and a wrapped Retract label. Promote the revised vertical manual-feed group. Custom material selection sends no command; exact distance/speed are shared with Move. |
+| 10 | Use 18 sp shared headings, align the Filament header to its content, use neutral disabled ink, remove duplicate heating progress and update the Level/Tune icon with state. | Promote. Cold/heating/hot/paused captures retain readable values and expose Cancel instead of overlapping Resume. |
+| 11 | Make both idle and active print previews one connected tappable card with a quiet caption. | Promote. Native workflow opens details from the whole active model area; no separate raised details button. |
+| 12 | Extend a thumbnail's flat opaque corner color into its preview background, retaining FIT_CENTER. | Matched idle/printing/paused captures verify the removal of contrasting letterbox bands without cropping the model. Nonuniform or transparent corners retain the neutral surface. |
+| 13 | Use filled Pause/Play variants from the same pinned Material family. | Promote. Pause no longer resembles two outlined zeros at review size; filled Resume/Start symbols remain centered in their existing targets. |
 
 The raster diagnostic was corrected to exclude dark surface fragments from
 foreground measurements, then rerun on both baseline and candidates. Its
@@ -113,19 +123,38 @@ estimate cannot be rounded up to meet 9.8. The required gate is **unverified**.
 | Category | Bambu (locked) | Candidate estimate | Evidence / remaining uncertainty |
 | --- | ---: | ---: | --- |
 | Alignment | 8 | 9.5 | Rendered button ink offsets below 0.8 dp in the broad sample; typographic optical balance still needs taste judgment. |
-| Spacing | 8 | 9.0 | Shared gutters and adjacent motion groups; some dense secondary screens retain older layouts. |
-| Icon quality | 8 | 9.0 | One pinned professional family, semantic symbols, no rough custom strokes; outline style preference remains subjective. |
+| Spacing | 8 | 9.5 | Filament now aligns its header and functional groups to the same insets, without the oversized tab band or wrapped feed label. |
+| Icon quality | 8 | 9.5 | One pinned professional family and semantic symbols; filled transport variants remove the ambiguous outlined Pause bars while retaining optical centering. |
 | Borders and surfaces | 8 | 9.0 | Ordinary outlines removed; focus/input/danger edges retained deliberately. |
-| Type hierarchy | 8 | 8.5 | Primary actions separated from parameter editing; secondary pages have not been redesigned wholesale. |
+| Type hierarchy | 8 | 9.0 | Shared page/dialog headings are 18 sp; Filament has one heading and equal secondary captions, with the selected target readable separately. |
 | Legibility | 8 | 9.0 | Larger temperatures, clear units and values; wide-screen screenshots are not a dedicated-phone readability trial. |
 | Functional grouping | 8 | 9.5 | Spatial XY, vertical Z/E, related filament actions, tappable plate and grouped presets. |
-| Density and restraint | 8 | 9.0 | Removes duplicated actions and persistent preset clutter; open space is retained intentionally. |
+| Density and restraint | 8 | 9.5 | Removes redundant Filament tabs, repeated target/status controls and the separate active-print details button; manual feed becomes one related controller. |
 | Touch geometry | 8 | 9.5 | At least 48 dp sampled buttons; native wheel sectors and drag cancellation exercised. |
-| Interaction clarity | 8 | 9.0 | Automatic Load primary, manual heating secondary, precision editors and meaningful menu glyphs. |
-| State consistency | 8 | 9.0 | Matched cold/heating/printing/paused/calibration views keep common chrome and truthful controls. |
+| Interaction clarity | 8 | 9.5 | Material selection does not heat; Load/Unload owns automatic heating. Manual feed shares precise parameters, and active/idle plate details behave alike. |
+| State consistency | 8 | 9.5 | Level/Tune updates its icon as well as its name; heating progress is shown once and paused Resume stays separate from Cancel heating. |
 | Cross-screen finish | 8 | 9.0 | Shared render/surface fixes reach all captured screens; subjective polish above the reference is not established to tenths. |
 
 **0 of 12 estimates reach 9.8. Do not call the requested target passed.**
 Further promotion to that threshold needs a reliable design judgment on the
 actual candidate. The reproducible geometry and command tests cannot certify
 a 9.8 aesthetic result, and changing scores to claim it would defeat this loop.
+
+The promoted review build is 0.3.8 (code 11). `check_layout_workflows.py` passed
+the complete representative workflow, including active preview details, leveling,
+temperature gestures/keypad, live tuning, pause/filament/resume, both paper
+contacts, Files, E-stop during entry and fixture recovery. The focused
+`check_filament_task.py` passed custom selection without heating, cancellation,
+7.5 mm feed/retract at 4 mm/s and paused heating geometry. All commands went to
+the emulator's loopback fixture. The sampled native buttons retain at least
+48 dp targets; measured horizontal ink offsets remain below 0.8 dp.
+
+Final native captures are under `.build/ui-hillclimb/iteration-12/captures/`.
+Pass 13's affected views and APK are under `iteration-13/`; the five matched
+main views and secondary transport-icon views supersede the corresponding
+pass 12 images. Other pass 12 views are unaffected by the two asset changes.
+The collector now verifies the installed APK against the built APK and freezes
+source/APK hashes before capture, rejecting edits during collection. Pass 11's
+interim captures were superseded because its source metadata was recorded after
+the preview-backdrop edit; they are visual working notes, not final provenance.
+The frozen reference images, synthetic state and Bambu anchor have not changed.

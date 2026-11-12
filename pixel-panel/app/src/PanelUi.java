@@ -24,7 +24,7 @@ final class PanelUi {
       DANGER_BG = 0xff3b1219, // Red 3
       DANGER_LINE = 0xff8c333a, // Red 7
       AMBER = 0xffffe7b3, // Amber 12
-      DISABLED = 0xff63706b; // Sage 9
+      DISABLED = 0xff74787f;
   static final int RIPPLE = 0x23c4f5e1;
   static final int CONTROL_RADIUS = 6,
       CARD_INSET = 12,
@@ -72,7 +72,7 @@ final class PanelUi {
   }
 
   TextView heading(String value) {
-    TextView v = text(value, 20, TEXT);
+    TextView v = text(value, 18, TEXT);
     v.setTypeface(Typeface.create("sans-serif-medium", Typeface.NORMAL));
     return v;
   }

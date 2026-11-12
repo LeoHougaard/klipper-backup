@@ -4,6 +4,7 @@ No real printer is contacted. Each tap is located from a fresh accessibility
 snapshot, and cleanup restores the normal printer endpoint without changing it.
 """
 from pathlib import Path
+import json
 import os
 import re
 import subprocess
@@ -16,6 +17,51 @@ ADB = Path(os.environ["LOCALAPPDATA"]) / "Android/Sdk/platform-tools/adb.exe"
 PACKAGE = "dev.leo.voronpanel"
 SERIAL = os.environ.get("ANDROID_SERIAL")
 ADB_COMMAND = [str(ADB), *(["-s", SERIAL] if SERIAL else [])]
+AGENT_DEVICE_COMMAND = os.environ.get("AGENT_DEVICE_COMMAND")
+
+
+def device(*args):
+    """Use the Device panel's bound command without starting another inspector."""
+    assert AGENT_DEVICE_COMMAND, 'Set AGENT_DEVICE_COMMAND to the command from device_open'
+    try:
+        return subprocess.check_output([AGENT_DEVICE_COMMAND, *args], text=True,
+                                       encoding='utf-8', stderr=subprocess.STDOUT)
+    except subprocess.CalledProcessError as error:
+        raise RuntimeError(error.output.strip()) from error
+
+
+def agent_snapshot():
+    result = json.loads(device('snapshot', '--json'))
+    assert result.get('success'), result
+    data = result['data']
+    assert not data.get('truncated'), 'Device snapshot was truncated'
+    assert data.get('snapshotQuality', {}).get('state') == 'healthy', data.get('snapshotQuality')
+    # A healthy ScrollView reports scroll-hidden-below/above as partial. Those
+    # are deliberately offscreen controls, not a missing accessibility root.
+    root = ET.Element('hierarchy')
+    parents = {}
+    for item in data['nodes']:
+        if not item.get('visibleToUser', True):
+            continue
+        rect = item['rect']
+        x, y, w, h = (round(rect[key]) for key in ('x', 'y', 'width', 'height'))
+        group = item.get('kind') in ('group', 'image')
+        node = ET.SubElement(parents.get(item.get('parentIndex'), root), 'node', {
+            'text': '' if group else item.get('label', ''),
+            # The helper coalesces identical text/content descriptions into one
+            # accessible label. Keep that name available to the existing tests.
+            'content-desc': item.get('contentDescription', item.get('label', '')),
+            'class': item.get('type', ''),
+            'resource-id': item.get('identifier', ''),
+            'package': item.get('bundleId', ''),
+            'bounds': f'[{x},{y}][{x+w},{y+h}]',
+            'clickable': str(item.get('hittable', False) or item.get('kind') == 'button').lower(),
+            'enabled': str(item.get('enabled', False)).lower(),
+            'selected': str(item.get('selected', False)).lower(),
+            'agent-ref': '@' + item['ref'],
+        })
+        parents[item['index']] = node
+    return root
 
 
 def adb(*args):
@@ -25,6 +71,8 @@ def adb(*args):
 
 
 def snapshot():
+    if AGENT_DEVICE_COMMAND:
+        return agent_snapshot()
     for attempt in range(3):
         try:
             result = adb("shell", "uiautomator", "dump", "/data/local/tmp/voron-controls-test.xml")
@@ -52,6 +100,9 @@ def tap(label, root=None):
         n.get("text", "").casefold() == label.casefold() or
         n.get("content-desc", "").casefold() in (label.casefold(), "open " + label.casefold()))]
     assert len(nodes) == 1, f"Expected one clickable {label!r}, found {len(nodes)}"
+    if AGENT_DEVICE_COMMAND:
+        device('press', nodes[0].get('agent-ref'), '--settle')
+        return
     left, top, right, bottom = map(int, re.findall(r"\d+", nodes[0].get("bounds")))
     adb("shell", "input", "tap", str((left + right) // 2), str((top + bottom) // 2))
     # Input injection returning does not mean a newly rebuilt native view tree

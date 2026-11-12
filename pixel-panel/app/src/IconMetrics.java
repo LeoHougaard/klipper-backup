@@ -17,7 +17,7 @@ final class IconMetrics {
       case "stop": return new float[] {0.125000f,0.125000f,0.875000f,0.875000f};
       case "edit": return new float[] {0.125000f,0.125000f,0.875000f,0.875000f};
       case "play": return new float[] {0.333333f,0.242708f,0.755208f,0.757292f};
-      case "pause": return new float[] {0.208333f,0.208333f,0.791667f,0.791667f};
+      case "pause": return new float[] {0.250000f,0.208333f,0.750000f,0.791667f};
       case "check": return new float[] {0.177583f,0.265625f,0.821875f,0.733333f};
       case "back": return new float[] {0.184375f,0.184375f,0.833333f,0.816167f};
       case "arrow": return new float[] {0.351042f,0.267708f,0.623958f,0.732292f};

@@ -32,6 +32,7 @@ SCREENS = {
     'xy-speed': 'XY speed', 'z-speed': 'Z speed', 'e-speed': 'Extrusion speed',
     'distance': 'Extrusion distance', 'position': 'Exact position', 'fan': 'Part fan',
     'presets': 'Temperature presets',
+    'filament-temperature': 'Filament temperature',
 }
 
 
@@ -46,7 +47,7 @@ def main():
     if not args.serial.startswith('emulator-'):
         parser.error('Review controls require an emulator serial, never a physical phone')
     os.environ['ANDROID_SERIAL'] = args.serial
-    from check_controls import ADB_COMMAND, adb, snapshot, tap, verify_fixture
+    from check_controls import ADB_COMMAND, AGENT_DEVICE_COMMAND, adb, device, snapshot, tap, verify_fixture
     from check_workflows import click
 
     fixture = Fixture()
@@ -111,13 +112,17 @@ def main():
             'distance': ['Prepare', 'Extrusion distance'], 'position': ['Prepare', 'Set X position'],
             'fan': ['Prepare', 'Part fan'],
             'presets': ['Temperature presets'],
+            'filament-temperature': ['Prepare', 'Filament', 'Filament temperature'],
         }
         for label in routes[name]: click(label)
 
     def capture():
-        data = subprocess.check_output([*ADB_COMMAND, 'exec-out', 'screencap', '-p'], timeout=15)
         name = str(time.time_ns()) + '.png'
-        (captures / name).write_bytes(data)
+        if AGENT_DEVICE_COMMAND:
+            device('screenshot', str(captures / name))
+        else:
+            data = subprocess.check_output([*ADB_COMMAND, 'exec-out', 'screencap', '-p'], timeout=15)
+            (captures / name).write_bytes(data)
         return '/view/' + name
 
     class Controls(BaseHTTPRequestHandler):
