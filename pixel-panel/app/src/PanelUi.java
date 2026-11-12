@@ -10,16 +10,16 @@ import android.widget.*;
 
 /** Small native component system for the landscape printer console. */
 final class PanelUi {
-  // Radix Colors 3.0.0: Sage neutrals, Mint accent, Red/Amber status only.
-  static final int BG = 0xff101211, // Sage 1
-      SURFACE = 0xff171918, // Sage 2
-      RAISED = 0xff202221, // Sage 3
-      LINE = 0xff444947, // Sage 7
-      TEXT = 0xffeceeed, // Sage 12
-      MUTED = 0xffadb5b2, // Sage 11
+  // Neutral surfaces; accent is reserved for selection and primary actions.
+  static final int BG = 0xff101113,
+      SURFACE = 0xff1b1c1f,
+      RAISED = 0xff2b2d31,
+      LINE = 0xff41444a,
+      TEXT = 0xfff2f3f4,
+      MUTED = 0xffaeb2b9,
       ACCENT = 0xffc4f5e1, // Mint 12; one accent ink/fill throughout
-      ACCENT_BG = 0xff092c2b, // Mint 3
-      ACCENT_LINE = 0xff1e685f, // Mint 7
+      ACCENT_BG = 0xff243b33,
+      ACCENT_LINE = 0xff526d60,
       DANGER = 0xffff9592, // Red 11
       DANGER_BG = 0xff3b1219, // Red 3
       DANGER_LINE = 0xff8c333a, // Red 7
@@ -128,7 +128,7 @@ final class PanelUi {
     v.setBackground(buttonBackground(style));
     if (icon != null) {
       Icon d = new Icon(icon, ink);
-      d.setBounds(0, 0, dp(19), dp(19));
+      d.setBounds(0, 0, dp(24), dp(24));
       v.setCompoundDrawables(d, null, null, null);
       v.setCompoundDrawablePadding(dp(8));
     }
@@ -187,12 +187,12 @@ final class PanelUi {
     item.setBackground(
         new RippleDrawable(
             ColorStateList.valueOf(RIPPLE),
-            selected ? selectedBackground : controlShape(RAISED, LINE),
+            selected ? selectedBackground : shape(SURFACE, CONTROL_RADIUS),
             shape(Color.WHITE, CONTROL_RADIUS)));
     ImageView image = new ImageView(context);
     image.setDuplicateParentStateEnabled(true);
-    image.setImageDrawable(new Icon(icon, selected ? ACCENT : MUTED));
-    item.addView(image, new LinearLayout.LayoutParams(dp(20), dp(20)));
+    image.setImageDrawable(new Icon(icon, selected ? ACCENT : TEXT));
+    item.addView(image, new LinearLayout.LayoutParams(dp(28), dp(28)));
     TextView label = text(title, 11, selected ? ACCENT : MUTED);
     label.setTextColor(ink(selected ? ACCENT : MUTED));
     label.setDuplicateParentStateEnabled(true);
@@ -205,6 +205,79 @@ final class PanelUi {
     item.setSelected(selected);
     item.setOnClickListener(v -> action.run());
     return item;
+  }
+
+  Button quietButton(String title, String icon, Runnable action) {
+    Button button = button(title, icon, 0, action);
+    button.setBackground(new RippleDrawable(ColorStateList.valueOf(RIPPLE),
+        shape(Color.TRANSPARENT, CONTROL_RADIUS), shape(Color.WHITE, CONTROL_RADIUS)));
+    return button;
+  }
+
+  View motionPad(Button up, Button right, Button down, Button left, Button home) {
+    FrameLayout wheel = new FrameLayout(context) {
+      final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+      View touchTarget;
+      float touchX, touchY;
+      { setWillNotDraw(false); }
+      @Override protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+        float size = Math.min(getWidth(), getHeight()), x = getWidth()/2f, y = getHeight()/2f;
+        float radius = size/2f - dp(1);
+        RectF bounds = new RectF(x-radius, y-radius, x+radius, y+radius);
+        for (int i = 0; i < 4; i++) {
+          paint.setColor(getChildAt(i).isPressed() ? LINE : RAISED);
+          canvas.drawArc(bounds, -134 + i*90, 88, true, paint);
+        }
+        paint.setColor(BG);
+        canvas.drawCircle(x, y, size*.19f, paint);
+      }
+      @Override public boolean onInterceptTouchEvent(MotionEvent event) { return true; }
+      @Override public boolean onTouchEvent(MotionEvent event) {
+        float x = event.getX()-getWidth()/2f, y = event.getY()-getHeight()/2f;
+        float size = Math.min(getWidth(), getHeight()), distance = (float)Math.hypot(x,y);
+        if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
+          if (distance > size/2f) return false;
+          double angle = Math.toDegrees(Math.atan2(y,x));
+          int index = distance < size*.19f ? 4 : angle < -45 && angle >= -135 ? 0
+              : angle >= -45 && angle < 45 ? 1 : angle >= 45 && angle < 135 ? 2 : 3;
+          touchTarget = getChildAt(index);
+          touchX = event.getX(); touchY = event.getY();
+          if (touchTarget.isEnabled()) touchTarget.setPressed(true);
+        } else if (event.getActionMasked() == MotionEvent.ACTION_MOVE) {
+          if (touchTarget != null && Math.hypot(event.getX()-touchX,event.getY()-touchY) > dp(24)) {
+            touchTarget.setPressed(false); touchTarget = null;
+          }
+        } else if (event.getActionMasked() == MotionEvent.ACTION_UP || event.getActionMasked() == MotionEvent.ACTION_CANCEL) {
+          if (touchTarget != null) {
+            boolean click = touchTarget.isPressed() && event.getActionMasked() == MotionEvent.ACTION_UP;
+            touchTarget.setPressed(false);
+            if (click) touchTarget.performClick();
+            touchTarget = null;
+          }
+        }
+        invalidate();
+        return true;
+      }
+      @Override protected void onLayout(boolean changed, int l, int t, int r, int b) {
+        int size = Math.min(getWidth(), getHeight()), cx = getWidth()/2, cy = getHeight()/2;
+        int target = Math.max(dp(48), (int)(size*.32f)), reach = (int)(size*.32f);
+        int[][] centers = {{cx,cy-reach},{cx+reach,cy},{cx,cy+reach},{cx-reach,cy},{cx,cy}};
+        for(int i=0;i<5;i++) {
+          View child=getChildAt(i);
+          child.layout(centers[i][0]-target/2,centers[i][1]-target/2,
+              centers[i][0]+target/2,centers[i][1]+target/2);
+        }
+      }
+    };
+    for (Button button : new Button[] {up, right, down, left, home}) {
+      pad(button, 2, 2);
+      button.setTextSize(12);
+      button.setBackground(new RippleDrawable(ColorStateList.valueOf(RIPPLE),
+          shape(Color.TRANSPARENT, 100), shape(Color.WHITE, 100)));
+      wheel.addView(button, new FrameLayout.LayoutParams(dp(64), dp(64)));
+    }
+    return wheel;
   }
 
   // Polling must not invalidate an unchanged accessibility tree or repaint idle text.
@@ -252,7 +325,7 @@ final class PanelUi {
       this.baseColor = color;
       paint.setColor(color);
       paint.setStyle(Paint.Style.STROKE);
-      paint.setStrokeWidth(1.6f);
+      paint.setStrokeWidth(1.8f);
       paint.setStrokeCap(Paint.Cap.ROUND);
       paint.setStrokeJoin(Paint.Join.ROUND);
     }
@@ -341,6 +414,26 @@ final class PanelUi {
           path(canvas, 18, 6, 15, 9);
           path(canvas, 6, 18, 9, 15);
           break;
+        case "load":
+        case "unload":
+          canvas.drawCircle(8, 8, 5, paint);
+          canvas.drawCircle(8, 8, 1.5f, paint);
+          path(canvas, 13, 8, 18, 8, 18, 21);
+          if (name.equals("load")) path(canvas, 14, 17, 18, 21, 22, 17);
+          else path(canvas, 14, 12, 18, 8, 22, 12);
+          break;
+        case "speed":
+          canvas.drawArc(3, 4, 21, 22, 180, 180, false, paint);
+          path(canvas, 4, 19, 20, 19);
+          path(canvas, 12, 16, 17, 8);
+          break;
+        case "cool":
+          path(canvas, 12, 2, 12, 22);
+          path(canvas, 3, 7, 21, 17);
+          path(canvas, 3, 17, 21, 7);
+          path(canvas, 9, 4, 12, 7, 15, 4);
+          path(canvas, 9, 20, 12, 17, 15, 20);
+          break;
         case "calibrate":
           path(canvas, 3, 18, 21, 18);
           path(canvas, 6, 21, 18, 21);
@@ -376,6 +469,22 @@ final class PanelUi {
           break;
         case "arrow":
           path(canvas, 9, 5, 16, 12, 9, 19);
+          break;
+        case "up":
+          path(canvas, 12, 21, 12, 3, 5, 10);
+          path(canvas, 12, 3, 19, 10);
+          break;
+        case "down":
+          path(canvas, 12, 3, 12, 21, 5, 14);
+          path(canvas, 12, 21, 19, 14);
+          break;
+        case "left":
+          path(canvas, 21, 12, 3, 12, 10, 5);
+          path(canvas, 3, 12, 10, 19);
+          break;
+        case "right":
+          path(canvas, 3, 12, 21, 12, 14, 5);
+          path(canvas, 21, 12, 14, 19);
           break;
         case "refresh":
           canvas.drawArc(4, 4, 20, 20, 45, 290, false, paint);

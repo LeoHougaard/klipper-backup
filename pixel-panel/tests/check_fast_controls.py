@@ -20,14 +20,14 @@ def main():
         if initial:
             click("Fast controls: on")
         click("Prepare")
-        click("Home all")
+        click("Home axes")
         wait_text("Home all axes?")
         assert scripts(fixture) == [], "Normal warning dispatched before confirmation"
         click("Back")
         click("More")
         click("Fast controls: off")
         click("Prepare")
-        click("Home all")
+        click("Home axes")
         wait_until(lambda: scripts(fixture) == ["G28"], "one-tap fast home")
         assert not any(n.get("text") == "Home all axes?" for n in snapshot().iter("node"))
         print("PASS: normal warning waits; Fast controls dispatches once with no repeat confirmation", flush=True)

@@ -30,7 +30,7 @@ def main():
         assert not any("Offsets saved" in n.get("text", "") for n in root[0].iter("node"))
         assert scripts(fixture) == ["ACCEPT"]
         print("PASS: intermediate receipt never claims persistence or completed mesh", flush=True)
-        click("Move")
+        click("Prepare")
         root = snapshot()
         def center(label):
             node = next(n for n in root.iter("node") if n.get("text") == label or n.get("content-desc") == label)

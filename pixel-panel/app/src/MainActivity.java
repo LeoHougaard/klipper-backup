@@ -55,6 +55,7 @@ public final class MainActivity extends Activity {
   Button emergencyButton;
   int screenLeftInset, screenRightInset, screenTopInset, screenBottomInset;
   double xyStep = 10, zStep = .1, extrudeStep = 5, paperStep = .025;
+  double xySpeed = 20, zSpeed = 5, extrudeSpeed = 3;
   boolean calibrationRequested;
   String calibrationResult = "";
   String filamentForJob;
@@ -507,12 +508,12 @@ public final class MainActivity extends Activity {
     p.gap(statusRail, GUTTER);
     addStatusHeater(statusRail, "Bed", "heater_bed");
     p.gap(statusRail, GUTTER);
-    Button tune = button("Tune print", "edit", 0,
-        () -> { if (activePrint()) tuningSheet(); else openPrepare("Filament"); });
-    gate(tune, () -> ready() && !manual());
+    Button tune = button("Tune print", activePrint() ? "speed" : "calibrate", 0,
+        () -> { if (activePrint()) tuningSheet(); else refreshHeightmap(); });
+    gate(tune, () -> ready() && !manual() && (activePrint() || capable("CALIBRATE_COMPENSATED_BED_MESH")));
     bindings.add(() -> {
-      tune.setText(activePrint() ? "Tune print" : "Filament ›");
-      tune.setContentDescription(activePrint() ? "Print tuning" : "Filament controls");
+      tune.setText(activePrint() ? "Tune print" : "Level");
+      tune.setContentDescription(activePrint() ? "Print tuning" : "Level");
     });
     statusRail.addView(tune, new LinearLayout.LayoutParams(-1, 0, 1));
     p.gap(statusRail, GUTTER);
@@ -607,18 +608,14 @@ public final class MainActivity extends Activity {
   void home() {
     if (ready() && !manual() && activePrint()) {
       LinearLayout job = p.panel();
-      job.setGravity(Gravity.CENTER_VERTICAL);
       add(workspace, job, -1);
       activeJob(job);
       return;
     }
     if (ready() && !manual() && !Arrays.asList("complete", "error", "cancelled").contains(jobState())) {
       LinearLayout body = p.panel();
-      body.setGravity(Gravity.CENTER_VERTICAL);
       add(workspace, body, -1);
-      recentPrint(body);
-      p.gap(body, 16);
-      idleHome(body);
+      dashboard(body);
       return;
     }
     LinearLayout columns = p.row();
@@ -831,6 +828,45 @@ public final class MainActivity extends Activity {
     rowButtons(left, pla, abs, cool);
   }
 
+  void dashboard(LinearLayout body) {
+    body.setPadding(0, 0, 0, 0);
+    LinearLayout columns = p.row(), plate = p.col(), controls = p.col();
+    LinearLayout.LayoutParams plateSize = new LinearLayout.LayoutParams(0, -1, 1);
+    plateSize.rightMargin = p.dp(GUTTER);
+    columns.addView(plate, plateSize);
+    columns.addView(controls, new LinearLayout.LayoutParams(0, -1, 1.6f));
+    add(body, columns, -1);
+    ImageView image = preview(plate, -1, -1, this::recentName);
+    image.setLayoutParams(new LinearLayout.LayoutParams(-1, 0, 1));
+    TextView name = p.text("", 16, PanelUi.TEXT);
+    name.setMaxLines(2);
+    name.setEllipsize(TextUtils.TruncateAt.END);
+    bindText(name, () -> recentName().isEmpty() ? "Stored prints" : friendly(recentName()));
+    add(plate, name, 42);
+    Button details = button("Print details", "files", 3, () -> {
+      if (recentFile() != null) fileDetails(recentFile()); else show("Files");
+    });
+    add(plate, details, 48);
+    p.gap(plate, GUTTER);
+    Button pla = button("PLA\n200° / 60°", null, 0, () -> preheat(200, 60));
+    Button abs = button("ABS\n240° / 100°", null, 0, () -> preheat(240, 100));
+    Button cool = button("Cool down", "cool", 0,
+        () -> gcode("Turning heaters off", "TURN_OFF_HEATERS", Policy.IDLE, null));
+    for (Button b : new Button[] {pla, abs, cool}) { b.setTextSize(11); b.setMaxLines(2); p.pad(b, 3, 3); gate(b, this::idle); }
+    pla.setContentDescription("PLA 200° / 60°");
+    abs.setContentDescription("ABS 240° / 100°");
+    rowButtons(plate, pla, abs, cool);
+    manualControls(controls);
+    p.gap(controls, GUTTER);
+    Button load = button("Load", "load", 0, () -> quickFilament(true));
+    Button unload = button("Unload", "unload", 0, () -> quickFilament(false));
+    load.setContentDescription("Load filament");
+    unload.setContentDescription("Unload filament");
+    gate(load, () -> idle() && !manual() && capable("LOAD_FILAMENT"));
+    gate(unload, () -> idle() && !manual() && capable("UNLOAD_FILAMENT"));
+    rowButtons(controls, load, unload);
+  }
+
   void quickFilament(boolean load) {
     openPrepare("Filament");
     filamentMacro(load);
@@ -883,13 +919,28 @@ public final class MainActivity extends Activity {
 
   void activeJob(LinearLayout card) {
     String filename = obj("print_stats").optString("filename");
-    LinearLayout left = card;
-    plateIdentity(left, filename);
-    p.gap(left, 8);
+    card.setPadding(0, 0, 0, 0);
+    LinearLayout columns = p.row(), model = p.col(), left = p.col();
+    LinearLayout.LayoutParams modelSize = new LinearLayout.LayoutParams(0, -1, 1);
+    modelSize.rightMargin = p.dp(GUTTER);
+    columns.addView(model, modelSize);
+    columns.addView(left, new LinearLayout.LayoutParams(0, -1, 1.25f));
+    add(card, columns, -1);
+    ImageView image = preview(model, -1, -1, () -> filename);
+    image.setLayoutParams(new LinearLayout.LayoutParams(-1, 0, 1));
+    add(model, button("Print details", "files", 3, this::activePrintDetails), 48);
+    LinearLayout info = plateInfo(filename);
+    TextView name = (TextView) info.getChildAt(0);
+    name.setTextSize(21);
+    name.setLayoutParams(new LinearLayout.LayoutParams(-1, p.dp(68)));
+    ((TextView) info.getChildAt(1)).setTextSize(14);
+    ((TextView) info.getChildAt(2)).setTextSize(14);
+    add(left, info, 116);
+    p.gap(left, GUTTER);
     LinearLayout stats = p.row();
-    TextView percent = p.text("", 34, PanelUi.TEXT);
+    TextView percent = p.text("", 44, PanelUi.TEXT);
     bindText(percent, () -> value(progress() * 100, 0) + "%");
-    stats.addView(percent, new LinearLayout.LayoutParams(0, p.dp(52), 1));
+    stats.addView(percent, new LinearLayout.LayoutParams(0, p.dp(64), 1));
     LinearLayout time = p.col();
     TextView label = p.label("EST. REMAINING");
     time.addView(label);
@@ -897,7 +948,7 @@ public final class MainActivity extends Activity {
     bindText(eta, this::timeLeft);
     time.addView(eta);
     stats.addView(time);
-    add(left, stats, 52);
+    left.addView(stats, new LinearLayout.LayoutParams(-1, 0, 1));
     ProgressBar bar = new ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal);
     bar.setProgressTintList(android.content.res.ColorStateList.valueOf(PanelUi.ACCENT));
     bar.setProgressBackgroundTintList(android.content.res.ColorStateList.valueOf(PanelUi.LINE));
@@ -919,11 +970,18 @@ public final class MainActivity extends Activity {
     if (jobState().equals("paused")) {
       rowButtons(
           left,
-          button("Load filament", "filament", 0, () -> quickFilament(true)),
-          button("Unload filament", "filament", 0, () -> quickFilament(false)),
-          button("Print details", "files", 0, this::activePrintDetails));
+          button("Load", "load", 3, () -> quickFilament(true)),
+          button("Unload", "unload", 3, () -> quickFilament(false)),
+          button("Move", "move", 0, () -> openPrepare("Move")));
+      // Keep the same accessible names as the dedicated filament workflow.
+      LinearLayout actions = (LinearLayout) left.getChildAt(left.getChildCount() - 1);
+      actions.getChildAt(0).setContentDescription("Load filament");
+      actions.getChildAt(1).setContentDescription("Unload filament");
     } else {
-      add(left, button("Print details", "files", 0, this::activePrintDetails), 48);
+      Button speed = button("", "speed", 3, this::printSpeedSheet);
+      bindText(speed, () -> "Speed " + value(finite(obj("gcode_move"), "speed_factor") * 100, 0) + "%");
+      gate(speed, this::activePrint);
+      add(left, speed, 48);
     }
   }
 
@@ -1329,6 +1387,10 @@ public final class MainActivity extends Activity {
       bedPage(workspace);
       return;
     }
+    if (prepareTab.equals("Move")) {
+      movePage(workspace);
+      return;
+    }
     LinearLayout tabs = p.row();
     tabs.setBackground(p.shape(PanelUi.SURFACE, PanelUi.CONTROL_RADIUS));
     for (String name : new String[] {"Move", "Filament"}) {
@@ -1415,110 +1477,128 @@ public final class MainActivity extends Activity {
   }
 
   void movePage(LinearLayout body) {
-    LinearLayout cols = prepareColumns(body);
-    LinearLayout motion = prepareCard(cols, true);
-    LinearLayout axes = p.row();
-    axes.setGravity(Gravity.TOP);
-    LinearLayout xy = p.col();
-    LinearLayout.LayoutParams left = new LinearLayout.LayoutParams(0, -2, 1.8f);
-    left.rightMargin = p.dp(12);
-    axes.addView(xy, left);
-    LinearLayout z = p.col();
-    axes.addView(z, new LinearLayout.LayoutParams(p.dp(150), -2));
-    rowButtons(xy, axisPosition("X"), axisPosition("Y"));
-    add(z, axisPosition("Z"), 48);
-    p.gap(xy, 4);
-    p.gap(z, 4);
-    String[][] cells = {{"", "Y +", ""}, {"X −", "XY", "X +"}, {"", "Y −", ""}};
-    for (int index = 0; index < cells.length; index++) {
-      String[] line = cells[index];
-      LinearLayout row = p.row();
-      for (int cell = 0; cell < line.length; cell++) {
-        String label = line[cell];
-        View v;
-        if (label.isEmpty() || label.equals("XY")) {
-          TextView t = p.text(label, 13, PanelUi.MUTED);
-          t.setGravity(Gravity.CENTER);
-          v = t;
-        } else {
-          String axis = label.substring(0, 1);
-          Button b =
-              prepareButton(
-                  label, null, 0, () -> jog(axis, label.contains("+") ? xyStep : -xyStep));
-          gate(b, this::manualMotionAllowed);
-          v = b;
-        }
-        LinearLayout.LayoutParams cellLayout = new LinearLayout.LayoutParams(0, p.dp(48), 1);
-        if (cell > 0) cellLayout.leftMargin = p.dp(4);
-        row.addView(v, cellLayout);
-      }
-      add(xy, row, 48);
-      if (index < 2) p.gap(xy, 4);
-    }
-    p.gap(xy, 6);
-    stepSelector(xy, new double[] {.1, 1, 10}, () -> xyStep, v -> xyStep = v);
-    Button up = prepareButton("Z +", null, 0, () -> jog("Z", zStep)),
-        down = prepareButton("Z −", null, 0, () -> jog("Z", -zStep));
-    gate(up, this::manualMotionAllowed);
-    gate(down, this::manualMotionAllowed);
-    add(z, up, 48);
-    p.gap(z, 4);
-    TextView zLabel = p.text("Z AXIS", 11, PanelUi.MUTED);
-    zLabel.setGravity(Gravity.CENTER);
-    add(z, zLabel, 48);
-    p.gap(z, 4);
-    add(z, down, 48);
-    p.gap(z, 6);
-    stepSelector(z, new double[] {.025, .1, 1}, () -> zStep, v -> zStep = v);
-    motion.addView(axes, new LinearLayout.LayoutParams(-1, -2));
-    LinearLayout tools = prepareCard(cols, false);
-    Button home = prepareButton("Home all", "home", 1, this::homeAxes);
-    preparePriority(home, () -> !homed("xyz"));
-    gate(home, () -> idle() && !manual());
-    add(tools, home, 48);
-    p.gap(tools, 8);
-    Button motors =
-        prepareButton(
-            "Release motors",
-            null,
-            0,
-            () ->
-                confirm(
-                    "Release the motors?",
-                    "The bed may move when its motor is released.",
-                    "Release motors",
-                    () -> gcode("Releasing motors", "M84", Policy.IDLE, null)));
+    manualControls(body);
+    p.gap(body, GUTTER);
+    Button motors = button("Release motors", null, 0,
+        () -> confirm("Release the motors?", "The bed may move when its motor is released.",
+            "Release motors", () -> gcode("Releasing motors", "M84", Policy.IDLE, null)));
     gate(motors, () -> idle() && !manual());
-    add(tools, motors, 48);
-    p.gap(tools, 8);
-    add(tools, p.label("EXTRUDER"), 20);
-    p.gap(tools, 4);
-    Button retract = button("E −", null, 0, () -> feed(-extrudeStep));
-    Button extrude = button("E +", null, 0, () -> feed(extrudeStep));
-    Button distance = button("", null, 0, () -> numberSheet("Extrusion distance", extrudeStep, .1, extrusionLimit(status),
-        v -> { extrudeStep = v; dismissSheet(); updateViews(); }, this::dismissSheet));
-    distance.setContentDescription("Extrusion distance");
-    distance.setTextSize(12);
-    p.pad(distance, 2, 4);
-    bindText(distance, () -> trimNumber(extrudeStep) + " mm");
-    gate(retract, this::manualMotionAllowed);
-    gate(extrude, this::manualMotionAllowed);
-    rowButtons(tools, retract, distance, extrude);
-    p.gap(tools, 4);
-    stepSelector(tools, new double[] {1, 5, 10}, () -> extrudeStep, v -> extrudeStep = v);
-    p.gap(tools, 8);
-    Button fan = prepareButton("Part cooling fan", null, 0, () -> fanSheet());
+    Button fan = button("Part fan", null, 0, this::fanSheet);
     gate(fan, () -> ready() && !manual());
-    add(tools, fan, 48);
+    rowButtons(body, button("Filament", "filament", 3, () -> openPrepare("Filament")), motors, fan);
   }
 
   boolean manualMotionAllowed() {
     return ready() && !manual() && !jobState().equals("printing");
   }
 
+  void manualControls(LinearLayout parent) {
+    LinearLayout motion = p.row(), xy = p.col(), z = p.col();
+    LinearLayout.LayoutParams xySize = new LinearLayout.LayoutParams(0, -1, 1);
+    xySize.rightMargin = p.dp(GUTTER);
+    motion.addView(xy, xySize);
+    z.setBackground(p.shape(PanelUi.SURFACE, PanelUi.CONTROL_RADIUS));
+    motion.addView(z, new LinearLayout.LayoutParams(p.dp(104), -1));
+    parent.addView(motion, new LinearLayout.LayoutParams(-1, 0, 1));
+    rowButtons(xy, axisPosition("X"), axisPosition("Y"));
+    add(z, axisPosition("Z"), 48);
+    p.gap(xy, GUTTER);
+    p.gap(z, GUTTER);
+    Button north = p.quietButton("Y +", "up", () -> jog("Y", xyStep));
+    Button east = p.quietButton("X +", "right", () -> jog("X", xyStep));
+    Button south = p.quietButton("Y \u2212", "down", () -> jog("Y", -xyStep));
+    Button west = p.quietButton("X \u2212", "left", () -> jog("X", -xyStep));
+    for (Button jog : new Button[] {north, east, south, west}) {
+      gate(jog, this::manualMotionAllowed);
+      jog.setContentDescription(jog.getText());
+      PanelUi.Icon icon = (PanelUi.Icon) jog.getCompoundDrawables()[0];
+      jog.setCompoundDrawables(null, icon, null, null);
+      jog.setCompoundDrawablePadding(p.dp(2));
+    }
+    Button home = p.quietButton("", "home", this::homeAxes);
+    home.setContentDescription("Home axes");
+    PanelUi.Icon homeIcon = (PanelUi.Icon) home.getCompoundDrawables()[0];
+    home.setCompoundDrawables(null, homeIcon, null, null);
+    home.setTextColor(PanelUi.ACCENT);
+    homeIcon.setInk(PanelUi.ACCENT);
+    gate(home, () -> idle() && !manual());
+    xy.addView(p.motionPad(north, east, south, west, home), new LinearLayout.LayoutParams(-1, 0, 1));
+    Button up = p.quietButton("Z +", "up", () -> jog("Z", zStep));
+    Button down = p.quietButton("Z −", "down", () -> jog("Z", -zStep));
+    gate(up, this::manualMotionAllowed);
+    gate(down, this::manualMotionAllowed);
+    z.addView(up, new LinearLayout.LayoutParams(-1, 0, 1));
+    p.gap(z, GUTTER);
+    add(z, motionDistanceButton("Z"), 48);
+    p.gap(z, GUTTER);
+    z.addView(down, new LinearLayout.LayoutParams(-1, 0, 1));
+    p.gap(xy, GUTTER);
+    p.gap(z, GUTTER);
+    rowButtons(xy, motionDistanceButton("XY"), motionSpeedButton("XY"));
+    add(z, motionSpeedButton("Z"), 48);
+    p.gap(parent, GUTTER);
+    Button retract = p.quietButton("E −", "unload", () -> feed(-extrudeStep));
+    Button feed = p.quietButton("E +", "load", () -> feed(extrudeStep));
+    gate(retract, this::manualMotionAllowed);
+    gate(feed, this::manualMotionAllowed);
+    LinearLayout filament = p.col();
+    filament.setBackground(p.shape(PanelUi.SURFACE, PanelUi.CONTROL_RADIUS));
+    rowButtons(filament, retract, motionDistanceButton("E"), feed, motionSpeedButton("E"));
+    add(parent, filament, 48);
+  }
+
+  Button motionDistanceButton(String axis) {
+    boolean e = axis.equals("E"), z = axis.equals("Z");
+    Button distance = p.quietButton("", "edit", () -> numberSheet(
+        e ? "Extrusion distance" : axis + " move distance", e ? extrudeStep : z ? zStep : xyStep,
+        e ? .1 : .001, e ? extrusionLimit(status) : 120,
+        v -> { if (e) extrudeStep = v; else if (z) zStep = v; else xyStep = v;
+          dismissSheet(); updateViews(); }, this::dismissSheet));
+    distance.setContentDescription(e ? "Extrusion distance" : axis + " move distance");
+    distance.setTextSize(12);
+    p.pad(distance, 2, 4);
+    bindText(distance, () -> trimNumber(e ? extrudeStep : z ? zStep : xyStep) + " mm");
+    return distance;
+  }
+
+  double motionSpeed(String axis) {
+    return axis.equals("XY") ? xySpeed : axis.equals("Z") ? zSpeed : extrudeSpeed;
+  }
+
+  double motionSpeedLimit(JSONObject current, String axis) {
+    JSONObject config = current.optJSONObject("configfile");
+    JSONObject settings = config == null ? null : config.optJSONObject("settings");
+    JSONObject section = settings == null ? null : settings.optJSONObject(axis.equals("E") ? "extruder" : "printer");
+    String key = axis.equals("E") ? "max_extrude_only_velocity" : axis.equals("Z") ? "max_z_velocity" : "max_velocity";
+    double fallback = axis.equals("E") ? 5 : axis.equals("Z") ? 15 : 300;
+    double limit = section == null ? fallback : section.optDouble(key, fallback);
+    return Double.isFinite(limit) && limit > 0 ? limit : fallback;
+  }
+
+  Button motionSpeedButton(String axis) {
+    Button speed = p.quietButton("", "speed", () -> motionSpeedSheet(axis));
+    speed.setTextSize(12);
+    p.pad(speed, 2, 4);
+    speed.setContentDescription(axis + " movement speed");
+    bindText(speed, () -> axis + " " + trimNumber(motionSpeed(axis)) + " mm/s");
+    return speed;
+  }
+
+  void motionSpeedSheet(String axis) {
+    numberSheet(axis + " speed (mm/s)", motionSpeed(axis), .1, motionSpeedLimit(status, axis),
+        v -> { if (axis.equals("XY")) xySpeed = v; else if (axis.equals("Z")) zSpeed = v; else extrudeSpeed = v;
+          dismissSheet(); updateViews(); }, this::dismissSheet);
+  }
+
+  void printSpeedSheet() {
+    numberSheet("Speed (%)", tuneValue(status, "speed_factor"), 50, 150,
+        v -> runAction("Setting print speed", Policy.READY,
+            (s, d) -> d.gcode("M220 S" + Math.round(v)), this::dismissSheet), this::dismissSheet);
+  }
+
   Button axisPosition(String axis) {
     int index = "XYZ".indexOf(axis);
-    Button position = button("", "edit", 0, () -> {
+    Button position = p.quietButton("", "edit", () -> {
       try {
         JSONObject t = obj("toolhead");
         numberSheet(axis + " position", t.getJSONArray("position").getDouble(index),
@@ -1526,7 +1606,9 @@ public final class MainActivity extends Activity {
             v -> moveAxis(axis, v, true), this::dismissSheet);
       } catch (Exception e) { tell("Position or travel limits unavailable", PanelUi.AMBER); }
     });
-    position.setTextSize(12);
+    position.setTextSize(14);
+    p.pad(position, 3, 3);
+    position.setGravity(Gravity.CENTER);
     position.setContentDescription("Set " + axis + " position");
     bindText(position, () -> {
       JSONArray pos = obj("toolhead").optJSONArray("position");
@@ -1589,6 +1671,7 @@ public final class MainActivity extends Activity {
   }
 
   void moveAxis(String axis, double distance, boolean absolute) {
+    final double speed = axis.equals("Z") ? zSpeed : xySpeed;
     runAction(
         "Moving " + axis,
         Policy.FILAMENT,
@@ -1603,12 +1686,14 @@ public final class MainActivity extends Activity {
           double target = absolute ? distance : pos.optDouble(i, Double.NaN) + distance;
           if (!Double.isFinite(target) || target < min.getDouble(i) || target > max.getDouble(i))
             throw new Exception("Move is outside " + axis + " travel");
+          if (!Double.isFinite(speed) || speed <= 0 || speed > motionSpeedLimit(s, axis.equals("Z") ? "Z" : "XY"))
+            throw new Exception("Movement speed is outside the printer limit");
           d.gcode(
               "SAVE_GCODE_STATE NAME=panel_move\nG91\nG0 "
                   + axis
                   + trimNumber(absolute ? target - pos.getDouble(i) : distance)
                   + " F"
-                  + (axis.equals("Z") ? 300 : 1200)
+                  + trimNumber(speed * 60)
                   + "\nRESTORE_GCODE_STATE NAME=panel_move");
         },
         absolute ? this::dismissSheet : null);
@@ -1861,6 +1946,7 @@ public final class MainActivity extends Activity {
   }
 
   void feed(double distance) {
+    final double speed = extrudeSpeed;
     runAction(
         distance > 0 ? "Feeding filament" : "Retracting filament",
         Policy.FILAMENT,
@@ -1870,10 +1956,12 @@ public final class MainActivity extends Activity {
           double max = extrusionLimit(s);
           if (!Double.isFinite(distance) || !Double.isFinite(max) || distance == 0 || Math.abs(distance) > max)
             throw new Exception("Extrusion distance is outside the printer limit");
+          if (!Double.isFinite(speed) || speed <= 0 || speed > motionSpeedLimit(s, "E"))
+            throw new Exception("Extrusion speed is outside the printer limit");
           d.gcode(
               "SAVE_GCODE_STATE NAME=panel_extrude\nM83\nG1 E"
                   + trimNumber(distance)
-                  + " F180\nRESTORE_GCODE_STATE NAME=panel_extrude");
+                  + " F" + trimNumber(speed * 60) + "\nRESTORE_GCODE_STATE NAME=panel_extrude");
         },
         null);
   }

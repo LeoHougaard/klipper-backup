@@ -77,12 +77,14 @@ def main():
         rail_x = nozzle[0]
         assert abs(stop[3]-nav[-1][3]) <= 1
         rail = [bounds(find(root, label)) for label in
-                ['Set nozzle temperature','Set bed temperature','Filament controls','Connection details','Emergency stop']]
+                ['Set nozzle temperature','Set bed temperature','Level','Connection details','Emergency stop']]
         assert max(b[3]-b[1] for b in rail)-min(b[3]-b[1] for b in rail) <= 1
         assert all(abs((rail[i+1][1]-rail[i][3])-(nav[1][1]-nav[0][3])) <= 1 for i in range(4))
-        assert home[3]-home[1] == 126, home
+        assert home[3]-home[1] >= 126, home
         image = bounds(find(root,'Model preview'))
-        assert abs((image[2]-image[0])-(image[3]-image[1])) <= 1, image
+        assert min(image[2]-image[0], image[3]-image[1]) >= 500, image
+        assert all(any(n.get('content-desc') == label for n in root.iter('node')) for label in
+                   ['X +','X −','Y +','Y −','XY movement speed','Z movement speed','E movement speed'])
         print('PASS: even navigation, right-side status, no duplicate header/library/preheat labels', flush=True)
 
         before = len(scripts())
@@ -175,7 +177,6 @@ def main():
                   extruder={'temperature':22,'target':0,'can_extrude':False})
         wait_text('Ready')
         tap('Prepare')
-        tap('Move')
         capture('07-move')
         assert not any(n.get('text') == 'Bed setup' for n in snapshot().iter('node'))
         tap('More')

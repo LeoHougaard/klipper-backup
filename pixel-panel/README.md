@@ -8,8 +8,12 @@ is the base Pixel 10 on Android 17. Klipper stays on the existing BTT Pi.
 
 - Landscape in either direction, muted dark colors, 48 dp minimum controls, and
   hardware-reported safe margins for both the camera cutout and rounded corners.
-- Home: compact Load/Unload, homing, movement, Level, PLA/ABS preheat and cooldown
-  controls beside a small plate preview. Level refreshes the compensated heightmap.
+- Home: a large plate preview beside a circular XY control, center homing, a
+  separate vertical Z control, and a related extrusion/Load/Unload area. Exact
+  positions, distances and XY/Z/E speeds are editable in place. Neutral dark
+  surfaces use accent only for selection and primary actions. Level in the
+  right rail refreshes the compensated heightmap; PLA/ABS preheat and cooldown
+  stay beside the plate. Printing enlarges the model and exposes print speed.
   Load/Unload heat to the selected filament temperature, wait for thermal readiness,
   then run the macro once. Cancel heating stops the pending operation and restores
   its previous heater target when that target still belongs to the operation.
@@ -30,6 +34,14 @@ is the base Pixel 10 on Android 17. Klipper stays on the existing BTT Pi.
   saved/rebuilt, rejected measurements, and unconfirmed completion.
   Manual motion is available idle or paused. Manual E uses Klipper's cold-extrusion
   readiness rather than automatically heating; Load/Unload own the automatic workflow.
+- Emulator review: `python pixel-panel/tests/review_server.py --serial emulator-5554`
+  serves loopback controls on port 18726 and a simulated Moonraker on 18725.
+  With the app already connected to that fixture, select printer state and
+  native screen separately, then **Open in app**. Screens include the main
+  pages, maintenance/calibration, heightmap, temperature and numeric editors.
+  **Capture current app** records manual Device interactions; **Annotate preview**
+  in T3 marks the resulting immutable screenshot. Fit/full-resolution zoom is
+  available. The server refuses physical-device serials and checks the endpoint.
 - Files: searchable stored G-code, newest first, metadata, model thumbnails and
   explicit print start. Refreshed size/timestamp changes invalidate old previews.
 - Camera: rear camera, silent 1280×720 maximum JPEG frames at approximately 1 fps,

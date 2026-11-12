@@ -1,5 +1,37 @@
 # Pixel panel verification
 
+## 0.3.6: related controls and broader native review
+
+Home uses a circular XY control with center homing, a separate vertical Z
+control, and a shared manual-extrusion area beside Load/Unload. Position,
+distance and speed editors stay with their axis. The model preview is enlarged;
+printing exposes a direct speed editor. Neutral dark surfaces replace the blue
+fills; navigation icons are larger. Layout grouping was compared with the
+[official Bambu H2D manual](https://csm.bblcdn.com/hub/4668d0ca43994ff3bff4b37f1a65c2e7.pdf),
+especially the movement and nozzle/extruder screens. Secondary tuning remains
+inside Tune print rather than crowding Home.
+
+`check_manual_filament.py` passed on emulator-5554: automatic heat/wait,
+cancellation and target restoration, hot Load/Unload, leaving the workflow,
+cold manual E refusal, exact X, Y/Z jogs, paused movement and unhomed refusal.
+`check_motion_speed.py` passed edited XY/Z/E feed rates, the whole wheel sector
+outside its label, drag cancellation, and direct M220 print-speed editing.
+G-code state is preserved. No physical printer commands were issued.
+
+`review_server.py` keeps printer state and native screen selection independent,
+with 12 states and 21 screen/editor routes. It captures the actual emulator,
+preserves immutable annotation images and supports fit/full-resolution viewing.
+It requires an emulator serial and checks the app's loopback endpoint before
+opening review controls. Fresh accessibility dumps retry briefly after launch
+instead of using an old tree when Android temporarily reports no root.
+`check_review_routes.py` passed nine native selections: printing, paused, tuning,
+temperature keypad, heightmap, both paper contacts, Files and restored Home.
+These review selections issued zero printer commands.
+
+The APK builds and verifies its signature; Python syntax and printer config
+checks pass. Native captures and command results are in `.build/space-review/`.
+Physical printer and dedicated-phone behavior remain untested for this revision.
+
 ## 0.3.5: compact controls and automatic filament handling
 
 The review emulator keeps both rails evenly spaced, with visible button borders
