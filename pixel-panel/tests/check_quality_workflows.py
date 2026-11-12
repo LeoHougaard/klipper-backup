@@ -37,7 +37,7 @@ def main():
         click("Home")
         click("Home axes")
         send_and_observe(fixture, "Home axes", "G28")
-        wait_text("All axes homed")
+        wait_until(lambda: fixture.status["toolhead"]["homed_axes"] == "xyz", "homing completed")
         send_and_observe(fixture, "PLA 200° / 60°", "SET_HEATER_TEMPERATURE HEATER=extruder TARGET=200\nSET_HEATER_TEMPERATURE HEATER=heater_bed TARGET=60")
         wait_until(lambda: fixture.status["extruder"]["target"] == 200 and fixture.status["heater_bed"]["target"] == 60, "preheat values")
         wait_text(" / 200°")
@@ -75,7 +75,8 @@ def main():
         click("Set 0°")
         click("Turn heater off")
         fixture.status["extruder"].update(temperature=22, can_extrude=False)
-        wait_text("Heat the nozzle to 230°")
+        wait_text("230° selected")
+        assert fixture.status["extruder"]["target"] == 0
         capture("08-custom-heater-off")
         click("ABS 240°")
         send_and_observe(fixture, "Heat to 240°", "SET_HEATER_TEMPERATURE HEATER=extruder TARGET=240")

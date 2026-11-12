@@ -23,7 +23,16 @@ def adb(*args):
 
 
 def snapshot():
-    result = adb("shell", "uiautomator", "dump", "/data/local/tmp/voron-controls-test.xml")
+    for attempt in range(2):
+        try:
+            result = adb("shell", "uiautomator", "dump", "/data/local/tmp/voron-controls-test.xml")
+            break
+        except subprocess.CalledProcessError as error:
+            if error.returncode != 137 or attempt:
+                raise
+            # Android can kill the transient UI inspector. Retry once, but
+            # still require a successful fresh dump before reading any XML.
+            time.sleep(.5)
     if "UI hierchary dumped to" not in result:
         raise RuntimeError("Android did not refresh its UI snapshot; refusing to reuse old XML")
     return ET.fromstring(adb("shell", "cat", "/data/local/tmp/voron-controls-test.xml"))

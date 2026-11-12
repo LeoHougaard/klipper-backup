@@ -1,4 +1,58 @@
-# Pixel panel 0.3.2 verification
+# Pixel panel 0.3.3 verification
+
+## Touch interaction and purpose
+
+Leo requested a consistent interaction language, fewer permanent instructions,
+content-sized layouts, deliberate keyboard/Back behavior, and slide-to-select
+temperatures in 5°C steps. This pass implements those workflows rather than
+adding controls to occupy empty space.
+
+- Action/edit controls have the same raised outlined treatment. Selection uses
+  the existing segmented accent; navigation remains on the rail. Header heater
+  controls and connection details now visibly afford interaction.
+- Idle Home and Move no longer reserve space for homing instructions. Unhomed
+  movement and cold filament handling respond to a tap with a transient error;
+  dispatch still validates prerequisites and sends no invalid command. Cold
+  feeding also checks the selected temperature at dispatch.
+- Home cards fit their content. Redundant idle-state copy and the repeated Tune
+  overflow are removed. Tuning values now accept precise entry in the shared
+  numeric editor, with separated tuning rows.
+- Temperature buttons slide horizontally in 5°C steps with a preview and haptic
+  ticks, bounded by configured heater limits. Targets send once on release,
+  never continuously while dragging. Cancelling/leaving the app sends nothing.
+  A tap retains presets; custom entry retains an explicit Apply action.
+- Numeric entry has its own large keypad, validation and delete/clear controls.
+  Android's IME is suppressed only for that dialog. Text search/address/key
+  fields retain the system keyboard with Done/Go and no fullscreen extraction.
+  Back works through page history and returns numeric temperature entry to its
+  parent editor. The heater readings remain legible during manual calibration.
+
+`check_touch_flows.py` passes on the actual Pixel: transient homing/cold errors
+with no commands; 48 dp keypad fit; invalid input rejected; 230°C dispatched
+exactly once; numeric Back/Files Back; search/Enter; precision speed 115%; E-stop
+while the keypad is open with no replay. Its result records three isolated
+fixture requests and zero physical-printer commands. `check_controls.py` also
+passes unhomed/cold rejection, state-preserving moves/extrusion, discovery
+recovery, travel bounds and confirmed file start.
+
+`check_temperature_drag.py` passes real touchscreen event injection for nozzle
+and bed, 5°C steps in both directions, configured maximum, one command on
+release, tap-to-presets and cancellation on Android Home. All commands go to its
+isolated fixture. These are UI/command checks, not physical heating tests.
+
+Numeric IME overlap was found visually and fixed with a dialog-scoped IME policy;
+no global keyboard setting changes. The UI inspector was once killed by Android
+(137); the helper retries that failure once and still requires a fresh successful
+dump. An open modal hides background nodes from accessibility, so the E-stop
+test uses its freshly measured header bounds from immediately before opening
+the keypad, as the existing emergency concurrency test does.
+
+Evidence: `.build/design/touch-flows/`. The app is still not independently
+established as 9.5 overall. A dedicated unrooted phone, physical print workflow
+and ergonomic use during real prints remain outside this fixture verification.
+
+Installed 0.3.3 APK SHA-256:
+`fa23745a60fd4997f5f79d9dd661e31dfa5f5da821845aecfbd61959f000157a`.
 
 ## Palette and corner consistency
 

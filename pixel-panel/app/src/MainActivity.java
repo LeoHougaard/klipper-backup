@@ -48,12 +48,16 @@ public final class MainActivity extends Activity {
   int calibrationResultColor = PanelUi.ACCENT;
   LinearLayout workspace, navigationRail, dialogFooter;
   Dialog activeDialog;
+  final ArrayDeque<String> pageHistory = new ArrayDeque<>();
+  boolean navigatingBack;
   Button emergencyButton;
   int screenLeftInset, screenRightInset, screenTopInset, screenBottomInset;
   double xyStep = 10, zStep = .1, paperStep = .025;
   boolean calibrationRequested;
   String calibrationResult = "";
   String filamentForJob;
+  String draggingHeater;
+  double temperaturePreview;
   byte[] displayedFrame;
   ImageView cameraImage;
   TextView cameraOverlay;
@@ -124,10 +128,18 @@ public final class MainActivity extends Activity {
           screenRightInset = right;
           screenTopInset = safe.top;
           screenBottomInset = safe.bottom;
-          v.setPadding(left, safe.top, right, safe.bottom);
+          v.setPadding(
+              left,
+              safe.top,
+              right,
+              Math.max(safe.bottom, insets.getInsets(WindowInsets.Type.ime()).bottom));
           return insets;
         });
     show("Home");
+    if (Build.VERSION.SDK_INT >= 33)
+      getOnBackInvokedDispatcher()
+          .registerOnBackInvokedCallback(
+              android.window.OnBackInvokedDispatcher.PRIORITY_DEFAULT, this::onBackPressed);
     if (Build.VERSION.SDK_INT >= 37
         && checkSelfPermission(Manifest.permission.ACCESS_LOCAL_NETWORK)
             != PackageManager.PERMISSION_GRANTED)
@@ -150,6 +162,8 @@ public final class MainActivity extends Activity {
   @Override
   protected void onPause() {
     super.onPause();
+    if (draggingHeater != null) notice = "";
+    draggingHeater = null;
     resumed = false;
     ui.removeCallbacks(heartbeat);
   }
@@ -168,8 +182,12 @@ public final class MainActivity extends Activity {
 
   @Override
   public void onBackPressed() {
-    if (!page.equals("Home")) show("Home");
-    else super.onBackPressed();
+    if (!pageHistory.isEmpty()) {
+      navigatingBack = true;
+      show(pageHistory.removeLast());
+      navigatingBack = false;
+    } else if (!page.equals("Home")) show("Home");
+    else moveTaskToBack(true);
   }
 
   @Override
@@ -320,7 +338,7 @@ public final class MainActivity extends Activity {
       show("Prepare");
       return;
     }
-    connection.setText("●  " + stateTitle());
+    connection.setText("●  " + stateTitle() + "  ›");
     connection.setTextColor(
         !urgentMessage.isEmpty()
                 || fresh()
@@ -387,6 +405,36 @@ public final class MainActivity extends Activity {
     parent.addView(t);
   }
 
+  void hideKeyboard() {
+    View focused = getCurrentFocus();
+    if (focused != null) {
+      ((android.view.inputmethod.InputMethodManager) getSystemService(INPUT_METHOD_SERVICE))
+          .hideSoftInputFromWindow(focused.getWindowToken(), 0);
+      focused.clearFocus();
+    }
+  }
+
+  void textInput(EditText input, int action, Runnable submit) {
+    input.setBackground(p.outline(PanelUi.RAISED));
+    input.setHintTextColor(PanelUi.MUTED);
+    p.pad(input, 12, 8);
+    input.setImeOptions(
+        action
+            | android.view.inputmethod.EditorInfo.IME_FLAG_NO_EXTRACT_UI
+            | android.view.inputmethod.EditorInfo.IME_FLAG_NO_FULLSCREEN);
+    input.setOnEditorActionListener((v, id, event) -> {
+      if (id == action
+          || event != null
+              && event.getKeyCode() == KeyEvent.KEYCODE_ENTER
+              && event.getAction() == KeyEvent.ACTION_UP) {
+        if (submit != null) submit.run();
+        hideKeyboard();
+        return true;
+      }
+      return false;
+    });
+  }
+
   void rowButtons(LinearLayout parent, Button... buttons) {
     LinearLayout row = p.row();
     for (Button b : buttons) p.weighted(row, b, 48);
@@ -403,6 +451,13 @@ public final class MainActivity extends Activity {
   }
 
   void show(String next) {
+    if (!next.equals(page)) {
+      hideKeyboard();
+      if (!navigatingBack) {
+        if (pageHistory.size() >= 12) pageHistory.removeFirst();
+        pageHistory.addLast(page);
+      }
+    }
     page = next;
     pageGeneration++;
     bindings.clear();
@@ -413,6 +468,7 @@ public final class MainActivity extends Activity {
     fileList = null;
     LinearLayout root = p.row();
     root.setBackgroundColor(PanelUi.BG);
+    root.setFocusableInTouchMode(true);
     p.pad(root, 8, 8);
     LinearLayout rail = p.col();
     navigationRail = rail;
@@ -439,6 +495,13 @@ public final class MainActivity extends Activity {
         56);
     root.addView(rail, new LinearLayout.LayoutParams(p.dp(68), -1));
     LinearLayout main = p.col(), header = p.row();
+    if (!pageHistory.isEmpty()) {
+      Button back = button("", "back", 0, this::onBackPressed);
+      back.setContentDescription("Back");
+      LinearLayout.LayoutParams backSize = new LinearLayout.LayoutParams(p.dp(48), p.dp(48));
+      backSize.rightMargin = p.dp(8);
+      header.addView(back, backSize);
+    }
     TextView screenTitle = p.text(page.equals("Home") ? "Voron 0.2" : page, 18, PanelUi.TEXT);
     screenTitle.setTypeface(Typeface.create("sans-serif-medium", Typeface.NORMAL));
     screenTitle.setContentDescription("Screen: " + page);
@@ -449,8 +512,11 @@ public final class MainActivity extends Activity {
     connection.setContentDescription("Connection details");
     connection.setMinWidth(p.dp(108));
     connection.setPadding(p.dp(10), 0, p.dp(10), 0);
+    connection.setBackground(p.buttonBackground(0));
     connection.setOnClickListener(v -> show("Connection"));
-    header.addView(connection, new LinearLayout.LayoutParams(-2, -1));
+    LinearLayout.LayoutParams connectionSize = new LinearLayout.LayoutParams(-2, -1);
+    connectionSize.rightMargin = p.dp(6);
+    header.addView(connection, connectionSize);
     Button stop = button("E-stop", "stop", 2, this::emergencyStop);
     emergencyButton = stop;
     stop.setContentDescription("Emergency stop");
@@ -460,12 +526,13 @@ public final class MainActivity extends Activity {
     workspace = p.col();
     main.addView(workspace, new LinearLayout.LayoutParams(-1, 0, 1));
     feedback = p.text("", 12, PanelUi.MUTED);
-    feedback.setMaxLines(1);
-    feedback.setEllipsize(TextUtils.TruncateAt.END);
+    feedback.setMaxLines(2);
+    feedback.setPadding(0, p.dp(4), 0, 0);
     feedback.setVisibility(View.GONE);
-    add(main, feedback, 22);
+    add(main, feedback, -2);
     root.addView(main, new LinearLayout.LayoutParams(0, -1, 1));
     setContentView(root);
+    root.requestFocus();
     switch (page) {
       case "Home":
         homeMode = mode();
@@ -499,7 +566,7 @@ public final class MainActivity extends Activity {
     LinearLayout cell = p.col();
     cell.setGravity(Gravity.CENTER_VERTICAL);
     cell.setPadding(p.dp(10), p.dp(3), p.dp(10), p.dp(3));
-    TextView label = p.text(title.toUpperCase(Locale.US), 10, PanelUi.MUTED);
+    TextView label = p.text(title.toUpperCase(Locale.US) + " ↔", 10, PanelUi.MUTED);
     cell.addView(label);
     LinearLayout reading = p.row();
     TextView actual = p.text("", 20, PanelUi.TEXT), target = p.text("", 12, PanelUi.MUTED);
@@ -507,9 +574,12 @@ public final class MainActivity extends Activity {
     bindText(
         target,
         () -> {
-          double n = finite(obj(heater), "target");
+          double n =
+              heater.equals(draggingHeater) ? temperaturePreview : finite(obj(heater), "target");
           return fresh() && Double.isFinite(n)
-              ? n > 0 ? " / " + value(n, 0) + "°" : " / off"
+              ? heater.equals(draggingHeater)
+                  ? " → " + value(n, 0) + "°"
+                  : n > 0 ? " / " + value(n, 0) + "°" : " / off"
               : " / —";
         });
     reading.addView(actual);
@@ -517,12 +587,14 @@ public final class MainActivity extends Activity {
     cell.addView(reading);
     cell.setContentDescription("Set " + title.toLowerCase(Locale.US) + " temperature");
     cell.setOnClickListener(v -> temperatureSheet(heater));
+    temperatureDrag(cell, heater);
     cell.setFocusable(true);
+    cell.setBackground(p.buttonBackground(0));
     headerControls.add(cell);
     bindings.add(() -> {
       boolean enabled = ready() && !manual() && !commandBusy;
       cell.setEnabled(enabled);
-      cell.setAlpha(enabled ? 1f : .45f);
+      cell.setAlpha(1f);
       boolean warm = finite(obj(heater), "target") > finite(obj(heater), "temperature") + 3;
       actual.setTextColor(warm ? PanelUi.AMBER : PanelUi.TEXT);
     });
@@ -535,10 +607,10 @@ public final class MainActivity extends Activity {
     LinearLayout columns = p.row();
     columns.setGravity(Gravity.TOP);
     LinearLayout left = p.panel(), right = p.panel();
-    LinearLayout.LayoutParams main = new LinearLayout.LayoutParams(0, -1, 1);
+    LinearLayout.LayoutParams main = new LinearLayout.LayoutParams(0, -2, 1);
     main.rightMargin = p.dp(12);
     columns.addView(left, main);
-    columns.addView(right, new LinearLayout.LayoutParams(p.dp(280), -1));
+    columns.addView(right, new LinearLayout.LayoutParams(p.dp(280), -2));
     add(workspace, columns, -1);
     if (!ready()) {
       unavailable(left);
@@ -680,11 +752,12 @@ public final class MainActivity extends Activity {
     target.setPadding(p.dp(8), 0, p.dp(8), 0);
     target.setContentDescription("Set " + title.toLowerCase(Locale.US) + " temperature");
     bindings.add(() -> {
-      double n = finite(obj(heater), "target");
+      double n = heater.equals(draggingHeater) ? temperaturePreview : finite(obj(heater), "target");
       target.setText(
           fresh() && Double.isFinite(n) && n > 0 ? value(n, 0) + "° target" : "Set target");
     });
     gate(target, () -> ready() && !manual());
+    temperatureDrag(target, heater);
     reading.addView(target, new LinearLayout.LayoutParams(p.dp(116), p.dp(48)));
     card.addView(reading);
     add(parent, card, 92);
@@ -696,7 +769,7 @@ public final class MainActivity extends Activity {
     tile.setBackground(
         new android.graphics.drawable.RippleDrawable(
             android.content.res.ColorStateList.valueOf(PanelUi.RIPPLE),
-            p.shape(PanelUi.SURFACE, PanelUi.CARD_RADIUS),
+            p.controlShape(PanelUi.RAISED, PanelUi.LINE),
             null));
     LinearLayout first = p.row();
     ImageView image = new ImageView(this);
@@ -714,20 +787,15 @@ public final class MainActivity extends Activity {
   }
 
   void idleHome(LinearLayout left) {
-    TextView title = p.text("", 26, PanelUi.TEXT);
-    bindText(title, () -> heating() ? "Heating" : "Ready");
-    left.addView(title);
-    TextView state = p.text("", 13, PanelUi.MUTED);
-    bindText(state, () -> homed("xyz") ? "All axes homed" : "Home before moving");
-    add(left, state, 24);
+    left.addView(p.heading("Prepare"));
     p.gap(left, 10);
-    Button home = button("Home axes", "home", 1, this::homeAxes);
+    Button home = button("Home axes", "home", 0, this::homeAxes);
     gate(home, () -> idle() && !manual());
     rowButtons(
         left,
         home,
-        button("Move", "move", 4, () -> openPrepare("Move")),
-        button("Filament", "filament", 4, () -> openPrepare("Filament")));
+        button("Move", "move", 0, () -> openPrepare("Move")),
+        button("Filament", "filament", 0, () -> openPrepare("Filament")));
     p.gap(left, 8);
     rowButtons(
         left,
@@ -855,9 +923,6 @@ public final class MainActivity extends Activity {
     LinearLayout title = p.row();
     title.addView(
         p.text("Live tuning", 17, PanelUi.TEXT), new LinearLayout.LayoutParams(0, p.dp(48), 1));
-    Button more = button("•••", null, 0, this::tuningSheet);
-    more.setContentDescription("Speed, flow & fan");
-    title.addView(more, new LinearLayout.LayoutParams(p.dp(48), p.dp(48)));
     right.addView(title);
     LinearLayout z = p.row();
     z.addView(p.label("Z OFFSET"), new LinearLayout.LayoutParams(0, -1, 1));
@@ -1313,9 +1378,9 @@ public final class MainActivity extends Activity {
       boolean active = primary.getAsBoolean();
       if (Boolean.valueOf(active).equals(control.getTag())) return;
       control.setTag(active);
-      int ink = active ? PanelUi.BG : PanelUi.ACCENT;
+      int ink = active ? PanelUi.BG : PanelUi.TEXT;
       control.setTextColor(p.ink(ink));
-      control.setBackground(p.buttonBackground(active ? 1 : 3));
+      control.setBackground(p.buttonBackground(active ? 1 : 0));
       for (android.graphics.drawable.Drawable drawable : control.getCompoundDrawables())
         if (drawable instanceof PanelUi.Icon) ((PanelUi.Icon) drawable).setInk(ink);
     });
@@ -1392,7 +1457,7 @@ public final class MainActivity extends Activity {
           Button b =
               prepareButton(
                   label, null, 0, () -> jog(axis, label.contains("+") ? xyStep : -xyStep));
-          gate(b, () -> idle() && !manual() && homed(axis.toLowerCase(Locale.US)));
+          gate(b, () -> idle() && !manual());
           v = b;
         }
         LinearLayout.LayoutParams cellLayout = new LinearLayout.LayoutParams(0, p.dp(48), 1);
@@ -1406,8 +1471,8 @@ public final class MainActivity extends Activity {
     stepSelector(xy, new double[] {.1, 1, 10}, () -> xyStep, v -> xyStep = v);
     Button up = prepareButton("Z +", null, 0, () -> jog("Z", zStep)),
         down = prepareButton("Z −", null, 0, () -> jog("Z", -zStep));
-    gate(up, () -> idle() && !manual() && homed("z"));
-    gate(down, () -> idle() && !manual() && homed("z"));
+    gate(up, () -> idle() && !manual());
+    gate(down, () -> idle() && !manual());
     add(z, up, 48);
     p.gap(z, 4);
     TextView zLabel = p.text("Z AXIS", 11, PanelUi.MUTED);
@@ -1420,18 +1485,6 @@ public final class MainActivity extends Activity {
     motion.addView(axes, new LinearLayout.LayoutParams(-1, -2));
     LinearLayout tools = prepareCard(cols, false);
     prepareHeading(tools, "Machine");
-    TextView homing = p.text("", 13, PanelUi.MUTED);
-    bindText(
-        homing,
-        () ->
-            !ready()
-                ? "Printer unavailable"
-                : !idle()
-                    ? "Movement locked during a print"
-                    : homed("xyz") ? "All axes homed" : "Home before moving");
-    homing.setMaxLines(2);
-    add(tools, homing, 32);
-    prepareSpace(tools);
     Button home = prepareButton("Home all", "home", 1, this::homeAxes);
     preparePriority(home, () -> !homed("xyz"));
     gate(home, () -> idle() && !manual());
@@ -1534,33 +1587,21 @@ public final class MainActivity extends Activity {
     LinearLayout cols = prepareColumns(body);
     LinearLayout instructions = prepareCard(cols, true);
     prepareHeading(instructions, "Change filament");
-    TextView stage = p.text("", 14, PanelUi.MUTED);
-    stage.setMaxLines(2);
-    bindText(
-        stage,
-        () ->
-            !ready()
-                ? "Connect to the printer first."
-                : jobState().equals("printing")
-                    ? "Pause the print before changing filament."
-                    : filamentReady()
-                        ? "Nozzle ready. Feed or Retract for fine adjustments."
-                        : filamentHeating()
-                            ? "Nozzle heating. Filament controls unlock when ready."
-                            : "Heat the nozzle to " + filamentTemperature + "° to begin.");
-    add(instructions, stage, 32);
-    prepareSpace(instructions);
     Button load = prepareButton("Load filament", "filament", 1, () -> filamentMacro(true)),
         unload = prepareButton("Unload filament", null, 0, () -> filamentMacro(false));
-    preparePriority(load, () -> !jobState().equals("paused"));
-    gate(load, () -> filamentReady() && capable("LOAD_FILAMENT"));
-    gate(unload, () -> filamentReady() && capable("UNLOAD_FILAMENT"));
+    preparePriority(load, () -> filamentReady() && !jobState().equals("paused"));
+    gate(
+        load,
+        () -> ready() && !manual() && !jobState().equals("printing") && capable("LOAD_FILAMENT"));
+    gate(
+        unload,
+        () -> ready() && !manual() && !jobState().equals("printing") && capable("UNLOAD_FILAMENT"));
     prepareButtons(instructions, load, unload);
     p.gap(instructions, 8);
     Button feed = prepareButton("Feed 5 mm", null, 0, () -> feed(5)),
         retract = prepareButton("Retract 5 mm", null, 0, () -> feed(-5));
-    gate(feed, () -> filamentReady());
-    gate(retract, () -> filamentReady());
+    gate(feed, () -> ready() && !manual() && !jobState().equals("printing"));
+    gate(retract, () -> ready() && !manual() && !jobState().equals("printing"));
     prepareButtons(instructions, feed, retract);
     View resumeGap = new View(this);
     instructions.addView(resumeGap, new LinearLayout.LayoutParams(-1, p.dp(8)));
@@ -1604,11 +1645,15 @@ public final class MainActivity extends Activity {
         prepareButton("Set target", "edit", 0, () -> temperatureSheet("extruder"));
     targetButton.setContentDescription("Set nozzle temperature");
     bindings.add(() -> {
-      double n = finite(obj("extruder"), "target");
+      double n =
+          "extruder".equals(draggingHeater)
+              ? temperaturePreview
+              : finite(obj("extruder"), "target");
       targetButton.setText(
           fresh() && Double.isFinite(n) && n > 0 ? value(n, 0) + "° target" : "Set target");
     });
     gate(targetButton, () -> ready() && !manual());
+    temperatureDrag(targetButton, "extruder");
     add(heat, targetButton, 48);
     p.gap(heat, 8);
     LinearLayout materials = p.row();
@@ -1697,7 +1742,8 @@ public final class MainActivity extends Activity {
         distance > 0 ? "Feeding filament" : "Retracting filament",
         Policy.FILAMENT,
         (s, d) -> {
-          if (!s.getJSONObject("extruder").optBoolean("can_extrude"))
+          if (!s.getJSONObject("extruder").optBoolean("can_extrude")
+              || finite(s.getJSONObject("extruder"), "temperature") < filamentTemperature - 5)
             throw new Exception("Heat the nozzle first");
           d.gcode(
               "SAVE_GCODE_STATE NAME=panel_extrude\nM83\nG1 E"
@@ -2017,7 +2063,7 @@ public final class MainActivity extends Activity {
                     getResources().getDisplayMetrics().heightPixels
                         - screenTopInset
                         - screenBottomInset
-                        - p.dp(208)
+                        - p.dp(176)
                         - (footer.getVisibility() == View.GONE ? 0 : p.dp(56)));
             int size =
                 View.MeasureSpec.getMode(height) == View.MeasureSpec.UNSPECIFIED
@@ -2122,6 +2168,76 @@ public final class MainActivity extends Activity {
     JSONObject settings = config == null ? null : config.optJSONObject("settings");
     JSONObject device = settings == null ? null : settings.optJSONObject(heater);
     return device == null ? Double.NaN : finite(device, "max_temp");
+  }
+
+  void temperatureDrag(View control, String heater) {
+    control.setOnTouchListener(
+        new View.OnTouchListener() {
+          float startX;
+          double start, selected;
+          long generation;
+          boolean sliding;
+
+          public boolean onTouch(View view, MotionEvent event) {
+            switch (event.getActionMasked()) {
+              case MotionEvent.ACTION_DOWN:
+                startX = event.getRawX();
+                double target = finite(obj(heater), "target");
+                start = Double.isFinite(target) ? Math.round(target / 5) * 5 : 0;
+                selected = start;
+                generation = connectionGeneration;
+                sliding = false;
+                view.setPressed(true);
+                return true;
+              case MotionEvent.ACTION_MOVE:
+                float distance = event.getRawX() - startX;
+                if (!sliding
+                    && Math.abs(distance)
+                        > ViewConfiguration.get(MainActivity.this).getScaledTouchSlop()) {
+                  sliding = true;
+                  draggingHeater = heater;
+                  view.getParent().requestDisallowInterceptTouchEvent(true);
+                }
+                if (sliding) {
+                  double max = Math.floor(heaterMax(status, heater) / 5) * 5;
+                  double next =
+                      Math.max(0, Math.min(max, start + Math.round(distance / p.dp(8)) * 5));
+                  if (next != selected)
+                    view.performHapticFeedback(HapticFeedbackConstants.CLOCK_TICK);
+                  selected = next;
+                  temperaturePreview = next;
+                  tell(
+                      (heater.equals("extruder") ? "Nozzle" : "Bed")
+                          + " → "
+                          + value(next, 0)
+                          + "° · release to set",
+                      PanelUi.ACCENT);
+                  updateViews();
+                }
+                return true;
+              case MotionEvent.ACTION_UP:
+              case MotionEvent.ACTION_CANCEL:
+                view.setPressed(false);
+                view.getParent().requestDisallowInterceptTouchEvent(false);
+                boolean active = heater.equals(draggingHeater);
+                draggingHeater = null;
+                boolean commit = event.getActionMasked() == MotionEvent.ACTION_UP;
+                if (sliding) {
+                  notice = "";
+                  if (commit
+                      && active
+                      && selected != start
+                      && generation == connectionGeneration
+                      && ready()
+                      && !manual()) setTemperature(heater, selected, null);
+                  updateViews();
+                } else if (commit) view.performClick();
+                return true;
+              default:
+                return true;
+            }
+          }
+        });
   }
 
   void setTemperature(String heater, double target, Runnable success) {
@@ -2247,44 +2363,107 @@ public final class MainActivity extends Activity {
                     target[0],
                     0,
                     max,
-                    v -> setTemperature(heater, v, this::dismissSheet))),
+                    v -> setTemperature(heater, v, this::dismissSheet),
+                    () -> temperatureSheet(heater))),
         apply);
     updateViews();
   }
 
-  void numberSheet(String title, double initial, double min, double max, DoubleConsumer accept) {
-    LinearLayout body = sheet(title, 420);
+  void numberSheet(
+      String title, double initial, double min, double max, DoubleConsumer accept, Runnable back) {
+    hideKeyboard();
+    LinearLayout body = sheet(title, 480);
+    activeDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+    activeDialog
+        .getWindow()
+        .setSoftInputMode(
+            WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
+                | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
+    ((android.view.inputmethod.InputMethodManager) getSystemService(INPUT_METHOD_SERVICE))
+        .hideSoftInputFromWindow(activeDialog.getWindow().getDecorView().getWindowToken(), 0);
+    activeDialog.setOnCancelListener(v -> back.run());
+    LinearLayout columns = p.row(), entry = p.col(), keypad = p.col();
+    LinearLayout.LayoutParams entrySize = new LinearLayout.LayoutParams(0, -2, 1);
+    entrySize.rightMargin = p.dp(16);
+    columns.addView(entry, entrySize);
+    columns.addView(keypad, new LinearLayout.LayoutParams(p.dp(204), -2));
     EditText input = new EditText(this);
     input.setTextColor(PanelUi.TEXT);
     input.setTextSize(24);
     input.setSingleLine(true);
     input.setInputType(
-        android.text.InputType.TYPE_CLASS_NUMBER | android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL);
+        android.text.InputType.TYPE_CLASS_NUMBER
+            | android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL
+            | (min < 0 ? android.text.InputType.TYPE_NUMBER_FLAG_SIGNED : 0));
+    input.setShowSoftInputOnFocus(false);
     input.setText(trimNumber(Double.isFinite(initial) ? initial : 0));
     input.selectAll();
     input.setContentDescription(title);
     input.setBackground(p.outline(PanelUi.RAISED));
     p.pad(input, 12, 8);
-    add(body, input, 56);
-    p.gap(body, 8);
-    subtext(body, trimNumber(min) + " – " + trimNumber(max));
-    p.gap(body, 12);
-    add(
-        body,
-        button(
-            "Apply",
-            "check",
-            1,
-            () -> {
-              try {
-                double v = Double.parseDouble(input.getText().toString());
-                if (!Double.isFinite(v) || v < min || v > max) throw new IllegalArgumentException();
-                accept.accept(v);
-              } catch (Exception e) {
-                input.setError("Use " + trimNumber(min) + " – " + trimNumber(max));
-              }
-            }),
-        48);
+    add(entry, input, 48);
+    p.gap(entry, 4);
+    TextView range = p.text(trimNumber(min) + " – " + trimNumber(max), 12, PanelUi.MUTED);
+    add(entry, range, 24);
+    p.gap(entry, 8);
+    add(entry, button("Clear", null, 0, () -> input.setText("")), 48);
+    p.gap(entry, 8);
+    Runnable apply =
+        () -> {
+          try {
+            double v = Double.parseDouble(input.getText().toString());
+            if (!Double.isFinite(v) || v < min || v > max) throw new IllegalArgumentException();
+            accept.accept(v);
+          } catch (Exception e) {
+            range.setText("Use " + trimNumber(min) + " – " + trimNumber(max));
+            range.setTextColor(PanelUi.DANGER);
+          }
+        };
+    add(entry, button("Apply", "check", 1, apply), 48);
+    if (min < 0) {
+      p.gap(entry, 4);
+      add(
+          entry,
+          button(
+              "±",
+              null,
+              0,
+              () -> {
+                String value = input.getText().toString();
+                input.setText(value.startsWith("-") ? value.substring(1) : "-" + value);
+                input.setSelection(input.length());
+              }),
+          48);
+    }
+    for (String[] keys :
+        new String[][] {{"1", "2", "3"}, {"4", "5", "6"}, {"7", "8", "9"}, {".", "0", "⌫"}}) {
+      LinearLayout row = p.row();
+      for (String key : keys) {
+        Button digit =
+            button(
+                key,
+                null,
+                0,
+                () -> {
+                  input.setError(null);
+                  int a = Math.max(0, input.getSelectionStart()),
+                      b = Math.max(0, input.getSelectionEnd());
+                  if (key.equals("⌫")) {
+                    if (a == b && a > 0) a--;
+                    input.getText().delete(Math.min(a, b), Math.max(a, b));
+                  } else input.getText().replace(Math.min(a, b), Math.max(a, b), key);
+                });
+        digit.setContentDescription(
+            key.equals("⌫") ? "Delete digit" : key.equals(".") ? "Decimal point" : "Digit " + key);
+        p.weighted(row, digit, 48);
+      }
+      add(keypad, row, 48);
+      if (!keys[0].equals(".")) p.gap(keypad, 4);
+    }
+    body.addView(columns);
+    textInput(input, android.view.inputmethod.EditorInfo.IME_ACTION_DONE, apply);
+    input.requestFocus();
+    input.selectAll();
   }
 
   void preheatSheet() {
@@ -2388,10 +2567,31 @@ public final class MainActivity extends Activity {
     int buttonWidth = dialog ? 56 : 48;
     LinearLayout controls = p.row();
     controls.setBackground(p.shape(PanelUi.RAISED, PanelUi.CONTROL_RADIUS));
-    minus.setBackground(p.buttonBackground(4));
-    plus.setBackground(p.buttonBackground(4));
+    minus.setBackground(p.buttonBackground(0));
+    plus.setBackground(p.buttonBackground(0));
     controls.addView(minus, new LinearLayout.LayoutParams(p.dp(buttonWidth), p.dp(48)));
-    TextView number = p.text("", dialog ? 20 : 18, PanelUi.ACCENT);
+    Button number =
+        button(
+            "",
+            "edit",
+            0,
+            () ->
+                numberSheet(
+                    title + " (%)",
+                    tuneValue(status, field),
+                    min,
+                    max,
+                    v ->
+                        runAction(
+                            "Setting " + title.toLowerCase(Locale.US),
+                            Policy.READY,
+                            (s, d) ->
+                                d.gcode(prefix + Math.round(field.equals("fan") ? v * 2.55 : v)),
+                            this::dismissSheet),
+                    dialog ? this::tuningSheet : this::dismissSheet));
+    number.setTextSize(dialog ? 18 : 16);
+    number.setCompoundDrawables(null, null, null, null);
+    p.pad(number, 2, 4);
     number.setGravity(Gravity.CENTER);
     controls.addView(number, new LinearLayout.LayoutParams(p.dp(dialog ? 72 : 62), p.dp(48)));
     controls.addView(plus, new LinearLayout.LayoutParams(p.dp(buttonWidth), p.dp(48)));
@@ -2415,13 +2615,16 @@ public final class MainActivity extends Activity {
         () ->
             ready() && Double.isFinite(tuneValue(status, field)) && tuneValue(status, field) < max;
     if (dialog) {
+      dialogGate(number, this::ready);
       dialogGate(minus, canDecrease);
       dialogGate(plus, canIncrease);
     } else {
+      gate(number, this::ready);
       gate(minus, canDecrease);
       gate(plus, canIncrease);
     }
     body.addView(row);
+    p.gap(body, 6);
   }
 
   void adjustTune(String field, int step, int min, int max, String prefix) {
@@ -2451,7 +2654,9 @@ public final class MainActivity extends Activity {
     search.setTextColor(PanelUi.TEXT);
     search.setHintTextColor(PanelUi.MUTED);
     search.setHint("Find a stored print");
+    search.setContentDescription("Search stored prints");
     search.setText(fileFilter);
+    textInput(search, android.view.inputmethod.EditorInfo.IME_ACTION_DONE, null);
     search.setBackground(p.shape(PanelUi.RAISED, PanelUi.CONTROL_RADIUS));
     p.pad(search, 12, 8);
     tools.addView(search, new LinearLayout.LayoutParams(0, p.dp(48), 1));
@@ -2996,7 +3201,7 @@ public final class MainActivity extends Activity {
   void menuRow(LinearLayout parent, String title, String subtitle, String icon, Runnable action) {
     LinearLayout row = p.row();
     p.pad(row, 6, 6);
-    row.setBackground(p.buttonBackground(4));
+    row.setBackground(p.buttonBackground(0));
     ImageView picture = new ImageView(this);
     picture.setImageDrawable(new PanelUi.Icon(icon, PanelUi.MUTED));
     row.addView(picture, new LinearLayout.LayoutParams(p.dp(22), p.dp(22)));
@@ -3096,6 +3301,7 @@ public final class MainActivity extends Activity {
               }
             });
     gate(connect, () -> !commandBusy);
+    textInput(endpoint, android.view.inputmethod.EditorInfo.IME_ACTION_GO, connect::performClick);
     rowButtons(printer, connect, button("API key", null, 0, this::apiKeySheet));
     p.gap(printer, 10);
     TextView details = p.text("", 13, PanelUi.MUTED);
@@ -3208,6 +3414,7 @@ public final class MainActivity extends Activity {
               dismissSheet();
             });
     dialogGate(save, () -> !commandBusy);
+    textInput(key, android.view.inputmethod.EditorInfo.IME_ACTION_DONE, save::performClick);
     add(body, save, 48);
   }
 

@@ -143,6 +143,12 @@ This APK is debuggable for testing; disable that flag for a release build.
 # Actual Android controls against an isolated Moonraker fixture. No real motion.
 python -X utf8 -u pixel-panel/tests/check_controls.py
 
+# Touch keypad, validation, Back, search, precise tuning and E-stop during entry.
+python -X utf8 -u pixel-panel/tests/check_touch_flows.py
+
+# Temperature slide steps/limits, single release dispatch, tap and cancellation.
+python -X utf8 -u pixel-panel/tests/check_temperature_drag.py
+
 # Full paper-calibration outcomes, repeated tuning and emergency-stop concurrency.
 python -X utf8 -u pixel-panel/tests/check_workflows.py
 
@@ -186,6 +192,22 @@ node pixel-panel/tests/check_device_ui.cjs
 See [verification](verification.md) for actual evidence and pending gates.
 
 ## Interface references
+
+The interaction language distinguishes roles: raised outlined controls perform
+actions or edit values; filled mint identifies the next main action; segmented
+mint marks a selection; the rail changes pages; plain text reports data. Home
+cards fit their content rather than promising another row of controls. Common
+homing and cold-filament prerequisites are checked when tapped, with transient
+errors and no dispatched command. They are not permanent instructions.
+
+Temperature buttons support sliding left/right in 5°C steps, with a live preview
+and one command on release. A cancelled gesture sends nothing. A tap opens the
+temperature presets. Custom numeric values use a built-in 48 dp keypad, range
+validation and explicit Apply; Android's IME stays hidden. Inline tuning values
+open the same editor; the duplicate overflow sheet is removed. Text fields retain
+Android's text keyboard, disable fullscreen extraction and support Done/Go. Back
+returns to the previous page; within custom temperature entry it returns to the
+temperature editor. Close dismisses the sheet.
 
 Native and Device interfaces share a restricted palette from
 [`@radix-ui/colors` 3.0.0](https://www.radix-ui.com/colors): Sage neutrals, Mint
