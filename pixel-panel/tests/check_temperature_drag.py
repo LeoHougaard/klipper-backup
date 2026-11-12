@@ -3,7 +3,7 @@ import re
 import subprocess
 import threading
 import time
-from check_controls import adb, snapshot, tap, ADB, PACKAGE, verify_fixture
+from check_controls import adb, snapshot, tap, ADB, PACKAGE, verify_fixture, ADB_COMMAND
 from check_workflows import wait_until, wait_text, scripts
 from fixture_server import Fixture
 
@@ -23,7 +23,7 @@ def main():
     def slide(label, delta, target, heater):
         x,y = center(label)
         count = len(scripts(f))
-        adb("shell", "input", "swipe", str(x),str(y),str(x+delta),str(y),"450")
+        adb("shell", "input", "swipe", str(x),str(y),str(x),str(y+delta),"450")
         expected = f"SET_HEATER_TEMPERATURE HEATER={heater} TARGET={target}"
         wait_until(lambda: len(scripts(f)) == count+1, "one command after release")
         assert scripts(f)[-1] == expected, scripts(f)
@@ -39,7 +39,7 @@ def main():
         slide("Set bed temperature", 42, 10, "heater_bed")
         maximum = int(f.status["configfile"]["settings"]["heater_bed"]["max_temp"] // 5 * 5)
         slide("Set bed temperature", 700, maximum, "heater_bed")
-        print("PASS: right/left drags select 5-degree steps, nozzle/bed both work, clamp at configured limit, one command per release", flush=True)
+        print("PASS: down/up side-rail drags select 5-degree steps, nozzle/bed both work, clamp at configured limit, one command per release", flush=True)
         tap("Set nozzle temperature")
         wait_text("Nozzle temperature")
         tap("Close")
@@ -47,7 +47,7 @@ def main():
         print("PASS: a tap still opens presets without changing target", flush=True)
         x,y = center("Set nozzle temperature")
         before = len(scripts(f))
-        swipe = subprocess.Popen([str(ADB), "shell","input","swipe",str(x),str(y),str(x+168),str(y),"1800"], stdout=subprocess.DEVNULL)
+        swipe = subprocess.Popen([*ADB_COMMAND, "shell","input","swipe",str(x),str(y),str(x),str(y+168),"1800"], stdout=subprocess.DEVNULL)
         time.sleep(.2)
         adb("shell", "input", "keyevent", "3")
         swipe.wait(timeout=10)

@@ -16,13 +16,13 @@ import uuid
 from urllib.error import HTTPError
 from urllib.request import Request, urlopen
 import xml.etree.ElementTree as ET
-from check_controls import tap, snapshot
+from check_controls import tap, snapshot, ADB_COMMAND
 
 ADB = Path(os.environ["LOCALAPPDATA"]) / "Android/Sdk/platform-tools/adb.exe"
 
 
 def adb(*args):
-    return subprocess.check_output([str(ADB), *args], text=True, encoding="utf-8", stderr=subprocess.STDOUT)
+    return subprocess.check_output([*ADB_COMMAND, *args], text=True, encoding="utf-8", stderr=subprocess.STDOUT)
 
 
 def main():

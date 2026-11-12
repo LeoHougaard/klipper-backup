@@ -4,7 +4,7 @@ import json
 import subprocess
 import threading
 from pathlib import Path
-from check_controls import adb, snapshot, tap, ADB, PACKAGE
+from check_controls import adb, snapshot, tap, ADB, PACKAGE, ADB_COMMAND
 from check_workflows import wait_text, wait_until
 from fixture_server import Fixture
 
@@ -24,7 +24,7 @@ def main():
         data = [{k:n.get(k) for k in ("text", "content-desc", "bounds", "enabled", "clickable", "selected")}
                 for n in root.iter("node") if n.get("text") or n.get("clickable") == "true"]
         (args.output / (name + ".json")).write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
-        (args.output / (name + ".png")).write_bytes(subprocess.check_output([str(ADB), "exec-out", "screencap", "-p"]))
+        (args.output / (name + ".png")).write_bytes(subprocess.check_output([*ADB_COMMAND, "exec-out", "screencap", "-p"]))
         print("Captured", name, flush=True)
     try:
         adb("shell", "am", "force-stop", PACKAGE)

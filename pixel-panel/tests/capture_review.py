@@ -11,7 +11,7 @@ import subprocess
 import threading
 import time
 import xml.etree.ElementTree as ET
-from check_controls import adb, snapshot, tap, ADB, PACKAGE
+from check_controls import adb, snapshot, tap, ADB, PACKAGE, ADB_COMMAND
 from fixture_server import Fixture
 
 
@@ -54,7 +54,7 @@ def main():
             if node.get("text") or node.get("clickable") == "true":
                 data.append({k: node.get(k) for k in ("text", "content-desc", "class", "bounds", "enabled", "clickable", "selected")})
         (args.output / f"{name}.json").write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
-        image = subprocess.check_output([str(ADB), "exec-out", "screencap", "-p"])
+        image = subprocess.check_output([*ADB_COMMAND, "exec-out", "screencap", "-p"])
         (args.output / f"{name}.png").write_bytes(image)
         captures.append(name)
         print("Captured", name, flush=True)
@@ -133,7 +133,7 @@ def main():
                 wait_for(lambda root: any("●  Live" in n.get("text", "") for n in root.iter("node")), "live native camera")
             capture("19-camera-printing")
             navigate("Home")
-            tap("Speed, flow & fan")
+            tap("Tune print")
             capture("12-live-tuning")
             tap("Close")
         fixture.status["print_stats"]["state"] = "paused"

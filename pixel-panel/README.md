@@ -9,9 +9,13 @@ is the base Pixel 10 on Android 17. Klipper stays on the existing BTT Pi.
 - Landscape in either direction, muted dark colors, 48 dp minimum controls, and
   hardware-reported safe margins for both the camera cutout and rounded corners.
 - Home: direct homing, PLA/ABS preheat, cooldown and the recent plate while idle.
-  Printing keeps model identity, progress, remaining time, pause/resume, live Z
-  and inline speed/flow/fan together. Nozzle/bed current and target values remain
-  editable in the header across the app; compact editors preserve job context.
+  Printing keeps model identity, progress, remaining time and pause/resume together.
+  **Tune print** opens live Z, speed, flow and fan controls only when needed.
+  Nozzle/bed readings, printer status and E-stop stay in a right-side rail across
+  every screen. Tap a temperature to edit it, or drag down/up to raise/lower its
+  target in 5-degree steps. Editors open beside the rail and preserve job context.
+  Navigation is evenly spaced on the left; Files and Camera remain the single
+  routes to their screens. Home's print-details button opens the relevant plate.
 - Paused filament changes start from the current heater target and offer local
   Resume back to the active job. Finished, failed and unavailable states show
   relevant next actions and separate Pixel/Moonraker/Klipper connection status.
@@ -129,8 +133,9 @@ On this Windows machine, Android SDK API 37, build-tools 36.0.0 and Android
 Studio's JBR are already installed:
 
 ```powershell
+$env:ANDROID_SERIAL = 'emulator-5554' # Use the serial shown by adb devices.
 python pixel-panel/build.py
-& "$env:LOCALAPPDATA/Android/Sdk/platform-tools/adb.exe" install -r pixel-panel/.build/Voron.apk
+& "$env:LOCALAPPDATA/Android/Sdk/platform-tools/adb.exe" -s $env:ANDROID_SERIAL install -r pixel-panel/.build/Voron.apk
 ```
 
 `ANDROID_HOME` and `JAVA_HOME` override tool locations. Compilation and signing
@@ -140,6 +145,10 @@ APK is copied to `.build/Voron.apk`. The signing key is outside the repository.
 This APK is debuggable for testing; disable that flag for a release build.
 
 ```powershell
+# Already-open review emulator connected to a loopback fixture on port 18725:
+# layout, tuning/keypad, pause/resume, paper calibration, Files and E-stop.
+python -X utf8 -u pixel-panel/tests/check_layout_workflows.py --port 18725
+
 # Actual Android controls against an isolated Moonraker fixture. No real motion.
 python -X utf8 -u pixel-panel/tests/check_controls.py
 
@@ -158,7 +167,7 @@ python -X utf8 -u pixel-panel/tests/check_fast_controls.py
 # Partial calibration certainty and E-stop cancellation during delayed preflight.
 python -X utf8 -u pixel-panel/tests/check_recovery_edges.py
 
-# Home, custom filament temperature/off/preset, paused Resume and inline read-back.
+# Home, custom filament temperature/off/preset, paused Resume and tuning read-back.
 python -X utf8 -u pixel-panel/tests/check_quality_workflows.py --output pixel-panel/.build/design/quality-workflows
 
 # Eight matched Prepare states and native touch bounds; sends no commands.

@@ -1,4 +1,40 @@
-# Pixel panel 0.3.3 verification
+# Pixel panel verification
+
+## 0.3.4: annotated layout corrections
+
+Verified on the Android 15 review emulator at 2424 × 1080, with every command
+directed to the loopback Moonraker fixture. No physical Pixel installation or
+printer motion/heating/restart was performed for this revision.
+
+- Removed the horizontal title/back/status header. Heaters, connection status,
+  E-stop and the contextual Tune print button share a fixed right-side rail.
+  Navigation fills the left rail with equal target heights and equal gaps.
+- Home and Prepare cards align with the available workspace. Idle Home omits
+  the redundant Files shortcut, PREHEAT label and position readout. Printing
+  uses separate preview/details columns and no duplicate Camera shortcut.
+- Live Z, speed, flow and fan are inside Tune print. Precise numeric changes
+  return to their originating tuning/fan editor, with confirmed values. Closing
+  the editor hides all those controls again.
+- Side-rail temperature gestures use down/up rather than horizontal travel.
+  Editors and keypads open to the left of the rail, preserving heater and
+  emergency-stop access without the old header-height allowance.
+
+Build/signature verification, Python test syntax and check-config.ps1 pass.
+`check_layout_workflows.py` passes equal navigation/gutter geometry, fixture
+destination verification, one-release temperature dispatch, keypad bounds,
+live Z, exact 115% speed, pause/filament/resume, front/rear paper calibration,
+Files details, and E-stop through an open keypad. Native screenshots and XML
+are saved in `.build/layout-review/`. Test ADB calls honor ANDROID_SERIAL,
+including direct screenshot and swipe subprocesses.
+
+The Camera-off, More and connection layouts were also inspected. The network
+information button is labelled Network details so it no longer duplicates the
+status rail's Connection details accessibility target.
+
+The records below describe earlier revisions and their separate physical-phone
+and gateway checks; those checks were not repeated on physical hardware here.
+
+## 0.3.3
 
 ## Touch interaction and purpose
 

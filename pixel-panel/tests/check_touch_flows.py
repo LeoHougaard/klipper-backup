@@ -7,7 +7,7 @@ import re
 import subprocess
 import threading
 from pathlib import Path
-from check_controls import adb, snapshot, tap, ADB, PACKAGE, verify_fixture
+from check_controls import adb, snapshot, tap, ADB, PACKAGE, verify_fixture, ADB_COMMAND
 from check_workflows import wait_text, wait_until, scripts
 from fixture_server import Fixture
 
@@ -22,7 +22,7 @@ def main():
     adb("reverse", f"tcp:{port}", f"tcp:{port}")
 
     def capture(name):
-        (output / (name + ".png")).write_bytes(subprocess.check_output([str(ADB), "exec-out", "screencap", "-p"]))
+        (output / (name + ".png")).write_bytes(subprocess.check_output([*ADB_COMMAND, "exec-out", "screencap", "-p"]))
 
     def digits(value):
         root = snapshot()
@@ -78,7 +78,7 @@ def main():
         assert not any(n.get("text") == "Temperature target" for n in snapshot().iter("node"))
         tap("Close")
         tap("Files")
-        tap("Back")
+        adb("shell", "input", "keyevent", "4")
         assert any(n.get("content-desc") == "Screen: Prepare" for n in snapshot().iter("node"))
         tap("Files")
         tap("Search stored prints")
@@ -86,21 +86,24 @@ def main():
         adb("shell", "input", "keyevent", "66")
         assert any(n.get("content-desc") == "Search stored prints" and n.get("text") == "test" for n in snapshot().iter("node"))
         capture("05-search")
-        tap("Back")
+        adb("shell", "input", "keyevent", "4")
         print("PASS: Back returns keypad to temperature editor and Files to Prepare; search accepts text and Enter without losing filter", flush=True)
 
         f.status["print_stats"].update(state="printing", filename="test-plate.gcode")
         tap("Home")
-        wait_text("Live tuning")
+        tap("Tune print")
+        wait_text("Tune this print")
         tap("Speed 100%")
         digits("115")
         tap("Apply")
         wait_until(lambda: scripts(f)[-1] == "M220 S115", "precision speed target")
         wait_text("115%")
         capture("06-precision-tuning")
+        tap("Close")
         # A modal exposes only its own accessibility window. Save the live
         # header bounds first, as in check_workflows.py; the header does not move.
         header = snapshot()
+        tap("Tune print")
         tap("Speed 115%")
         tap("Emergency stop", header)
         wait_until(lambda: any(r["path"] == "/printer/emergency_stop" for r in f.requests), "E-stop through keypad")

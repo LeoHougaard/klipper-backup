@@ -4,7 +4,7 @@ import json
 import subprocess
 import threading
 from pathlib import Path
-from check_controls import adb, snapshot, PACKAGE, ADB, verify_fixture
+from check_controls import adb, snapshot, PACKAGE, ADB, verify_fixture, ADB_COMMAND
 from check_workflows import click, wait_text, wait_until, send_and_observe, scripts
 from fixture_server import Fixture
 
@@ -24,7 +24,7 @@ def main():
 
     def capture(name):
         if args.output:
-            (args.output / (name + ".png")).write_bytes(subprocess.check_output([str(ADB), "exec-out", "screencap", "-p"]))
+            (args.output / (name + ".png")).write_bytes(subprocess.check_output([*ADB_COMMAND, "exec-out", "screencap", "-p"]))
 
     try:
         adb("shell", "am", "force-stop", PACKAGE)
@@ -91,8 +91,10 @@ def main():
         capture("03-resumed-home")
         print("PASS: recent plate -> start -> pause -> matched-temperature filament load -> local Resume -> Home", flush=True)
 
+        click("Tune print")
         send_and_observe(fixture, "Increase speed by 10 percent", "M220 S110")
         wait_text("110%")
+        click("Close")
         assert not any(n.get("text") == "Tune this print" for n in snapshot().iter("node"))
         click("Set nozzle temperature")
         click("200°")

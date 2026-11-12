@@ -109,11 +109,11 @@ def main():
 
         fixture.status["print_stats"].update(state="printing", filename="fixture-active.gcode")
         click("Home")
-        wait_text("Z OFFSET")
+        click("Tune print")
+        wait_text("Z offset")
         for _ in range(3):
             send_and_observe(fixture, "Further +0.025", "SET_GCODE_OFFSET Z_ADJUST=0.025 MOVE=1")
         assert math.isclose(fixture.status["gcode_move"]["homing_origin"][2], .05)
-        click("Speed, flow & fan")
         for label, expected in [
                 ("Increase speed by 10 percent", "M220 S110"),
                 ("Increase speed by 10 percent", "M220 S120"),
@@ -135,7 +135,7 @@ def main():
         click("Close")
         print("PASS: repeated live Z, speed and flow adjustments use fresh values", flush=True)
 
-        click("Speed, flow & fan")
+        click("Tune print")
         fixture.command_delay = 25
         before = len(scripts(fixture))
         send_and_observe(fixture, "Increase flow by 5 percent", "M221 S95")
@@ -154,7 +154,7 @@ def main():
         stop_node = next(n for n in snapshot().iter("node") if n.get("content-desc") == "Emergency stop")
         left, top, right, bottom = map(int, re.findall(r"\d+", stop_node.get("bounds")))
         assert min(right-left, bottom-top) >= 126
-        click("Speed, flow & fan")
+        click("Tune print")
         fixture.command_delay = 25
         send_and_observe(fixture, "Increase flow by 5 percent", "M221 S100")
         pending = fixture.requests[-1]["time"]

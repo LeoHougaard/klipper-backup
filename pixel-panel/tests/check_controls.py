@@ -14,12 +14,14 @@ from fixture_server import Fixture
 
 ADB = Path(os.environ["LOCALAPPDATA"]) / "Android/Sdk/platform-tools/adb.exe"
 PACKAGE = "dev.leo.voronpanel"
+SERIAL = os.environ.get("ANDROID_SERIAL")
+ADB_COMMAND = [str(ADB), *(["-s", SERIAL] if SERIAL else [])]
 
 
 def adb(*args):
     if args[:3] == ("shell", "am", "start") and "-W" not in args:
         args = (*args[:3], "-W", *args[3:])
-    return subprocess.check_output([str(ADB), *args], text=True, encoding="utf-8", stderr=subprocess.STDOUT)
+    return subprocess.check_output([*ADB_COMMAND, *args], text=True, encoding="utf-8", stderr=subprocess.STDOUT)
 
 
 def snapshot():
@@ -34,7 +36,7 @@ def snapshot():
             # still require a successful fresh dump before reading any XML.
             time.sleep(.5)
     if "UI hierchary dumped to" not in result:
-        raise RuntimeError("Android did not refresh its UI snapshot; refusing to reuse old XML")
+        raise RuntimeError("Android did not refresh its UI snapshot; refusing to reuse old XML: " + result.strip())
     return ET.fromstring(adb("shell", "cat", "/data/local/tmp/voron-controls-test.xml"))
 
 

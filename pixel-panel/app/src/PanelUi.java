@@ -165,7 +165,7 @@ final class PanelUi {
   }
 
   void weighted(LinearLayout parent, View v, int height) {
-    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, dp(height), 1);
+    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, height < 0 ? height : dp(height), 1);
     // Internal gutters only: the outer edge must follow its card's 12 dp inset.
     if (parent.getChildCount() > 0) lp.leftMargin = dp(6);
     parent.addView(v, lp);
