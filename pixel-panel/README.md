@@ -187,6 +187,13 @@ See [verification](verification.md) for actual evidence and pending gates.
 
 ## Interface references
 
+Native and Device interfaces share a restricted palette from
+[`@radix-ui/colors` 3.0.0](https://www.radix-ui.com/colors): Sage neutrals, Mint
+accent, and Red/Amber status. Color roles and corner sizes are defined in
+`PanelUi.java` and mirrored as CSS variables in `device.html`; Android theme
+and launcher icon use the same colors. Cards use a 20 dp radius around 12 dp
+insets and 8 dp controls; sheets use a 24 dp radius around 16 dp insets.
+
 The interface uses the printer tasks common to Bambu's touchscreen workflow
 and KlipperScreen: status, temperatures, axes, filament, stored prints and
 maintenance. It doesn't copy branding or add unrelated multi-material controls.

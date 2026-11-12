@@ -11,7 +11,7 @@ import org.json.JSONArray;
 
 /** Read-only measured mesh. Row zero is the front of the bed, drawn at the bottom. */
 final class BedMeshView extends View {
-  private static final int LOW = 0xff657f92, ZERO = 0xff9dc9b5, HIGH = 0xffbba477;
+  private static final int LOW = PanelUi.MUTED, ZERO = PanelUi.ACCENT, HIGH = PanelUi.AMBER;
   private final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
   private final RectF cell = new RectF();
   private final float density;
@@ -46,7 +46,7 @@ final class BedMeshView extends View {
         .append(", average ")
         .append(average)
         .append(
-            ". Colors are relative to the mesh average: blue lower, mint near average, amber"
+            ". Colors are relative to the mesh average: gray lower, mint near average, amber"
                 + " higher. ")
         .append("The color scale extends at least 0.10 millimeters either side of the average. ")
         .append("Measured rows, listed front to rear; each row runs from X minimum to X maximum: ");
@@ -123,7 +123,7 @@ final class BedMeshView extends View {
     paint.setTextSize(dp(11));
     canvas.drawText(String.format(Locale.US, "Color scale ±%.2f mm", scale), left, dp(17), paint);
     paint.setTextAlign(Paint.Align.RIGHT);
-    canvas.drawText("Blue lower · amber higher", right, dp(17), paint);
+    canvas.drawText("Gray lower · amber higher", right, dp(17), paint);
     paint.setTextAlign(Paint.Align.CENTER);
     paint.setTextSize(dp(12));
     canvas.drawText("Front · Y min", getWidth() / 2f, getHeight() - dp(10), paint);

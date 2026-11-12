@@ -1,4 +1,40 @@
-# Pixel panel 0.3.1 verification
+# Pixel panel 0.3.2 verification
+
+## Palette and corner consistency
+
+The broader independent reviews did not uphold the earlier Prepare-only 9.5
+rating as a whole-app result. Terra and Astra identified small secondary text,
+crowded tuning rows and Home action emphasis. Some free-model reviews could not
+view images and supplied unsupported visual scores; those are not visual
+acceptance evidence. No overall 9.5 or superiority over commercial printers is
+established. This pass follows Leo's request for a focused palette/radius change.
+
+Native controls, Android theme/icon and the browser Device surface now use
+Radix Colors 3.0.0: Sage neutrals, one Mint accent, Red and Amber for semantic
+status. Neutral backgrounds are Sage 1/2/3, borders Sage 7, secondary/primary
+text Sage 11/12. The shared accent is Mint 12, selected fill/border Mint 3/7,
+danger Red 11/3/7 and warning Amber 12. There are no per-screen native UI color
+literals. The heightmap reuses gray/mint/amber instead of its own three hues.
+
+Control corners are 8 dp; card corners are 20 dp with 12 dp insets; sheets are
+24 dp with 16 dp insets. Thus enclosing corners equal inset plus inner radius.
+Prepare tabs no longer use horizontal margins that leave mismatched inset
+curves. Input, preview and selection shapes share the same role tokens.
+
+Reference: [Radix scale use cases](https://www.radix-ui.com/colors/docs/palette-composition/understanding-the-scale).
+Exact sRGB values come from the published `@radix-ui/colors@3.0.0` dark CSS.
+This is a visual refinement, with printer command policies unchanged.
+
+Built and installed 0.3.2 on the actual Pixel. Captured eight Prepare states plus
+Home and the temperature sheet in `.build/design/palette-radius/`; checked corner
+alignment and fit directly. All 171 captured clickable controls remain at least
+48 × 48 dp. The capture manifest records zero fixture or hardware commands.
+Device-panel browser checks pass: idle/printing/pause/resume, changed-job and
+homing checks, 48 px mobile controls, no overflow and independent sticky E-stop.
+The saved real endpoint is restored and Prepare is open upright.
+
+Installed APK SHA-256:
+`273786c7e8301a0bd3927d26481cd4353bfacc29bfbf2bf4ecfb4917695e78b6`.
 
 ## Prepare refinement: individual category gate
 

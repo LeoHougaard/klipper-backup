@@ -10,18 +10,28 @@ import android.widget.*;
 
 /** Small native component system for the landscape printer console. */
 final class PanelUi {
-  static final int BG = 0xff0d1215,
-      SURFACE = 0xff161e23,
-      RAISED = 0xff202b31,
-      LINE = 0xff2d3b42,
-      TEXT = 0xffe9efed,
-      MUTED = 0xffa2b1b5,
-      ACCENT = 0xff9bcabb,
-      ACCENT_BG = 0xff223b34,
-      DANGER = 0xffe6a5a0,
-      DANGER_BG = 0xff302326,
-      AMBER = 0xffdfc397;
-  static final int DISABLED = 0xff65777c;
+  // Radix Colors 3.0.0: Sage neutrals, Mint accent, Red/Amber status only.
+  static final int BG = 0xff101211, // Sage 1
+      SURFACE = 0xff171918, // Sage 2
+      RAISED = 0xff202221, // Sage 3
+      LINE = 0xff444947, // Sage 7
+      TEXT = 0xffeceeed, // Sage 12
+      MUTED = 0xffadb5b2, // Sage 11
+      ACCENT = 0xffc4f5e1, // Mint 12; one accent ink/fill throughout
+      ACCENT_BG = 0xff092c2b, // Mint 3
+      ACCENT_LINE = 0xff1e685f, // Mint 7
+      DANGER = 0xffff9592, // Red 11
+      DANGER_BG = 0xff3b1219, // Red 3
+      DANGER_LINE = 0xff8c333a, // Red 7
+      AMBER = 0xffffe7b3, // Amber 12
+      DISABLED = 0xff63706b; // Sage 9
+  static final int RIPPLE = 0x23c4f5e1;
+  // Concentric corners: card 20 = inset 12 + control 8; sheet 24 = inset 16 + 8.
+  static final int CONTROL_RADIUS = 8,
+      CARD_INSET = 12,
+      CARD_RADIUS = CONTROL_RADIUS + CARD_INSET,
+      SHEET_INSET = 16,
+      SHEET_RADIUS = CONTROL_RADIUS + SHEET_INSET;
   final Context context;
 
   PanelUi(Context c) {
@@ -76,7 +86,7 @@ final class PanelUi {
   }
 
   GradientDrawable outline(int color) {
-    GradientDrawable d = shape(color, 10);
+    GradientDrawable d = shape(color, CONTROL_RADIUS);
     d.setStroke(dp(1), LINE);
     return d;
   }
@@ -134,7 +144,7 @@ final class PanelUi {
   }
 
   GradientDrawable controlShape(int fill, int border) {
-    GradientDrawable d = shape(fill, 8);
+    GradientDrawable d = shape(fill, CONTROL_RADIUS);
     if (border != 0) d.setStroke(dp(1), border);
     return d;
   }
@@ -143,27 +153,28 @@ final class PanelUi {
     int fill =
         style == 4
             ? Color.TRANSPARENT
-            : style == 1 ? ACCENT : style == 2 ? DANGER_BG : style == 3 ? ACCENT_BG : SURFACE;
+            : style == 1 ? ACCENT : style == 2 ? DANGER_BG : style == 3 ? ACCENT_BG : RAISED;
     int border =
-        style == 4 || style == 1 ? 0 : style == 2 ? 0xff68464b : style == 3 ? 0xff45685c : LINE;
+        style == 4 || style == 1 ? 0 : style == 2 ? DANGER_LINE : style == 3 ? ACCENT_LINE : LINE;
     StateListDrawable content = new StateListDrawable();
-    content.addState(
-        new int[] {-android.R.attr.state_enabled}, controlShape(0xff141c20, 0xff243238));
+    content.addState(new int[] {-android.R.attr.state_enabled}, controlShape(SURFACE, LINE));
     content.addState(new int[] {android.R.attr.state_focused}, controlShape(fill, ACCENT));
     content.addState(new int[] {}, controlShape(fill, border));
-    return new RippleDrawable(ColorStateList.valueOf(0x239bcabb), content, shape(0xffffffff, 8));
+    return new RippleDrawable(
+        ColorStateList.valueOf(RIPPLE), content, shape(Color.WHITE, CONTROL_RADIUS));
   }
 
   void weighted(LinearLayout parent, View v, int height) {
     LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, dp(height), 1);
-    lp.setMargins(dp(3), 0, dp(3), 0);
+    // Internal gutters only: the outer edge must follow its card's 12 dp inset.
+    if (parent.getChildCount() > 0) lp.leftMargin = dp(6);
     parent.addView(v, lp);
   }
 
   LinearLayout panel() {
     LinearLayout v = col();
-    v.setBackground(shape(SURFACE, 10));
-    pad(v, 14, 12);
+    v.setBackground(shape(SURFACE, CARD_RADIUS));
+    pad(v, CARD_INSET, CARD_INSET);
     return v;
   }
 
@@ -174,14 +185,14 @@ final class PanelUi {
     item.setMinimumWidth(dp(48));
     GradientDrawable cue = shape(ACCENT, 2);
     LayerDrawable selectedBackground =
-        new LayerDrawable(new Drawable[] {shape(0xff1b2c29, 8), cue});
+        new LayerDrawable(new Drawable[] {shape(ACCENT_BG, CONTROL_RADIUS), cue});
     selectedBackground.setLayerSize(1, dp(3), dp(24));
     selectedBackground.setLayerGravity(1, Gravity.LEFT | Gravity.CENTER_VERTICAL);
     item.setBackground(
         new RippleDrawable(
-            ColorStateList.valueOf(0x239bcabb),
-            selected ? selectedBackground : shape(BG, 8),
-            shape(0xffffffff, 8)));
+            ColorStateList.valueOf(RIPPLE),
+            selected ? selectedBackground : shape(BG, CONTROL_RADIUS),
+            shape(Color.WHITE, CONTROL_RADIUS)));
     ImageView image = new ImageView(context);
     image.setDuplicateParentStateEnabled(true);
     image.setImageDrawable(new Icon(icon, selected ? ACCENT : MUTED));

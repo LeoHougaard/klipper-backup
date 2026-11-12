@@ -590,7 +590,8 @@ public final class MainActivity extends Activity {
   ImageView preview(LinearLayout parent, int width, int height, Supplier<String> filename) {
     ImageView image = new ImageView(this);
     image.setScaleType(ImageView.ScaleType.FIT_CENTER);
-    image.setBackground(p.shape(PanelUi.BG, 8));
+    image.setBackground(p.shape(PanelUi.BG, PanelUi.CONTROL_RADIUS));
+    image.setClipToOutline(true);
     p.pad(image, 6, 6);
     image.setContentDescription("Model preview");
     final Bitmap[] previous = {null};
@@ -694,8 +695,8 @@ public final class MainActivity extends Activity {
     p.pad(tile, 12, 10);
     tile.setBackground(
         new android.graphics.drawable.RippleDrawable(
-            android.content.res.ColorStateList.valueOf(0x22ffffff),
-            p.shape(PanelUi.SURFACE, 10),
+            android.content.res.ColorStateList.valueOf(PanelUi.RIPPLE),
+            p.shape(PanelUi.SURFACE, PanelUi.CARD_RADIUS),
             null));
     LinearLayout first = p.row();
     ImageView image = new ImageView(this);
@@ -1251,11 +1252,11 @@ public final class MainActivity extends Activity {
 
   void prepare() {
     LinearLayout tabs = p.row();
-    tabs.setBackground(p.shape(PanelUi.SURFACE, 8));
+    tabs.setBackground(p.shape(PanelUi.SURFACE, PanelUi.CONTROL_RADIUS));
     for (String name : new String[] {"Move", "Filament", "Bed setup"}) {
       Button tab = button(name, null, name.equals(prepareTab) ? 3 : 4, () -> openPrepare(name));
       tab.setSelected(name.equals(prepareTab));
-      p.weighted(tabs, tab, 48);
+      tabs.addView(tab, new LinearLayout.LayoutParams(0, p.dp(48), 1));
     }
     LinearLayout bar = p.row();
     bar.addView(tabs, new LinearLayout.LayoutParams(p.dp(480), p.dp(48)));
@@ -1294,20 +1295,7 @@ public final class MainActivity extends Activity {
   }
 
   Button prepareButton(String title, String icon, int style, Runnable click) {
-    Button control = button(title, icon, style, click);
-    if (style == 0) {
-      android.graphics.drawable.StateListDrawable states =
-          new android.graphics.drawable.StateListDrawable();
-      states.addState(new int[] {-android.R.attr.state_enabled}, p.shape(0xff192226, 8));
-      states.addState(new int[] {android.R.attr.state_focused}, p.outline(PanelUi.RAISED));
-      states.addState(new int[] {}, p.shape(PanelUi.RAISED, 8));
-      control.setBackground(
-          new android.graphics.drawable.RippleDrawable(
-              android.content.res.ColorStateList.valueOf(0x239bcabb),
-              states,
-              p.shape(0xffffffff, 8)));
-    }
-    return control;
+    return button(title, icon, style, click);
   }
 
   void prepareButtons(LinearLayout parent, Button... controls) {
@@ -1471,7 +1459,7 @@ public final class MainActivity extends Activity {
   void stepSelector(
       LinearLayout parent, double[] values, DoubleSupplier selected, DoubleConsumer choose) {
     LinearLayout row = p.row();
-    row.setBackground(p.shape(PanelUi.BG, 8));
+    row.setBackground(p.shape(PanelUi.BG, PanelUi.CONTROL_RADIUS));
     for (double step : values) {
       String label = trimNumber(step);
       Button b =
@@ -1624,7 +1612,7 @@ public final class MainActivity extends Activity {
     add(heat, targetButton, 48);
     p.gap(heat, 8);
     LinearLayout materials = p.row();
-    materials.setBackground(p.shape(PanelUi.BG, 8));
+    materials.setBackground(p.shape(PanelUi.BG, PanelUi.CONTROL_RADIUS));
     for (int target : new int[] {200, 240}) {
       Button b =
           button(
@@ -1766,7 +1754,8 @@ public final class MainActivity extends Activity {
           if (!Boolean.valueOf(selected).equals(line.getTag())) {
             line.setTag(selected);
             line.setTextColor(selected ? PanelUi.ACCENT : PanelUi.MUTED);
-            line.setBackground(p.shape(selected ? PanelUi.ACCENT_BG : PanelUi.SURFACE, 6));
+            line.setBackground(
+                p.shape(selected ? PanelUi.ACCENT_BG : PanelUi.SURFACE, PanelUi.CONTROL_RADIUS));
           }
         });
         add(options, line, 28);
@@ -1851,7 +1840,7 @@ public final class MainActivity extends Activity {
       add(main, result, 34);
       prepareHeading(options, "Mesh detail");
       LinearLayout choices = p.row();
-      choices.setBackground(p.shape(PanelUi.BG, 8));
+      choices.setBackground(p.shape(PanelUi.BG, PanelUi.CONTROL_RADIUS));
       for (int n : new int[] {5, 9, 13}) {
         Button b =
             button(
@@ -2006,7 +1995,7 @@ public final class MainActivity extends Activity {
     dialogBindings.clear();
     Dialog d = new Dialog(this);
     LinearLayout frame = p.panel();
-    p.pad(frame, 20, 16);
+    p.pad(frame, PanelUi.SHEET_INSET, PanelUi.SHEET_INSET);
     LinearLayout header = p.row();
     header.addView(p.heading(title), new LinearLayout.LayoutParams(0, -2, 1));
     Button close = button("Close", null, 0, d::dismiss);
@@ -2052,7 +2041,7 @@ public final class MainActivity extends Activity {
     feedbackSpace.topMargin = p.dp(8);
     frame.addView(dialogFeedback, feedbackSpace);
     d.setContentView(frame);
-    d.getWindow().setBackgroundDrawable(p.shape(PanelUi.SURFACE, 16));
+    d.getWindow().setBackgroundDrawable(p.shape(PanelUi.SURFACE, PanelUi.SHEET_RADIUS));
     d.getWindow()
         .setLayout(
             Math.min(
@@ -2398,7 +2387,7 @@ public final class MainActivity extends Activity {
     p.pad(plus, 4, 8);
     int buttonWidth = dialog ? 56 : 48;
     LinearLayout controls = p.row();
-    controls.setBackground(p.shape(PanelUi.RAISED, 8));
+    controls.setBackground(p.shape(PanelUi.RAISED, PanelUi.CONTROL_RADIUS));
     minus.setBackground(p.buttonBackground(4));
     plus.setBackground(p.buttonBackground(4));
     controls.addView(minus, new LinearLayout.LayoutParams(p.dp(buttonWidth), p.dp(48)));
@@ -2463,7 +2452,7 @@ public final class MainActivity extends Activity {
     search.setHintTextColor(PanelUi.MUTED);
     search.setHint("Find a stored print");
     search.setText(fileFilter);
-    search.setBackground(p.shape(PanelUi.SURFACE, 10));
+    search.setBackground(p.shape(PanelUi.RAISED, PanelUi.CONTROL_RADIUS));
     p.pad(search, 12, 8);
     tools.addView(search, new LinearLayout.LayoutParams(0, p.dp(48), 1));
     Button refresh = button("Refresh", "refresh", 0, this::fetchFiles);
@@ -2686,8 +2675,8 @@ public final class MainActivity extends Activity {
       p.pad(row, 10, 6);
       row.setBackground(
           new android.graphics.drawable.RippleDrawable(
-              android.content.res.ColorStateList.valueOf(0x22ffffff),
-              p.shape(PanelUi.SURFACE, 10),
+              android.content.res.ColorStateList.valueOf(PanelUi.RIPPLE),
+              p.shape(PanelUi.SURFACE, PanelUi.CARD_RADIUS),
               null));
       ImageView image = new ImageView(this);
       Bitmap thumb = thumbnails.get(name);
@@ -2824,7 +2813,8 @@ public final class MainActivity extends Activity {
     LinearLayout cols = p.row();
     cols.setGravity(Gravity.TOP);
     FrameLayout preview = new FrameLayout(this);
-    preview.setBackground(p.shape(0xff080b0d, 12));
+    preview.setBackground(p.shape(PanelUi.BG, PanelUi.CARD_RADIUS));
+    preview.setClipToOutline(true);
     cameraImage = new ImageView(this);
     cameraImage.setScaleType(ImageView.ScaleType.FIT_CENTER);
     cameraImage.setRotation(

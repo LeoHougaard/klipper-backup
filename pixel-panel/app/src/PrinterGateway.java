@@ -315,7 +315,11 @@ final class PrinterGateway implements AutoCloseable {
     } catch (IOException ignored) {
       return "<!doctype html><html lang='en'><meta charset='utf-8'>"
           + "<meta name='viewport' content='width=device-width,initial-scale=1'>"
-          + "<title>Voron</title><body style='background:#101416;color:#e7edeb;"
+          + "<title>Voron</title><body style='background:#"
+          + Integer.toHexString(PanelUi.BG).substring(2)
+          + ";color:#"
+          + Integer.toHexString(PanelUi.TEXT).substring(2)
+          + ";"
           + "font:16px system-ui;padding:24px'><h1>Device interface unavailable</h1>"
           + "<p>Reinstall the Voron app to restore the Device interface.</p>"
           + "<p>The authenticated printer gateway remains available to Orca.</p></body></html>";
