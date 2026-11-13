@@ -71,6 +71,9 @@ No AI detector or on-phone slicer is included.
 
 ## Use
 
+See [current printer readiness and handoff](printer-handoff.md) for the actual
+Pixel installation, verified live connection, and remaining physical checks.
+
 1. Open **Voron**. Allow local-network access on Android 17. In More → Connection, enter
    the Pi's Moonraker URL, including port 7125 if directly accessing Moonraker.
    Home should show `Ready` when the printer is ready and idle.
