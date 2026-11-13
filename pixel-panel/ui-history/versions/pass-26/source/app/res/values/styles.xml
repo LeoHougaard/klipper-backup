@@ -1,0 +1,14 @@
+<resources>
+    <style name="AppTheme" parent="android:style/Theme.Material.NoActionBar">
+        <item name="android:fontFamily">sans</item>
+        <item name="android:colorAccent">#C4F5E1</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar">false</item>
+        <item name="android:windowActionModeOverlay">true</item>
+        <item name="android:windowBackground">#101211</item>
+    </style>
+    <style name="PanelSheetMotion">
+        <item name="android:windowEnterAnimation">@anim/sheet_enter</item>
+        <item name="android:windowExitAnimation">@anim/sheet_exit</item>
+    </style>
+</resources>

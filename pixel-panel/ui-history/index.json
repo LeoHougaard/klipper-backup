@@ -247,6 +247,22 @@
       "recorded_utc": "2026-11-12T17:24:13.557718+00:00",
       "historical_import": false,
       "restoration": "Install the preserved APK for exact executable behavior; inspect saved source/capture manifests for provenance."
+    },
+    {
+      "id": "pass-26",
+      "label": "Physical-phone label fit experiment",
+      "decision": "Reject singleLine: custom-drawn labels disappear; preserve evidence",
+      "recorded_utc": "2026-11-13T03:52:19.579612+00:00",
+      "historical_import": false,
+      "restoration": "Install the preserved APK for exact executable behavior; inspect saved source/capture manifests for provenance."
+    },
+    {
+      "id": "pass-27",
+      "label": "Real Pixel safe-margin control label fit",
+      "decision": "Promote compact padding; live Home/Prepare and camera verified; printer remains read-only",
+      "recorded_utc": "2026-11-13T03:57:20.911770+00:00",
+      "historical_import": false,
+      "restoration": "Install the preserved APK for exact executable behavior; inspect saved source/capture manifests for provenance."
     }
   ]
 }

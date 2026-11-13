@@ -1,0 +1,44 @@
+{
+  "checked_utc": "2026-11-13T02:54:31.732930+00:00",
+  "printer": "http://10.1.39.216:7125",
+  "phone_gateway": "http://10.1.39.231:8765",
+  "phone_version": "0.3.9",
+  "klipper_state": "ready",
+  "moonraker_warnings": [],
+  "required_objects_present": true,
+  "required_macros_present": true,
+  "safe_preset_limits_verified": true,
+  "authenticated_lan_proxy_verified": true,
+  "unauthenticated_rejected": true,
+  "stored_file_count": 32,
+  "job_state": "standby",
+  "heater_targets": {
+    "extruder": 0.0,
+    "heater_bed": 0.0
+  },
+  "physical_output_commands_sent": 0,
+  "upload_round_trip": true,
+  "temporary_file_removed": true,
+  "apk_sha256": "c7d6ce02be292d6e211c843a6dcdef30c65e5719cb1505b48bee326996e3e1d4",
+  "installed_apk_verified": true,
+  "physical_tests": "Deferred by Leo: read-only checks only",
+  "portable_usb_hotspot_power_recovery": "Not yet validated on dedicated hardware",
+  "read_only_followup": {
+    "checked_utc": "2026-11-13T03:39:30.056602+00:00",
+    "klipper_state": "ready",
+    "job_state": "standby",
+    "heater_targets": {
+      "extruder": 0.0,
+      "heater_bed": 0.0
+    },
+    "authenticated_lan_proxy_verified": true
+  },
+  "phone_unlock": {
+    "attempts": 1,
+    "result": "Helper failed; phone remains locked",
+    "error": "The Pixel command failed. Credential output was suppressed.",
+    "read_only_preflight": "Root available; primary user confirmed",
+    "pin_changed": false,
+    "additional_pin_attempts": false
+  }
+}

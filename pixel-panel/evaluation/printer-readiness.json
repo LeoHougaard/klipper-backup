@@ -1,8 +1,8 @@
 {
-  "checked_utc": "2026-11-13T02:54:31.732930+00:00",
+  "checked_utc": "2026-11-13T03:55:54.926382+00:00",
   "printer": "http://10.1.39.216:7125",
   "phone_gateway": "http://10.1.39.231:8765",
-  "phone_version": "0.3.9",
+  "phone_version": "0.3.10",
   "klipper_state": "ready",
   "moonraker_warnings": [],
   "required_objects_present": true,
@@ -17,28 +17,37 @@
     "heater_bed": 0.0
   },
   "physical_output_commands_sent": 0,
-  "upload_round_trip": true,
-  "temporary_file_removed": true,
-  "apk_sha256": "c7d6ce02be292d6e211c843a6dcdef30c65e5719cb1505b48bee326996e3e1d4",
+  "upload_round_trip": false,
+  "apk_sha256": "73991eaa559ff9cbd3cf1b3e8ee974efaae139a54e9c05ff97dff9ee57b4a6eb",
   "installed_apk_verified": true,
   "physical_tests": "Deferred by Leo: read-only checks only",
   "portable_usb_hotspot_power_recovery": "Not yet validated on dedicated hardware",
-  "read_only_followup": {
-    "checked_utc": "2026-11-13T03:39:30.056602+00:00",
-    "klipper_state": "ready",
-    "job_state": "standby",
-    "heater_targets": {
-      "extruder": 0.0,
-      "heater_bed": 0.0
-    },
-    "authenticated_lan_proxy_verified": true
-  },
   "phone_unlock": {
-    "attempts": 1,
-    "result": "Helper failed; phone remains locked",
-    "error": "The Pixel command failed. Credential output was suppressed.",
-    "read_only_preflight": "Root available; primary user confirmed",
+    "current_state": "unlocked",
+    "credential_verified": true,
+    "saved_credential_already_current": true,
     "pin_changed": false,
-    "additional_pin_attempts": false
+    "unlock_cycle_retested": false
+  },
+  "camera": {
+    "live_camera": "Live \u00b7 1280 \u00d7 720 \u00b7 1 frame/s",
+    "authenticated_jpeg_verified": true,
+    "fresh_frames": true,
+    "light_percent": 0,
+    "image_saved": false,
+    "printer_outputs_activated": false,
+    "camera_stopped_after_check": true,
+    "gateway_still_available": true
+  },
+  "previous_upload_round_trip_verified": {
+    "phone_version": "0.3.9",
+    "passed": true,
+    "temporary_file_removed": true
+  },
+  "physical_ui_checked": {
+    "home": true,
+    "prepare": true,
+    "feed_retract_fit": true,
+    "safe_margins_preserved": true
   }
 }

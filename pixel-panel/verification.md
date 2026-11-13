@@ -2,12 +2,13 @@
 
 ## Live printer connection after the UI loop
 
-Voron 0.3.9 is now installed on the actual Pixel 10, with its installed APK hash
+Voron 0.3.10 is now installed on the actual Pixel 10, with its installed APK hash
 verified. Authenticated PC-to-phone-to-Pi telemetry, the 32-file listing and a
 comment-only upload/read/delete round trip pass on the live LAN. Unauthenticated
 requests are rejected. No physical output command or printer restart was sent.
-The phone remains locked pending Leo's unlock; physical controls and the dedicated
-USB/hotspot/power/recovery setup are not signed off. See
+The phone is unlocked; live Home/Prepare and camera streaming are verified.
+The camera was stopped afterwards. Physical printer controls remain untested at
+Leo's read-only instruction; dedicated USB/hotspot/power/recovery is not signed off. See
 [printer handoff](printer-handoff.md) and the sanitized
 [readiness receipt](evaluation/printer-readiness.json). Older sections below
 describe the earlier simulator-only UI evaluation.

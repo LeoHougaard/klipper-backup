@@ -2,7 +2,7 @@
 
 ## Installed and verified
 
-The development Pixel 10 now has Voron **0.3.9 (code 12)**. Its installed APK
+The development Pixel 10 now has Voron **0.3.10 (code 14)**. Its installed APK
 matches the verified build. The previous 0.3.3 APK is backed up outside Git at
 `%LOCALAPPDATA%/VoronPanel/deployment-backups/2026-11-12/`.
 Existing app data and the saved connection were preserved. The PIN, launcher
@@ -52,13 +52,16 @@ the Pi continues executing an existing print independently.
 
 ## Remaining acceptance checks
 
-The phone is currently locked. One authorized encrypted-credential unlock attempt
-failed with protected output; root and primary-user preflight checks pass. No
-second PIN attempt or PIN change was made. Its updated live UI and camera still
-need a visible check after unlocking. Leo has explicitly limited current printer
-checks to read-only. Physical controls require Leo to be present
-and confirm the printer is clear before homing, Level, or heater/filament tests.
-The simulator tests do not replace those hardware checks.
+The phone is unlocked. Home and Prepare were checked against the live printer;
+Feed/Retract padding now fits the real phone's safe margins. Authenticated live
+camera frames were verified over LAN, then the camera was stopped with the light
+off. No camera image was saved. The saved encrypted unlock credential verifies;
+no PIN or credential change was needed. The earlier unlock helper failure has
+not been retested through a new lock/unlock cycle.
+
+Leo explicitly limited printer tests to read-only. No homing, Level, heating,
+filament motion, print start or service restart has been performed. The earlier
+comment-only upload round trip passed on 0.3.9; the 0.3.10 follow-up used GETs only.
 
 Portable operation is not signed off: connect the intended dedicated phone to
 the Pi over USB, prove tethering and an actual offline hotspot client, measure

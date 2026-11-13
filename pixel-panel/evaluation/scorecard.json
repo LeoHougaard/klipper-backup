@@ -1,7 +1,7 @@
 {
   "model": "sol",
-  "candidate_version": "0.3.9",
-  "iteration": 25,
+  "candidate_version": "0.3.10",
+  "iteration": 27,
   "starting_build_anchor": 1,
   "bambu_scores": {
     "Alignment": 8,
@@ -67,5 +67,6 @@
     "Remaining optical/spacing/surface preference is an anchored judgment, not established to 0.1 point.",
     "No ten original visual categories have been verified at 9.8."
   ],
-  "actuation_evidence_scope": "Full suite on pass24; pass25 changes only cancelled-state text. Final changed-state captures are verified separately."
+  "actuation_evidence_scope": "Full suite on pass24; pass25 changes only cancelled-state text. Final changed-state captures are verified separately.",
+  "final_change_scope": "Physical-phone label padding only; no actuator changes. Physical printer checks remain read-only."
 }

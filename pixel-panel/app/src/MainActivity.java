@@ -1615,6 +1615,10 @@ public final class MainActivity extends Activity {
     add(z, motionSpeedButton("Z"), 48);
     Button retract = p.quietButton("Retract", "unload", () -> feed(-extrudeStep));
     Button feed = p.quietButton("Feed", "load", () -> feed(extrudeStep));
+    // The physical phone's cutout/corner insets narrow this shared control row.
+    // Preserve 48 dp targets while leaving room for each complete action label.
+    p.pad(retract, 2, 4);
+    p.pad(feed, 2, 4);
     retract.setContentDescription("Retract filament manually");
     feed.setContentDescription("Feed filament manually");
     gate(retract, this::manualMotionAllowed);

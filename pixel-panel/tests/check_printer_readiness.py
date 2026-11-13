@@ -102,7 +102,7 @@ def main():
         report['temporary_file_removed']=True
     report['apk_sha256']=expected_hash
     report['installed_apk_verified']=True
-    report['physical_tests']='Pending user presence and safe-printer confirmation'
+    report['physical_tests']='Not performed; this checker never activates printer outputs'
     report['portable_usb_hotspot_power_recovery']='Not yet validated on dedicated hardware'
     args.output.parent.mkdir(parents=True,exist_ok=True)
     args.output.write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')
