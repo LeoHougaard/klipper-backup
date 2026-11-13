@@ -52,8 +52,11 @@ the Pi continues executing an existing print independently.
 
 ## Remaining acceptance checks
 
-The phone is currently locked. Its updated live UI and camera still need a
-visible check after Leo unlocks it. Physical controls require Leo to be present
+The phone is currently locked. One authorized encrypted-credential unlock attempt
+failed with protected output; root and primary-user preflight checks pass. No
+second PIN attempt or PIN change was made. Its updated live UI and camera still
+need a visible check after unlocking. Leo has explicitly limited current printer
+checks to read-only. Physical controls require Leo to be present
 and confirm the printer is clear before homing, Level, or heater/filament tests.
 The simulator tests do not replace those hardware checks.
 
